@@ -3,3 +3,5 @@ dist/
 .DS_Store/
 scraped_data/
 .firebase/
+vite.log
+*.log

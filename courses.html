@@ -69,55 +69,68 @@
       if (!grid) return;
 
       const filtered = coursesData.filter(course => {
+        const cat = (course.category || '').toLowerCase();
+        const title = (course.title || '').toLowerCase();
+        const id = (course.id || course.slug || '').toLowerCase();
+
         if (filter === 'all') return true;
-        if (filter === 'ladies') return course.audience.toLowerCase().includes('ladies') || course.audience.toLowerCase().includes('adult');
-        if (filter === 'youth') return course.audience.toLowerCase().includes('youth') || course.slug.includes('teen');
-        if (filter === 'quran') return course.title.toLowerCase().includes('quran') || course.slug.includes('quran');
+        if (filter === 'ladies') return cat.includes('sisters') || cat.includes('ladies') || cat.includes('women') || cat.includes('monthly');
+        if (filter === 'youth') return cat.includes('youth') || title.includes('teen') || id.includes('teen');
+        if (filter === 'quran') return cat.includes('qur') || title.includes('qur') || id.includes('qur');
         return true;
       });
 
-      grid.innerHTML = filtered.map(course => `
-        <div class="bg-white rounded-2xl shadow-xs border border-sabeel-gold/20 overflow-hidden flex flex-col transition-all hover:shadow-md hover:-translate-y-1">
-          <div class="h-56 bg-sabeel-sage-light/40 relative p-4 flex items-center justify-center overflow-hidden group">
-            <img src="${course.image}" alt="${course.title}" class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105" onerror="this.onerror=null; this.src='/images/sabeel-institute-PNG-1.png'" />
-            <span class="absolute top-3 left-3 bg-sabeel-raspberry text-white text-[10px] uppercase font-bold px-3 py-1 rounded-full shadow-xs">${course.audience}</span>
-          </div>
+      grid.innerHTML = filtered.map(course => {
+        const courseSlug = course.id || course.slug || '';
+        const categoryLabel = course.category || 'Islamic Education';
+        const feeLabel = course.tuition || course.fee || 'Registration Open';
+        const scheduleText = course.schedule || course.date || 'See details';
+        const locationText = course.location || course.venue || 'Sabeel Institute';
+        const regLink = course.registrationUrl || course.registration_link || '#';
 
-          <div class="p-6 flex-grow flex flex-col justify-between">
-            <div>
-              <div class="text-[11px] text-sabeel-gold font-bold tracking-wider uppercase mb-1">${course.fee}</div>
-              <h3 class="font-serif text-xl font-bold text-sabeel-raspberry mb-2">${course.title}</h3>
-              <p class="text-xs text-sabeel-taupe mb-6 line-clamp-3 leading-relaxed">
-                ${course.description}
-              </p>
+        return `
+          <div class="bg-white rounded-2xl shadow-xs border border-sabeel-gold/20 overflow-hidden flex flex-col transition-all hover:shadow-md hover:-translate-y-1">
+            <div class="h-56 bg-sabeel-sage-light/40 relative p-4 flex items-center justify-center overflow-hidden group">
+              <img src="${course.image}" alt="${course.title}" class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105" onerror="this.onerror=null; this.src='/images/sabeel-institute-PNG-1.png'" />
+              <span class="absolute top-3 left-3 bg-sabeel-raspberry text-white text-[10px] uppercase font-bold px-3 py-1 rounded-full shadow-xs">${categoryLabel}</span>
             </div>
 
-            <div>
-              <div class="border-t border-sabeel-gold/10 pt-4 space-y-1.5 text-xs text-sabeel-taupe mb-6">
-                <div class="flex items-center justify-between">
-                  <span><strong>Date:</strong> ${course.date}</span>
-                </div>
-                <div class="flex items-center justify-between">
-                  <span><strong>Time:</strong> ${course.time}</span>
-                </div>
-                <div class="flex items-center justify-between">
-                  <span><strong>Venue:</strong> ${course.venue}</span>
-                </div>
+            <div class="p-6 flex-grow flex flex-col justify-between">
+              <div>
+                <div class="text-[11px] text-sabeel-gold font-bold tracking-wider uppercase mb-1">${feeLabel}</div>
+                <h3 class="font-serif text-xl font-bold text-sabeel-raspberry mb-2">${course.title}</h3>
+                <p class="text-xs text-sabeel-taupe mb-6 line-clamp-3 leading-relaxed">
+                  ${course.overview || course.description || ''}
+                </p>
               </div>
 
-              <div class="grid grid-cols-2 gap-3">
-                <a href="course-detail.html?slug=${course.slug}" class="text-center py-2.5 px-3 rounded-xl bg-sabeel-ivory text-sabeel-raspberry font-semibold text-xs border border-sabeel-raspberry/30 hover:bg-sabeel-raspberry hover:text-white transition">
-                  Course Details
-                </a>
-                <a href="${course.registration_link}" target="_blank" rel="noopener noreferrer" class="text-center py-2.5 px-3 rounded-xl bg-sabeel-raspberry text-white font-semibold text-xs hover:bg-sabeel-raspberry-dark transition shadow-xs flex items-center justify-center gap-1">
-                  Register Now
-                  <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
-                </a>
+              <div>
+                <div class="border-t border-sabeel-gold/10 pt-4 space-y-1.5 text-xs text-sabeel-taupe mb-6">
+                  <div class="flex items-center justify-between">
+                    <span><strong>Schedule:</strong> ${scheduleText}</span>
+                  </div>
+                  <div class="flex items-center justify-between">
+                    <span><strong>Instructor:</strong> ${course.instructor || 'Faculty'}</span>
+                  </div>
+                  <div class="flex items-center justify-between">
+                    <span><strong>Location:</strong> ${locationText}</span>
+                  </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-3">
+                  <a href="course-detail.html?id=${courseSlug}" class="text-center py-2.5 px-3 rounded-xl bg-sabeel-ivory text-sabeel-raspberry font-semibold text-xs border border-sabeel-raspberry/30 hover:bg-sabeel-raspberry hover:text-white transition">
+                    Course Details
+                  </a>
+                  <a href="${regLink}" target="_blank" rel="noopener noreferrer" class="text-center py-2.5 px-3 rounded-xl bg-sabeel-raspberry text-white font-semibold text-xs hover:bg-sabeel-raspberry-dark transition shadow-xs flex items-center justify-center gap-1">
+                    Register Now
+                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                  </a>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      `).join('');
+        `;
+      }).join('');
     }
 
     document.addEventListener('DOMContentLoaded', () => {

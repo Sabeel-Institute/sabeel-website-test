@@ -34,18 +34,42 @@
   <div id="footer-container"></div>
 
   <script type="module">
-    import coursesData from './src/courses_data.json';
+    import activeCourses from './src/courses_data.json';
+    import pastCourses from './src/past_courses_data.json';
 
     document.addEventListener('DOMContentLoaded', () => {
       const urlParams = new URLSearchParams(window.location.search);
-      const slug = urlParams.get('slug');
+      const queryId = urlParams.get('id') || urlParams.get('slug');
 
-      const course = coursesData.find(c => c.slug === slug) || coursesData[0];
-      if (!course) return;
+      let course = null;
+      let isPast = false;
 
-      document.title = `${course.title} - Sabeel Institute`;
+      if (queryId) {
+        course = activeCourses.find(c => c.id === queryId || c.slug === queryId);
+        if (!course) {
+          course = pastCourses.find(c => c.id === queryId || c.slug === queryId);
+          if (course) isPast = true;
+        }
+      }
+
+      // Default fallback if no match or parameter
+      if (!course) {
+        course = activeCourses[0];
+      }
+
+      const title = course.title || "Sabeel Course";
+      const image = course.image || "/images/sabeel-institute-PNG-1.png";
+      const category = course.category || (isPast ? "Past Program Archive" : "Sabeel Course");
+      const schedule = course.schedule || course.date || "Schedule upon enrollment";
+      const instructor = course.instructor || "Sabeel Qualified Faculty";
+      const venue = course.venue || "Houston, TX / Online";
+      const fee = course.fee || "Contact for Tuition";
+      const description = course.description || "Comprehensive Islamic education grounded in authentic scholarship and sisterhood.";
+      const regUrl = course.registrationUrl || course.registration_link || "contact.html";
+
+      document.title = `${title} - Sabeel Institute`;
       const breadcrumb = document.getElementById('breadcrumb-title');
-      if (breadcrumb) breadcrumb.textContent = course.title;
+      if (breadcrumb) breadcrumb.textContent = title;
 
       const container = document.getElementById('course-content-root');
       if (container) {
@@ -54,58 +78,64 @@
 
             <!-- Left Column: Flyer/Image -->
             <div class="lg:col-span-5 bg-sabeel-sage-light/30 p-4 rounded-2xl border border-sabeel-gold/30">
-              <img src="${course.image}" alt="${course.title}" class="w-full h-auto rounded-xl shadow-xs object-cover" onerror="this.onerror=null; this.src='/images/sabeel-institute-PNG-1.png'" />
+              <img src="${image}" alt="${title}" class="w-full h-auto rounded-xl shadow-xs object-cover" onerror="this.onerror=null; this.src='/images/sabeel-institute-PNG-1.png'" />
               <div class="mt-4 p-4 bg-sabeel-ivory rounded-xl text-center border border-sabeel-gold/10">
-                <span class="text-xs font-semibold text-sabeel-gold uppercase tracking-widest block mb-1">Target Audience</span>
-                <span class="text-sm font-bold text-sabeel-raspberry">${course.audience}</span>
+                <span class="text-xs font-semibold text-sabeel-gold uppercase tracking-widest block mb-1">Category</span>
+                <span class="text-sm font-bold text-sabeel-raspberry">${category}</span>
               </div>
             </div>
 
             <!-- Right Column: Course Metadata & Details -->
             <div class="lg:col-span-7 space-y-6">
               <div>
-                <span class="inline-block px-3.5 py-1 rounded-full bg-sabeel-sage-light text-sabeel-raspberry text-xs font-bold tracking-wider uppercase mb-3 border border-sabeel-sage/40">
-                  Open Registration
+                <span class="inline-block px-3.5 py-1 rounded-full ${isPast ? 'bg-sabeel-taupe-light text-sabeel-taupe' : 'bg-sabeel-sage-light text-sabeel-raspberry'} text-xs font-bold tracking-wider uppercase mb-3 border border-sabeel-gold/20">
+                  ${isPast ? 'Past Program Archive' : 'Open Registration'}
                 </span>
-                <h1 class="font-serif text-3xl sm:text-4xl font-bold text-sabeel-raspberry leading-tight">${course.title}</h1>
+                <h1 class="font-serif text-3xl sm:text-4xl font-bold text-sabeel-raspberry leading-tight">${title}</h1>
               </div>
 
               <!-- Quick Info Grid -->
               <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 bg-sabeel-ivory/60 p-4 rounded-2xl border border-sabeel-gold/20">
                 <div>
-                  <span class="block text-[10px] text-sabeel-taupe font-bold uppercase">Fee</span>
-                  <span class="text-xs font-bold text-sabeel-raspberry">${course.fee}</span>
+                  <span class="block text-[10px] text-sabeel-taupe font-bold uppercase">Instructor</span>
+                  <span class="text-xs font-bold text-sabeel-raspberry">${instructor}</span>
                 </div>
                 <div>
-                  <span class="block text-[10px] text-sabeel-taupe font-bold uppercase">Date</span>
-                  <span class="text-xs font-bold text-sabeel-dark">${course.date}</span>
+                  <span class="block text-[10px] text-sabeel-taupe font-bold uppercase">Schedule / Date</span>
+                  <span class="text-xs font-bold text-sabeel-dark">${schedule}</span>
                 </div>
                 <div>
-                  <span class="block text-[10px] text-sabeel-taupe font-bold uppercase">Time</span>
-                  <span class="text-xs font-bold text-sabeel-dark">${course.time}</span>
+                  <span class="block text-[10px] text-sabeel-taupe font-bold uppercase">Tuition / Fee</span>
+                  <span class="text-xs font-bold text-sabeel-dark">${fee}</span>
                 </div>
                 <div>
-                  <span class="block text-[10px] text-sabeel-taupe font-bold uppercase">Venue</span>
-                  <span class="text-xs font-bold text-sabeel-dark">${course.venue}</span>
+                  <span class="block text-[10px] text-sabeel-taupe font-bold uppercase">Location</span>
+                  <span class="text-xs font-bold text-sabeel-dark">${venue}</span>
                 </div>
               </div>
 
               <!-- Description -->
               <div class="space-y-4 pt-2">
-                <h3 class="font-serif text-xl font-bold text-sabeel-raspberry border-b border-sabeel-gold/20 pb-2">Course Overview</h3>
+                <h3 class="font-serif text-xl font-bold text-sabeel-raspberry border-b border-sabeel-gold/20 pb-2">Program Overview</h3>
                 <div class="text-sm text-sabeel-taupe leading-relaxed space-y-3 whitespace-pre-line">
-                  ${course.description}
+                  ${description}
                 </div>
               </div>
 
               <!-- Action CTAs -->
               <div class="pt-6 border-t border-sabeel-gold/20 flex flex-wrap gap-4 items-center">
-                <a href="${course.registration_link}" target="_blank" rel="noopener noreferrer" class="bg-sabeel-raspberry hover:bg-sabeel-raspberry-dark text-white px-8 py-3.5 rounded-full font-semibold text-xs uppercase tracking-wider transition shadow-md flex items-center gap-2">
-                  Register For This Course
-                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
-                </a>
+                ${!isPast ? `
+                  <a href="${regUrl}" target="_blank" rel="noopener noreferrer" class="bg-sabeel-raspberry hover:bg-sabeel-raspberry-dark text-white px-8 py-3.5 rounded-full font-semibold text-xs uppercase tracking-wider transition shadow-md flex items-center gap-2">
+                    Register For This Course
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                  </a>
+                ` : `
+                  <span class="bg-sabeel-taupe-light text-sabeel-taupe px-6 py-3 rounded-full font-semibold text-xs uppercase tracking-wider">
+                    Registration Closed
+                  </span>
+                `}
                 <a href="contact.html" class="bg-sabeel-sage hover:bg-sabeel-sage/80 text-sabeel-dark px-6 py-3.5 rounded-full font-semibold text-xs uppercase tracking-wider transition border border-sabeel-gold/20">
-                  Ask a Question
+                  Inquire / Contact Us
                 </a>
               </div>
 
