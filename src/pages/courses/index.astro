@@ -1,0 +1,80 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/PageHero.astro';
+import CourseCard from '../../components/CourseCard.astro';
+import Divider from '../../components/Divider.astro';
+import Icon from '../../components/Icon.astro';
+import { getOpenCourses } from '../../lib/content';
+
+const courses = await getOpenCourses();
+---
+
+<BaseLayout
+  title="Courses"
+  description="Current classes, gatherings, and programs for women, teens, and children at Sabeel Institute in Houston and online."
+>
+  <PageHero title="Our Courses">
+    <p>
+      Explore current classes, gatherings, and programs for women, teens, and children — in person in Houston
+      and live online. Each course page has the schedule, fee, and registration link.
+    </p>
+  </PageHero>
+
+  <section class="py-14 md:py-16" aria-labelledby="open-heading">
+    <div class="container-page">
+      <p class="text-lg font-bold text-gold-text">Current Opportunities</p>
+      <h2 id="open-heading" class="heading-sans mt-1">Open for Registration</h2>
+      <Divider class="mt-4" />
+      {
+        courses.length > 0 ? (
+          <ul class="mt-10 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+            {courses.map((course) => (
+              <li>
+                <CourseCard course={course} />
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p class="mt-10 rounded-card border border-border bg-surface p-7 text-ink-soft">
+            Registration for our next programs opens soon. Subscribe below to hear first.
+          </p>
+        )
+      }
+
+      <div class="mt-12 grid gap-5 md:grid-cols-2">
+        <a
+          href="/seminary/"
+          class="group flex items-center gap-5 rounded-card border border-border bg-surface p-6 transition-shadow hover:shadow-card"
+        >
+          <span class="flex size-14 shrink-0 items-center justify-center rounded-full bg-raspberry text-on-raspberry">
+            <Icon name="graduation-cap" class="size-7" />
+          </span>
+          <span>
+            <span class="block text-lg font-semibold text-raspberry">Hikam Seminary</span>
+            <span class="block text-ink-soft">A one-year certification program in the essential Islamic sciences.</span>
+          </span>
+          <Icon name="arrow-right" class="ml-auto size-5 shrink-0 text-raspberry transition-transform group-hover:translate-x-1" />
+        </a>
+        <a
+          href="/financial-aid/"
+          class="group flex items-center gap-5 rounded-card border border-border bg-surface p-6 transition-shadow hover:shadow-card"
+        >
+          <span class="flex size-14 shrink-0 items-center justify-center rounded-full bg-sage-wash text-ink">
+            <Icon name="hand-coins" class="size-7" />
+          </span>
+          <span>
+            <span class="block text-lg font-semibold text-raspberry">Financial Aid</span>
+            <span class="block text-ink-soft">Finances should never be a barrier to learning.</span>
+          </span>
+          <Icon name="arrow-right" class="ml-auto size-5 shrink-0 text-raspberry transition-transform group-hover:translate-x-1" />
+        </a>
+      </div>
+
+      <p class="mt-10 text-center">
+        <a href="/past-courses/" class="link-arrow text-lg">
+          Browse past courses <Icon name="arrow-right" class="size-5" />
+        </a>
+      </p>
+    </div>
+  </section>
+</BaseLayout>

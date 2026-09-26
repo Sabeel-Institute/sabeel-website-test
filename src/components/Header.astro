@@ -1,0 +1,113 @@
+---
+import { Image } from 'astro:assets';
+import logo from '../assets/images/logo.png';
+import Icon from './Icon.astro';
+import { mainNav } from '../site.config';
+import { hasPosts } from '../lib/content';
+
+const nav = mainNav.filter((item) => item.href !== '/blog/' || hasPosts);
+const path = Astro.url.pathname;
+const isActive = (href: string) => path === href || path.startsWith(href);
+---
+
+<header class="relative z-40 bg-canvas">
+  <div class="container-page flex h-20 items-center justify-between gap-6 lg:h-24">
+    <a href="/" class="shrink-0" aria-label="Sabeel Institute home">
+      <Image
+        src={logo}
+        alt="Sabeel Institute"
+        width={150}
+        class="h-auto w-[118px] lg:w-[140px]"
+        loading="eager"
+        layout="fixed"
+      />
+    </a>
+
+    <nav aria-label="Main" class="hidden lg:block">
+      <ul class="flex items-center gap-1 xl:gap-2">
+        {
+          nav.map((item) => (
+            <li>
+              <a
+                href={item.href}
+                aria-current={isActive(item.href) ? 'page' : undefined}
+                class="relative rounded px-2 py-1.5 text-[15px] text-ink transition-colors hover:text-raspberry aria-[current=page]:text-raspberry xl:px-2.5 xl:text-base"
+              >
+                {item.label}
+                <span
+                  aria-hidden="true"
+                  class:list={[
+                    'absolute inset-x-2 -bottom-0.5 h-px bg-gold transition-opacity',
+                    isActive(item.href) ? 'opacity-100' : 'opacity-0',
+                  ]}
+                />
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+
+    <div class="flex items-center gap-2">
+      <a href="/donate/" class="btn btn-primary hidden px-5 text-base sm:inline-flex lg:px-7 lg:text-[17px]">
+        Donate Now
+      </a>
+      <button
+        type="button"
+        class="inline-flex size-11 items-center justify-center rounded-lg text-ink hover:bg-inset lg:hidden"
+        aria-controls="mobile-nav"
+        aria-expanded="false"
+        data-menu-toggle
+      >
+        <span data-menu-open><Icon name="menu" class="size-6" label="Open menu" /></span>
+        <span data-menu-close hidden><Icon name="x" class="size-6" label="Close menu" /></span>
+      </button>
+    </div>
+  </div>
+
+  <nav
+    id="mobile-nav"
+    aria-label="Main"
+    hidden
+    class="absolute inset-x-0 top-full border-t border-border bg-surface shadow-card lg:hidden"
+  >
+    <ul class="container-page flex flex-col py-3">
+      {
+        nav.map((item) => (
+          <li>
+            <a
+              href={item.href}
+              aria-current={isActive(item.href) ? 'page' : undefined}
+              class="flex min-h-12 items-center border-b border-border/70 text-lg text-ink aria-[current=page]:font-semibold aria-[current=page]:text-raspberry"
+            >
+              {item.label}
+            </a>
+          </li>
+        ))
+      }
+      <li class="pt-4 pb-2">
+        <a href="/donate/" class="btn btn-primary w-full text-base">Donate Now</a>
+      </li>
+    </ul>
+  </nav>
+</header>
+
+<script>
+  const toggle = document.querySelector<HTMLButtonElement>('[data-menu-toggle]');
+  const menu = document.getElementById('mobile-nav');
+  if (toggle && menu) {
+    const setOpen = (open: boolean) => {
+      menu.hidden = !open;
+      toggle.setAttribute('aria-expanded', String(open));
+      toggle.querySelector<HTMLElement>('[data-menu-open]')!.hidden = open;
+      toggle.querySelector<HTMLElement>('[data-menu-close]')!.hidden = !open;
+    };
+    toggle.addEventListener('click', () => setOpen(menu.hasAttribute('hidden')));
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && !menu.hidden) {
+        setOpen(false);
+        toggle.focus();
+      }
+    });
+  }
+</script>

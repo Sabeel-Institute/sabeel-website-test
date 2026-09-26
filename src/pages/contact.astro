@@ -1,0 +1,87 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import Icon from '../components/Icon.astro';
+import { site } from '../site.config';
+
+const channels = [
+  { icon: 'mail', title: 'Email Us', value: site.email, href: `mailto:${site.email}` },
+  { icon: 'instagram', title: 'Instagram', value: '@sabeel_institute', href: site.social.instagram },
+  { icon: 'facebook', title: 'Facebook', value: 'Sabeel Institute', href: site.social.facebook },
+] as const;
+---
+
+<BaseLayout title="Contact" description={`Get in touch with Sabeel Institute: ${site.email}.`}>
+  <PageHero title="Contact Us">
+    <p>
+      Have a question about a course, the seminary, financial aid, or volunteering? We would love to hear from
+      you.
+    </p>
+  </PageHero>
+
+  <section class="bg-sage-wash py-14 md:py-16">
+    <div class="container-page grid gap-10 lg:grid-cols-[1fr_1.1fr]">
+      <ul class="grid content-start gap-4">
+        {
+          channels.map((c) => (
+            <li>
+              <a href={c.href} class="group flex items-center gap-5 rounded-card bg-surface p-6 transition-shadow hover:shadow-card">
+                <span class="flex size-14 shrink-0 items-center justify-center rounded-full bg-canvas text-gold-text">
+                  <Icon name={c.icon} class="size-6" />
+                </span>
+                <span class="min-w-0">
+                  <span class="block text-sm font-bold tracking-wide text-gold-text uppercase">{c.title}</span>
+                  <span class="block truncate text-lg text-ink group-hover:text-raspberry">{c.value}</span>
+                </span>
+              </a>
+            </li>
+          ))
+        }
+        <li class="flex items-center gap-5 rounded-card bg-surface p-6">
+          <span class="flex size-14 shrink-0 items-center justify-center rounded-full bg-canvas text-gold-text">
+            <Icon name="map-pin" class="size-6" />
+          </span>
+          <span>
+            <span class="block text-sm font-bold tracking-wide text-gold-text uppercase">Where we meet</span>
+            <span class="block text-lg text-ink">{site.location}, at local masajid and online</span>
+          </span>
+        </li>
+      </ul>
+
+      <div class="rounded-card bg-surface p-7 sm:p-10">
+        <h2 class="display-md">Send a Message</h2>
+        <p class="mt-2 text-ink-soft">This opens a pre-addressed email in your mail app.</p>
+        <form class="mt-6 grid gap-4" data-contact-form data-to={site.email}>
+          <div class="grid gap-4 sm:grid-cols-2">
+            <label class="grid gap-1.5 text-[15px] font-medium text-ink">
+              Name
+              <input name="name" required autocomplete="name" class="min-h-12 rounded-lg border border-border-strong bg-canvas px-4 text-base font-normal focus:border-raspberry focus:outline-none" />
+            </label>
+            <label class="grid gap-1.5 text-[15px] font-medium text-ink">
+              Subject
+              <input name="subject" required class="min-h-12 rounded-lg border border-border-strong bg-canvas px-4 text-base font-normal focus:border-raspberry focus:outline-none" />
+            </label>
+          </div>
+          <label class="grid gap-1.5 text-[15px] font-medium text-ink">
+            Message
+            <textarea name="message" required rows="6" class="rounded-lg border border-border-strong bg-canvas px-4 py-3 text-base font-normal focus:border-raspberry focus:outline-none"></textarea>
+          </label>
+          <button type="submit" class="btn btn-primary justify-self-start px-8 text-base">
+            Send Message <Icon name="arrow-right" class="size-5" />
+          </button>
+        </form>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<script>
+  const form = document.querySelector<HTMLFormElement>('[data-contact-form]')!;
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const data = new FormData(form);
+    const subject = encodeURIComponent(String(data.get('subject')));
+    const body = encodeURIComponent(`${data.get('message')}\n\n— ${data.get('name')}`);
+    window.location.href = `mailto:${form.dataset.to}?subject=${subject}&body=${body}`;
+  });
+</script>

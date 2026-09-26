@@ -1,0 +1,175 @@
+---
+import { Image } from 'astro:assets';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Divider from '../components/Divider.astro';
+import Icon from '../components/Icon.astro';
+import CourseCard from '../components/CourseCard.astro';
+import heroPhoto from '../assets/images/hero-classroom.png';
+import stillLife from '../assets/images/still-life-quran.jpg';
+import teacherIcon from '../assets/images/icon-teacher.png';
+import serviceIcon from '../assets/images/icon-service.png';
+import { getOpenCourses } from '../lib/content';
+
+const openCourses = await getOpenCourses();
+const featured = openCourses.slice(0, 3);
+
+const difference = [
+  {
+    icon: 'book-open',
+    title: 'Rooted in Scholarship',
+    text: 'Learn with Alimiyyah graduates trained across the core Islamic sciences.',
+  },
+  {
+    icon: 'users',
+    title: 'A Place to Belong',
+    text: 'Study face to face in Houston, among women who know your name and walk beside you.',
+  },
+  {
+    icon: 'leaf',
+    title: 'Learn. Reflect. Serve.',
+    text: 'Deepened through suhbah, Sabeel’s learning endures — students who studied here over a decade ago still serve alongside us.',
+  },
+] as const;
+---
+
+<BaseLayout>
+  <!-- Hero -->
+  <section class="relative overflow-hidden bg-canvas">
+    <div class="container-page grid items-center gap-10 pt-8 pb-14 md:grid-cols-2 md:gap-6 md:py-0">
+      <div class="md:py-20 lg:py-24">
+        <p class="eyebrow">About Sabeel Institute</p>
+        <Divider width="sm" class="mt-3" />
+        <h1 class="display-xl mt-6 max-w-[36rem]">Take your Islamic Learning Further.</h1>
+        <p class="mt-6 max-w-[36rem] font-display text-[1.3rem] leading-[1.5] text-ink-soft sm:text-[1.4rem]">
+          Structured, in-person Islamic learning for women in Houston — from classes and gatherings to sustained
+          study with women trained in the Islamic sciences.
+        </p>
+        <a href="/courses/" class="btn btn-primary mt-9 px-7 text-sm tracking-wide uppercase">Explore Programs</a>
+      </div>
+
+      <div class="relative md:h-full md:min-h-[520px]">
+        <Image
+          src={stillLife}
+          alt=""
+          widths={[480, 720]}
+          sizes="(min-width: 768px) 50vw, 100vw"
+          class="absolute inset-0 hidden size-full object-cover opacity-45 md:block"
+          loading="eager"
+        />
+        <div class="absolute inset-y-0 left-0 hidden w-32 bg-linear-to-r from-canvas to-transparent md:block"></div>
+        <div class="relative md:absolute md:inset-x-0 md:top-1/2 md:-translate-y-1/2 md:pl-4 lg:pl-0">
+          <Image
+            src={heroPhoto}
+            alt="Women studying the Qur’an together around a table in a sunlit classroom"
+            widths={[480, 720, 960, 1280]}
+            sizes="(min-width: 1320px) 640px, (min-width: 768px) 48vw, 100vw"
+            class="aspect-[3/2] w-full rounded-sm object-cover shadow-card"
+            loading="eager"
+            fetchpriority="high"
+          />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- The Sabeel Difference -->
+  <section class="bg-sage-wash py-14 md:py-16" aria-labelledby="difference-heading">
+    <div class="container-page">
+      <h2 id="difference-heading" class="heading-sans text-center">The Sabeel Difference</h2>
+      <Divider align="center" class="mt-4" />
+      <ul class="mt-10 grid gap-10 md:grid-cols-3 md:gap-0">
+        {
+          difference.map((item, i) => (
+            <li
+              class:list={[
+                'px-4 text-center md:px-8 md:py-4',
+                i > 0 && 'md:border-l md:border-gold',
+              ]}
+            >
+              <span class="mx-auto flex size-[70px] items-center justify-center rounded-full bg-canvas text-gold-text">
+                <Icon name={item.icon} class="size-8" />
+              </span>
+              <h3 class="mt-5 text-[1.45rem] font-semibold tracking-wide text-raspberry uppercase">{item.title}</h3>
+              <p class="mx-auto mt-3 max-w-[23rem] leading-[1.8] text-ink">{item.text}</p>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <!-- Open for Registration -->
+  <section class="py-14 md:py-16" aria-labelledby="open-heading">
+    <div class="container-page">
+      <div class="grid gap-6 md:grid-cols-2 md:items-end">
+        <div>
+          <p class="text-lg font-bold text-gold-text">Current Opportunities</p>
+          <h2 id="open-heading" class="heading-sans mt-1">Open for Registration</h2>
+          <Divider class="mt-4" />
+        </div>
+        <div class="md:pb-1">
+          <p class="max-w-[34rem] leading-[1.8] text-ink-soft">
+            Explore current classes, gatherings, and programs for women, teens, and children.
+          </p>
+          <a href="/courses/" class="link-arrow mt-4 text-lg font-semibold">
+            View All Open Courses <Icon name="arrow-right" class="size-5" />
+          </a>
+        </div>
+      </div>
+
+      {
+        featured.length > 0 ? (
+          <ul class="mt-10 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+            {featured.map((course) => (
+              <li>
+                <CourseCard course={course} />
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p class="mt-10 rounded-card border border-border bg-surface p-7 text-ink-soft">
+            Registration for our next programs opens soon. Subscribe below to hear first.
+          </p>
+        )
+      }
+    </div>
+  </section>
+
+  <!-- Teachers and service -->
+  <section class="pb-14 md:pb-20">
+    <div class="container-page grid gap-5 lg:grid-cols-2">
+      {
+        [
+          {
+            icon: teacherIcon,
+            eyebrow: 'Strongest Asset',
+            title: 'Meet the Teachers',
+            text: 'Learn from Alimiyyah graduates who pair rigorous training in the Islamic sciences with clarity, care, and an understanding of the questions women are carrying today.',
+            link: 'Meet the Teaching Team',
+            href: '/our-team/#teachers',
+          },
+          {
+            icon: serviceIcon,
+            eyebrow: 'Outcomes',
+            title: 'From Student to Service',
+            text: 'At Sabeel, learning is meant to be lived. Students carry what they gain into their homes, masajid, classrooms, and communities — serving with greater knowledge, confidence, and ihsan.',
+            link: 'Meet the Volunteer Team',
+            href: '/our-team/#admin',
+          },
+        ].map((card) => (
+          <article class="flex flex-col gap-6 rounded-card border-2 border-gold/25 bg-surface p-7 sm:flex-row sm:items-center sm:gap-8 sm:p-10">
+            <Image src={card.icon} alt="" width={140} class="size-28 shrink-0 sm:size-[132px]" />
+            <div>
+              <p class="text-lg font-bold text-gold-text">{card.eyebrow}</p>
+              <h2 class="mt-1 text-[1.6rem] leading-tight font-semibold text-raspberry">{card.title}</h2>
+              <p class="mt-4 leading-[1.8] text-ink-soft">{card.text}</p>
+              <a href={card.href} class="link-arrow mt-4">
+                {card.link} <Icon name="arrow-right" class="size-5" />
+              </a>
+            </div>
+          </article>
+        ))
+      }
+    </div>
+  </section>
+</BaseLayout>

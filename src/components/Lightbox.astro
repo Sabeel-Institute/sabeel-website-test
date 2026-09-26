@@ -1,0 +1,97 @@
+---
+/**
+ * One shared image viewer. Any link with `data-lightbox` opens its `href`
+ * image here, with optional `data-title`, `data-caption`, and `data-page`
+ * (a URL to show as "View course page"). Links in the same `data-lightbox`
+ * group can be stepped through with the arrows. Without JavaScript the link
+ * simply opens the image.
+ */
+import Icon from './Icon.astro';
+---
+
+<dialog
+  id="lightbox"
+  aria-labelledby="lightbox-title"
+  class="m-auto max-h-[100dvh] w-full max-w-5xl bg-transparent p-0 backdrop:bg-ink/85 backdrop:backdrop-blur-sm open:flex"
+>
+  <div class="relative flex w-full flex-col items-center gap-3 p-3 sm:p-6">
+    <div class="flex w-full items-start justify-between gap-4 text-on-raspberry">
+      <div class="min-w-0">
+        <p id="lightbox-title" class="font-display text-2xl leading-tight font-bold"></p>
+        <p id="lightbox-caption" class="text-sm text-on-raspberry/80"></p>
+      </div>
+      <button
+        type="button"
+        data-lightbox-close
+        class="flex size-11 shrink-0 items-center justify-center rounded-full bg-surface text-ink hover:bg-white"
+      >
+        <Icon name="x" class="size-5" label="Close" />
+      </button>
+    </div>
+    <div class="relative flex w-full items-center justify-center">
+      <button
+        type="button"
+        data-lightbox-prev
+        class="absolute left-0 z-10 flex size-11 items-center justify-center rounded-full bg-surface/90 text-ink shadow-card hover:bg-white sm:-left-2"
+      >
+        <Icon name="chevron-left" class="size-6" label="Previous flyer" />
+      </button>
+      <img id="lightbox-img" alt="" class="max-h-[78dvh] w-auto max-w-full rounded-sm object-contain shadow-card" />
+      <button
+        type="button"
+        data-lightbox-next
+        class="absolute right-0 z-10 flex size-11 items-center justify-center rounded-full bg-surface/90 text-ink shadow-card hover:bg-white sm:-right-2"
+      >
+        <Icon name="chevron-right" class="size-6" label="Next flyer" />
+      </button>
+    </div>
+    <a id="lightbox-page" class="btn btn-primary" hidden>View course page <Icon name="arrow-right" class="size-4" /></a>
+  </div>
+</dialog>
+
+<script>
+  const dialog = document.getElementById('lightbox') as HTMLDialogElement;
+  const img = document.getElementById('lightbox-img') as HTMLImageElement;
+  const title = document.getElementById('lightbox-title')!;
+  const caption = document.getElementById('lightbox-caption')!;
+  const page = document.getElementById('lightbox-page') as HTMLAnchorElement;
+  const prev = dialog.querySelector<HTMLButtonElement>('[data-lightbox-prev]')!;
+  const next = dialog.querySelector<HTMLButtonElement>('[data-lightbox-next]')!;
+  let group: HTMLAnchorElement[] = [];
+  let index = 0;
+
+  const visible = (a: HTMLAnchorElement) => !a.closest('[hidden]');
+
+  function show(i: number) {
+    index = (i + group.length) % group.length;
+    const a = group[index]!;
+    img.src = a.href;
+    img.alt = a.dataset.alt ?? a.dataset.title ?? '';
+    title.textContent = a.dataset.title ?? '';
+    caption.textContent = a.dataset.caption ?? '';
+    page.hidden = !a.dataset.page;
+    if (a.dataset.page) page.href = a.dataset.page;
+    prev.hidden = next.hidden = group.length < 2;
+  }
+
+  document.addEventListener('click', (e) => {
+    const a = (e.target as Element).closest<HTMLAnchorElement>('a[data-lightbox]');
+    if (!a || e.metaKey || e.ctrlKey || e.shiftKey) return;
+    e.preventDefault();
+    const name = a.dataset.lightbox;
+    group = [...document.querySelectorAll<HTMLAnchorElement>(`a[data-lightbox="${name}"]`)].filter(visible);
+    show(group.indexOf(a));
+    dialog.showModal();
+  });
+  prev.addEventListener('click', () => show(index - 1));
+  next.addEventListener('click', () => show(index + 1));
+  dialog.querySelector('[data-lightbox-close]')!.addEventListener('click', () => dialog.close());
+  dialog.addEventListener('click', (e) => {
+    if (e.target === dialog) dialog.close();
+  });
+  dialog.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowLeft' && group.length > 1) show(index - 1);
+    if (e.key === 'ArrowRight' && group.length > 1) show(index + 1);
+  });
+  dialog.addEventListener('close', () => img.removeAttribute('src'));
+</script>

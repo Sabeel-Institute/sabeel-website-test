@@ -1,0 +1,175 @@
+---
+import type { GetStaticPaths } from 'astro';
+import { Image, getImage } from 'astro:assets';
+import { render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Divider from '../../components/Divider.astro';
+import Icon from '../../components/Icon.astro';
+import CourseCard from '../../components/CourseCard.astro';
+import Lightbox from '../../components/Lightbox.astro';
+import { courseHasPage, getOpenCourses, type Course } from '../../lib/content';
+import { getCollection } from 'astro:content';
+
+export const getStaticPaths = (async () => {
+  const courses = await getCollection('courses', courseHasPage);
+  return courses.map((course) => ({ params: { slug: course.id }, props: { course } }));
+}) satisfies GetStaticPaths;
+
+interface Props {
+  course: Course;
+}
+
+const { course } = Astro.props;
+const d = course.data;
+const isOpen = d.status === 'open';
+const { Content } = await render(course);
+const fullFlyer = await getImage({ src: d.flyer, width: 1600 });
+const others = (await getOpenCourses()).filter((c) => c.id !== course.id).slice(0, 3);
+
+const overview = [
+  { icon: 'calendar', label: 'Dates', value: d.dates },
+  { icon: 'clock', label: 'Time', value: d.time },
+  { icon: 'map-pin', label: 'Venue', value: d.venue },
+  { icon: 'users', label: 'Audience', value: d.audience },
+  { icon: 'tag', label: 'Fee', value: d.fee },
+] as const;
+const rows = overview.filter((r) => r.value);
+---
+
+<BaseLayout title={d.title} description={d.summary ?? d.subtitle ?? d.title} shareImage={d.flyer}>
+  <section class="bg-canvas pt-6 pb-14 md:pb-20">
+    <div class="container-page">
+      <nav aria-label="Breadcrumb" class="text-[15px] text-ink-soft">
+        <ol class="flex flex-wrap items-center gap-2">
+          <li><a href="/" class="hover:text-raspberry">Home</a></li>
+          <li aria-hidden="true">/</li>
+          <li>
+            <a href={isOpen ? '/courses/' : '/past-courses/'} class="hover:text-raspberry">
+              {isOpen ? 'Courses' : 'Past Courses'}
+            </a>
+          </li>
+          <li aria-hidden="true">/</li>
+          <li aria-current="page" class="text-ink">{d.title}</li>
+        </ol>
+      </nav>
+
+      {
+        !isOpen && (
+          <p class="mt-6 flex flex-wrap items-center gap-x-3 gap-y-1 rounded-card border border-gold bg-surface px-5 py-4 text-ink">
+            <Icon name="info" class="size-5 shrink-0 text-gold-text" />
+            This course has ended.
+            <a href="/courses/" class="font-medium text-raspberry underline decoration-gold underline-offset-4">
+              See what’s open for registration
+            </a>
+          </p>
+        )
+      }
+
+      <div class="mt-8 grid gap-10 lg:grid-cols-[1fr_minmax(0,420px)] lg:gap-16">
+        <div>
+          <p class="font-display text-xl font-bold text-gold-text">{d.category}</p>
+          <h1 class="display-xl mt-1">{d.title}</h1>
+          {d.subtitle && <p class="mt-3 font-display text-2xl leading-snug text-ink-soft italic">{d.subtitle}</p>}
+          <Divider class="mt-6" />
+          {d.summary && <p class="mt-6 max-w-[40rem] text-lg leading-relaxed text-ink-soft">{d.summary}</p>}
+
+          {
+            rows.length > 0 && (
+              <dl class="mt-8 divide-y divide-border rounded-card border border-gold/70 border-t-4 border-t-gold bg-surface px-6">
+                {rows.map((r) => (
+                  <div class="grid grid-cols-[1.75rem_6rem_1fr] items-start gap-2 py-4 sm:grid-cols-[1.75rem_7rem_1fr]">
+                    <Icon name={r.icon} class="mt-0.5 size-5 text-gold-text" />
+                    <dt class="font-semibold text-ink">{r.label}</dt>
+                    <dd class="text-ink-soft">{r.value}</dd>
+                  </div>
+                ))}
+              </dl>
+            )
+          }
+
+          {
+            isOpen && (
+              <div class="mt-8 flex flex-wrap items-center gap-4">
+                <a href={d.registerUrl} class="btn btn-primary px-8 text-base" target="_blank" rel="noopener">
+                  Register Now <Icon name="external" class="size-4" />
+                </a>
+                <a href="/financial-aid/" class="text-[15px] text-ink-soft underline decoration-gold underline-offset-4 hover:text-raspberry">
+                  Need financial aid?
+                </a>
+              </div>
+            )
+          }
+        </div>
+
+        <figure class="lg:pt-2">
+          <a
+            href={fullFlyer.src}
+            data-lightbox="flyer"
+            data-title={d.title}
+            data-alt={`Flyer for ${d.title}`}
+            class="group relative block overflow-hidden rounded-sm shadow-card"
+          >
+            <Image
+              src={d.flyer}
+              alt={`Flyer for ${d.title}`}
+              widths={[420, 640, 840]}
+              sizes="(min-width: 1024px) 420px, 100vw"
+              class="w-full"
+              loading="eager"
+            />
+            <span class="absolute right-3 bottom-3 flex items-center gap-1.5 rounded-full bg-surface/95 px-3 py-1.5 text-sm font-medium text-ink shadow-card">
+              <Icon name="zoom-in" class="size-4" /> View flyer
+            </span>
+          </a>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  {
+    course.body?.trim() && (
+      <section class="border-t border-border bg-surface py-14 md:py-16">
+        <div class="container-page">
+          <div class="mx-auto max-w-[46rem]">
+            <h2 class="display-md">Course Details</h2>
+            <Divider class="mt-4" />
+            <div class="prose-sabeel mt-8 text-[17px] leading-[1.8]">
+              <Content />
+            </div>
+            {isOpen && (
+              <div class="mt-12 flex flex-col gap-5 rounded-card bg-sage-mist p-7 sm:flex-row sm:items-center sm:justify-between">
+                <div>
+                  <p class="font-display text-2xl font-bold text-raspberry">Ready to join?</p>
+                  <p class="text-ink-soft">Registration takes a couple of minutes.</p>
+                </div>
+                <a href={d.registerUrl} class="btn btn-primary shrink-0 px-8 text-base" target="_blank" rel="noopener">
+                  Register Now <Icon name="external" class="size-4" />
+                </a>
+              </div>
+            )}
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  {
+    others.length > 0 && (
+      <section class="py-14 md:py-16" aria-labelledby="more-heading">
+        <div class="container-page">
+          <h2 id="more-heading" class="heading-sans">You May Also Like</h2>
+          <Divider class="mt-4" />
+          <ul class="mt-10 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+            {others.map((c) => (
+              <li>
+                <CourseCard course={c} />
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+    )
+  }
+
+  <Lightbox />
+</BaseLayout>

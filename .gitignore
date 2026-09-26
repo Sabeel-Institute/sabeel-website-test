@@ -1,7 +1,6 @@
 node_modules/
 dist/
-.DS_Store/
-scraped_data/
+.astro/
 .firebase/
-vite.log
+.DS_Store
 *.log
