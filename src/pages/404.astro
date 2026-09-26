@@ -1,0 +1,22 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Divider from '../components/Divider.astro';
+---
+
+<BaseLayout title="Page not found" hideNewsletter>
+  <section class="py-20 md:py-28">
+    <div class="container-page max-w-[40rem] text-center">
+      <p class="eyebrow">Page not found</p>
+      <h1 class="display-xl mt-3">This path leads elsewhere.</h1>
+      <Divider align="center" class="mt-5" />
+      <p class="mt-6 text-lg text-ink-soft">
+        The page you are looking for may have moved. Try one of these instead.
+      </p>
+      <div class="mt-8 flex flex-wrap justify-center gap-3">
+        <a href="/" class="btn btn-primary px-7">Home</a>
+        <a href="/courses/" class="btn btn-outline px-7">Courses</a>
+        <a href="/contact/" class="btn btn-outline px-7">Contact</a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

@@ -1,0 +1,23 @@
+---
+/** Gold hairline with a centred diamond, used under eyebrows and headings. */
+interface Props {
+  align?: 'start' | 'center';
+  width?: 'sm' | 'md';
+  class?: string;
+}
+const { align = 'start', width = 'md', class: className = '' } = Astro.props;
+---
+
+<span
+  aria-hidden="true"
+  class:list={[
+    'flex items-center',
+    width === 'sm' ? 'w-[100px]' : 'w-[150px]',
+    align === 'center' && 'mx-auto',
+    className,
+  ]}
+>
+  <span class="h-px flex-1 bg-gold"></span>
+  <span class="mx-[-1px] size-[9px] rotate-45 bg-gold"></span>
+  <span class="h-px flex-1 bg-gold"></span>
+</span>

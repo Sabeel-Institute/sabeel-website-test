@@ -1,0 +1,167 @@
+@import 'tailwindcss';
+@import '@fontsource/cormorant-garamond/500.css';
+@import '@fontsource/cormorant-garamond/600.css';
+@import '@fontsource/cormorant-garamond/700.css';
+@import '@fontsource/cormorant-garamond/500-italic.css';
+@import '@fontsource-variable/inter';
+@import '@fontsource-variable/dm-sans';
+
+/*
+ * Design tokens. Values follow the Sabeel brand palette ("Option 1"): ivory and
+ * sage carry the page, raspberry marks what people act on, gold is decoration.
+ * Gold and taupe fail contrast as text, so text uses the deepened cuts below.
+ * Components use these role names only; no raw hex values outside this block.
+ */
+@theme {
+  --color-*: initial;
+  --color-white: #ffffff;
+  --color-transparent: transparent;
+  --color-current: currentColor;
+
+  --color-canvas: #f6ebdd;
+  --color-surface: #fbf6f0;
+  --color-inset: #e7ddd0;
+  --color-sage: #a8b89a;
+  --color-sage-wash: color-mix(in oklab, #a8b89a 50%, #f6ebdd);
+  --color-sage-mist: color-mix(in oklab, #a8b89a 26%, #f6ebdd);
+  --color-accent-soft: #e6ccc9;
+
+  --color-ink: #3a2f28;
+  --color-ink-soft: #6a5748;
+  --color-muted: #a58d7a;
+
+  --color-raspberry: #83114f;
+  --color-raspberry-deep: #660d3e;
+  --color-on-raspberry: #f9f2e9;
+
+  --color-gold: #c6a15b;
+  --color-gold-text: #795e2a;
+  --color-border: #dfd1c1;
+  --color-border-strong: #c9b7a7;
+  --color-success: #4e7a43;
+
+  --font-display: 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
+  --font-sans: 'Inter Variable', 'Inter', system-ui, sans-serif;
+  --font-label: 'DM Sans Variable', 'DM Sans', system-ui, sans-serif;
+
+  --radius-card: 10px;
+  --shadow-card: 0 1px 2px rgb(58 47 40 / 0.06), 0 8px 24px -12px rgb(58 47 40 / 0.18);
+}
+
+@layer base {
+  html {
+    color-scheme: light;
+    font-variant-numeric: lining-nums;
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+  body {
+    @apply bg-canvas font-sans text-ink antialiased;
+    font-size: 17px;
+    line-height: 1.7;
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-raspberry);
+    outline-offset: 3px;
+  }
+  ::selection {
+    background: var(--color-accent-soft);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    *,
+    *::before,
+    *::after {
+      transition-duration: 0.01ms !important;
+      animation-duration: 0.01ms !important;
+    }
+  }
+}
+
+@layer components {
+  .container-page {
+    @apply mx-auto w-full max-w-[1320px] px-4 sm:px-6 lg:px-12;
+  }
+
+  /* Small uppercase label above headings. */
+  .eyebrow {
+    @apply font-label text-[15px] font-bold tracking-[0.04em] text-gold-text uppercase sm:text-base;
+  }
+
+  .display-xl {
+    @apply font-display text-[2.6rem] leading-[1.05] font-bold text-raspberry sm:text-[3.25rem] lg:text-[3.6rem];
+  }
+  .display-lg {
+    @apply font-display text-[2.2rem] leading-[1.1] font-bold text-raspberry sm:text-5xl;
+  }
+  .display-md {
+    @apply font-display text-[1.9rem] leading-tight font-bold text-raspberry;
+  }
+  .heading-sans {
+    @apply font-sans text-[1.75rem] leading-tight font-semibold text-raspberry sm:text-[2rem];
+  }
+
+  .btn {
+    @apply inline-flex min-h-11 items-center justify-center gap-2 rounded-lg px-6 py-3 text-[15px] leading-none font-medium transition-colors duration-200;
+  }
+  /* Use together with .btn: class="btn btn-primary". */
+  .btn-primary {
+    @apply bg-raspberry text-on-raspberry shadow-card hover:bg-raspberry-deep;
+  }
+  .btn-outline {
+    @apply border border-raspberry/60 bg-transparent text-raspberry hover:bg-raspberry hover:text-on-raspberry;
+  }
+
+  .link-arrow {
+    @apply inline-flex items-center gap-2 font-medium text-raspberry transition-[gap] duration-200 hover:gap-3;
+  }
+
+  /* Long-form text from Markdown (course details, bios, posts). */
+  .prose-sabeel {
+    @apply text-ink;
+    & > * + * {
+      margin-top: 1em;
+    }
+    & h2 {
+      @apply mt-10 font-display text-3xl font-bold text-raspberry;
+    }
+    & h3 {
+      @apply mt-8 font-sans text-xl font-semibold text-raspberry;
+    }
+    & h4 {
+      @apply mt-6 font-sans text-base font-semibold text-ink;
+    }
+    & h2 + *,
+    & h3 + *,
+    & h4 + * {
+      margin-top: 0.5em;
+    }
+    & a {
+      @apply text-raspberry underline decoration-gold decoration-2 underline-offset-4 hover:decoration-raspberry;
+    }
+    & strong {
+      @apply font-semibold text-ink;
+    }
+    & ul {
+      @apply list-none space-y-2 pl-0;
+    }
+    & ul > li {
+      @apply relative pl-6;
+    }
+    & ul > li::before {
+      content: '';
+      @apply absolute top-[0.7em] left-1 size-1.5 rotate-45 bg-gold;
+    }
+    & ol {
+      @apply list-decimal space-y-2 pl-6 marker:font-semibold marker:text-gold-text;
+    }
+    & blockquote {
+      @apply border-l-2 border-gold pl-5 font-display text-2xl leading-snug text-raspberry italic;
+    }
+    & hr {
+      @apply my-10 border-border;
+    }
+  }
+}

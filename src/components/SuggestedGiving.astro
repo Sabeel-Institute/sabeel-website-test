@@ -1,0 +1,28 @@
+---
+/** Suggested monthly giving levels, shared by the About and Donate pages. */
+const givingLevels = [
+  { amount: '$50', period: '/month', label: 'Individual', note: 'Supports all our programs' },
+  { amount: '$100', period: '/month', label: 'Family', note: 'Supports all our programs' },
+  { amount: '$35', period: '/month', label: 'Single program', note: 'Supports one program' },
+] as const;
+
+interface Props {
+  class?: string;
+}
+const { class: className = '' } = Astro.props;
+---
+
+<ul class:list={['grid gap-3 sm:grid-cols-3', className]}>
+  {
+    givingLevels.map((level) => (
+      <li class="rounded-lg border border-gold bg-surface px-4 py-4 text-center">
+        <p class="font-display text-3xl font-bold text-raspberry">
+          {level.amount}
+          <span class="font-sans text-base font-normal text-ink-soft">{level.period}</span>
+        </p>
+        <p class="mt-1 font-semibold text-ink">{level.label}</p>
+        <p class="text-sm text-ink-soft">{level.note}</p>
+      </li>
+    ))
+  }
+</ul>

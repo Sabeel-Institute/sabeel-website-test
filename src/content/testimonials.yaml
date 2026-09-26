@@ -1,0 +1,25 @@
+# Student and parent testimonials. `id` must be unique; entries show in this order.
+- id: certification-emerging-into-light
+  program: Certification Program
+  quote: Joining the institute felt like emerging from darkness into the light (InshaAllah)… It’s as if Allah lifted the veil from my heart that had once felt overpowering.
+- id: certification-reading-quran
+  program: Certification Program
+  quote: Reading the Quran became so much more enjoyable and rewarding! My life has changed.
+- id: certification-language-of-quran
+  program: Certification Program
+  quote: Understanding the language of the Quran has opened new doors for me… The environment fosters a sense of community and suhbah that is spiritually uplifting.
+- id: certification-forever-grateful
+  program: Certification Program
+  quote: I am forever grateful for the transformative impact it has had on my life… The courses have empowered me with a solid foundation… guiding my children. The exceptional teachers… have made learning a joy.
+- id: why-islam-is-true
+  program: Why Islam Is True Course
+  quote: The course beautifully integrates scientific arguments that establish the existence of God… It is invaluable for parents and young adults navigating challenges to religious belief in the modern world.
+- id: girls-summer-garden
+  program: Girls – Summer Garden
+  quote: My girls really enjoyed it and had something special to come home and share with me daily… they were both very sad when the class ended… please, please, please keep on doing more. Please let the teachers know how hard they worked and left memories in the girls’ hearts.
+- id: boys-summer-camp-futuwwah
+  program: Boys – Summer Camp Futuwwah
+  quote: My son has benefited immensely… he has acquired valuable knowledge and skills… The program has provided him with the opportunity to forge meaningful friendships.
+- id: kids-islam-is-outta-this-world
+  program: Kids – Islam Is Outta This World
+  quote: Despite it being 1 AM here, my son was fully engaged and excited to share everything he had learnt. He was talking about Allah swt, the creation of the earth, and the pen… truly heartwarming.

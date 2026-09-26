@@ -1,0 +1,76 @@
+---
+import { Image } from 'astro:assets';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import Divider from '../components/Divider.astro';
+import Icon from '../components/Icon.astro';
+import SuggestedGiving from '../components/SuggestedGiving.astro';
+import sprigInk from '../assets/decor/sprig-ink.png';
+import { site } from '../site.config';
+---
+
+<BaseLayout
+  title="Donate"
+  description="Support Sabeel Institute's Islamic education for women and children in Houston. Donations are tax-deductible."
+>
+  <PageHero title="Donate">
+    <p>
+      Your support helps us provide life-changing Islamic education, create meaningful programs, and build a
+      stronger community of knowledgeable, confident, and compassionate women.
+    </p>
+  </PageHero>
+
+  <section class="relative overflow-hidden bg-sage-wash py-14 md:py-16" aria-labelledby="impact-heading">
+    <Image
+      src={sprigInk}
+      alt=""
+      width={220}
+      class="pointer-events-none absolute right-0 bottom-10 hidden w-[160px] opacity-60 xl:block"
+    />
+    <div class="container-page grid gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,34rem)] lg:gap-14">
+      <div>
+        <h2 id="impact-heading" class="display-lg uppercase">Make an Impact</h2>
+        <Divider class="mt-4" />
+        <div class="mt-6 space-y-4 text-[17px] leading-[1.8] text-ink">
+          <p>
+            <strong class="font-semibold">Fundraising goal:</strong> to rent a dedicated space for Sabeel Institute to
+            expand in-person and online Islamic education for women and children.
+          </p>
+          <p>
+            Please enroll in a monthly donation level of your choosing based on the suggested ranges below, or
+            whatever you are able to give.
+          </p>
+        </div>
+        <SuggestedGiving class="mt-7" />
+        <dl class="mt-8">
+          <div class="rounded-card bg-surface p-5">
+            <dt class="text-sm font-bold tracking-wide text-gold-text uppercase">Tax-deductible</dt>
+            <dd class="mt-1 text-ink">Our tax ID is <span class="font-semibold">{site.taxId}</span>.</dd>
+          </div>
+        </dl>
+      </div>
+
+      <div id="give" class="scroll-mt-6 lg:pt-2">
+        <div class="rounded-card border border-gold/70 border-t-4 border-t-gold bg-surface p-7 text-center shadow-card sm:p-10">
+          <span class="mx-auto flex size-16 items-center justify-center rounded-full bg-canvas text-gold-text">
+            <Icon name="hand-heart" class="size-8" />
+          </span>
+          <h2 class="mt-5 font-display text-3xl font-bold text-raspberry">Give Online</h2>
+          <p class="mt-3 text-ink-soft">
+            Give securely online — one time, monthly, or yearly.
+          </p>
+          <a href={site.donationFormUrl} class="btn btn-primary mt-7 w-full py-4 text-lg" target="_blank" rel="noopener">
+            Donate Securely <Icon name="external" class="size-5" />
+          </a>
+          <p class="mt-4 flex items-center justify-center gap-2 text-sm text-ink-soft">
+            <Icon name="lock" class="size-4 text-success" /> 100% secure donation
+          </p>
+          <div class="mt-7 border-t border-border pt-6 text-[15px] text-ink-soft">
+            Prefer Zelle? Send to{' '}
+            <a href={`mailto:${site.zelle}`} class="font-semibold text-raspberry underline decoration-gold underline-offset-4">{site.zelle}</a>.
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
