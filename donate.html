@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Support & Donate - Sabeel Institute Houston</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./src/style.css" />
+</head>
+<body class="bg-[#FAF6F0] text-[#1F1F1F] font-sans antialiased flex flex-col min-h-screen">
+  <div id="site-header"></div>
+
+  <main class="flex-grow">
+    <!-- Hero Banner -->
+    <section class="relative bg-gradient-to-b from-[#711F35] to-[#581829] text-white py-20 overflow-hidden">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
+        <span class="inline-block px-4 py-1.5 rounded-full bg-[#D39E57]/20 text-[#D39E57] text-xs font-semibold tracking-wider uppercase mb-4">Invest in Sacred Learning</span>
+        <h1 class="font-serif text-4xl sm:text-5xl lg:text-6xl font-bold mb-6">Support Sabeel Institute</h1>
+        <p class="text-xl max-w-2xl mx-auto text-[#FAF6F0]/90 font-light leading-relaxed">
+          Your support directly empowers women's Islamic education, funds student scholarships, and sustains community suhbah in Houston.
+        </p>
+      </div>
+    </section>
+
+    <!-- Donation Section -->
+    <section class="py-16 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="bg-white rounded-3xl p-8 sm:p-12 border border-[#E8DFC8] shadow-sm grid grid-cols-1 md:grid-cols-2 gap-12">
+        <div>
+          <h2 class="font-serif text-3xl font-bold text-[#711F35] mb-4">Make a Impact Today</h2>
+          <p class="text-gray-600 text-sm mb-6 leading-relaxed">
+            Sabeel Institute is a non-profit educational initiative. Every donation goes directly toward facility maintenance, course subsidies, student financial aid, and scholar honorariums.
+          </p>
+          <div class="space-y-4">
+            <div class="p-4 bg-[#FAF6F0] rounded-xl border border-[#E8DFC8]">
+              <h4 class="font-bold text-[#711F35] text-sm">Sadaqah Jariyah Fund</h4>
+              <p class="text-xs text-gray-600">Sustain ongoing classes and community programming.</p>
+            </div>
+            <div class="p-4 bg-[#FAF6F0] rounded-xl border border-[#E8DFC8]">
+              <h4 class="font-bold text-[#711F35] text-sm">Hikam Student Scholarship</h4>
+              <p class="text-xs text-gray-600">Provide full or partial tuition for deserving seekers of knowledge.</p>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <form class="space-y-6" onsubmit="event.preventDefault(); alert('Thank you for your generous contribution interest!');">
+            <div>
+              <label class="block text-sm font-semibold text-gray-700 mb-2">Select Gift Amount</label>
+              <div class="grid grid-cols-3 gap-3">
+                <button type="button" class="py-2.5 border border-[#711F35] text-[#711F35] rounded-xl font-bold focus:bg-[#711F35] focus:text-white">$50</button>
+                <button type="button" class="py-2.5 border border-[#711F35] text-[#711F35] rounded-xl font-bold focus:bg-[#711F35] focus:text-white">$100</button>
+                <button type="button" class="py-2.5 border border-[#711F35] text-[#711F35] rounded-xl font-bold focus:bg-[#711F35] focus:text-white">$250</button>
+              </div>
+            </div>
+            <div>
+              <label class="block text-sm font-semibold text-gray-700 mb-1">Custom Amount ($)</label>
+              <input type="number" placeholder="Enter amount" class="w-full p-3 rounded-xl border border-[#E8DFC8] focus:ring-[#711F35] focus:border-[#711F35]" />
+            </div>
+            <div>
+              <label class="block text-sm font-semibold text-gray-700 mb-1">Full Name</label>
+              <input type="text" required placeholder="Jane Doe" class="w-full p-3 rounded-xl border border-[#E8DFC8] focus:ring-[#711F35] focus:border-[#711F35]" />
+            </div>
+            <div>
+              <label class="block text-sm font-semibold text-gray-700 mb-1">Email Address</label>
+              <input type="email" required placeholder="jane@example.com" class="w-full p-3 rounded-xl border border-[#E8DFC8] focus:ring-[#711F35] focus:border-[#711F35]" />
+            </div>
+            <button type="submit" class="w-full py-3.5 bg-[#711F35] text-white font-bold rounded-xl hover:bg-[#581829] transition-colors">
+              Proceed to Secure Donation
+            </button>
+          </form>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div id="site-footer"></div>
+  <script type="module" src="./src/main.js"></script>
+</body>
+</html>

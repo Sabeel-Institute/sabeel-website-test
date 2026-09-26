@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Current & Upcoming Courses - Sabeel Institute Houston</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./src/style.css" />
+</head>
+<body class="bg-[#FAF6F0] text-[#1F1F1F] font-sans antialiased selection:bg-[#711F35] selection:text-white flex flex-col min-h-screen">
+  <div id="site-header"></div>
+
+  <main class="flex-grow">
+    <!-- Hero Banner -->
+    <section class="relative bg-gradient-to-b from-[#711F35] to-[#581829] text-white py-20 overflow-hidden">
+      <div class="absolute inset-0 opacity-10 bg-[radial-gradient(#D39E57_1px,transparent_1px)] [background-size:16px_16px]"></div>
+      <div class="max-w-7xl mx-mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
+        <span class="inline-block px-4 py-1.5 rounded-full bg-[#D39E57]/20 text-[#D39E57] text-xs font-semibold tracking-wider uppercase mb-4">Educational Offerings</span>
+        <h1 class="font-serif text-4xl sm:text-5xl lg:text-6xl font-bold mb-6">Current & Upcoming Courses</h1>
+        <p class="text-xl max-w-2xl mx-auto text-[#FAF6F0]/90 font-light leading-relaxed">
+          Explore our structured in-person programs and short courses designed for women seeking traditional Islamic knowledge in Houston.
+        </p>
+      </div>
+    </section>
+
+    <!-- Filter & Course Grid -->
+    <section class="py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex flex-wrap items-center justify-between gap-4 mb-12 border-b border-[#E8DFC8] pb-6">
+        <div>
+          <h2 class="font-serif text-2xl font-bold text-[#711F35]">Spring & Summer 2025 Schedule</h2>
+          <p class="text-sm text-gray-600 mt-1">All courses are taught in-person in Houston with option for recording access where specified.</p>
+        </div>
+        <div class="flex items-center space-x-2">
+          <span class="text-xs font-semibold uppercase text-gray-500">Filter by category:</span>
+          <select id="course-filter" class="bg-white border border-[#E8DFC8] text-sm rounded-lg p-2.5 focus:ring-[#711F35] focus:border-[#711F35]">
+            <option value="all">All Programs</option>
+            <option value="seminary">Hikam Seminary</option>
+            <option value="short">Short Courses & Intensive</option>
+            <option value="gatherings">Gatherings & Suhbah</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <!-- Course Card 1 -->
+        <div class="bg-white rounded-2xl shadow-sm border border-[#E8DFC8] overflow-hidden flex flex-col transition-all hover:shadow-md hover:-translate-y-1">
+          <div class="h-48 bg-[#711F35]/10 relative p-6 flex flex-col justify-between">
+            <span class="self-start px-3 py-1 bg-[#711F35] text-white text-xs font-semibold rounded-full">Intensive Course</span>
+            <div class="font-serif text-3xl text-[#711F35] font-bold">Fiqh of Purification</div>
+          </div>
+          <div class="p-6 flex-grow flex flex-col justify-between">
+            <div>
+              <div class="text-xs text-[#D39E57] font-semibold tracking-wider uppercase mb-2">Islamic Law / Fiqh</div>
+              <h3 class="font-serif text-xl font-bold text-gray-900 mb-3">Foundational Taharah & Salah for Women</h3>
+              <p class="text-sm text-gray-600 mb-6 line-clamp-3">
+                A thorough study of sacred purification rules, menstrual health rulings, prayer essentials, and practical jurisprudence tailored for modern Muslim women.
+              </p>
+            </div>
+            <div class="border-t border-gray-100 pt-4 space-y-2 text-xs text-gray-600 mb-6">
+              <div class="flex items-center justify-between">
+                <span><strong>Instructor:</strong> Ustadha Farhana</span>
+                <span><strong>Duration:</strong> 6 Weeks</span>
+              </div>
+              <div class="flex items-center justify-between">
+                <span><strong>Schedule:</strong> Tuesdays 7:00 PM</span>
+                <span><strong>Location:</strong> Houston Center</span>
+              </div>
+            </div>
+            <a href="contact.html" class="w-full inline-flex justify-center items-center px-4 py-2.5 rounded-lg bg-[#711F35] text-white font-medium hover:bg-[#581829] transition-colors">
+              Register Now
+            </a>
+          </div>
+        </div>
+
+        <!-- Course Card 2 -->
+        <div class="bg-white rounded-2xl shadow-sm border border-[#E8DFC8] overflow-hidden flex flex-col transition-all hover:shadow-md hover:-translate-y-1">
+          <div class="h-48 bg-[#C2D2BD]/20 relative p-6 flex flex-col justify-between">
+            <span class="self-start px-3 py-1 bg-[#2C5E3B] text-white text-xs font-semibold rounded-full">Hikam Seminary</span>
+            <div class="font-serif text-3xl text-[#2C5E3B] font-bold">Quranic Sciences</div>
+          </div>
+          <div class="p-6 flex-grow flex flex-col justify-between">
+            <div>
+              <div class="text-xs text-[#D39E57] font-semibold tracking-wider uppercase mb-2">Tafsir & Tajweed</div>
+              <h3 class="font-serif text-xl font-bold text-gray-900 mb-3">Surah Al-Kahf: Contemplation & Guidance</h3>
+              <p class="text-sm text-gray-600 mb-6 line-clamp-3">
+                Deep dive into the thematic structure, spiritual allegories, and contemporary lessons of Surah Al-Kahf with verse-by-verse analytical tafsir.
+              </p>
+            </div>
+            <div class="border-t border-gray-100 pt-4 space-y-2 text-xs text-gray-600 mb-6">
+              <div class="flex items-center justify-between">
+                <span><strong>Instructor:</strong> Dr. Maryam Ahmed</span>
+                <span><strong>Duration:</strong> 10 Weeks</span>
+              </div>
+              <div class="flex items-center justify-between">
+                <span><strong>Schedule:</strong> Sundays 10:00 AM</span>
+                <span><strong>Location:</strong> Hybrid / Live Stream</span>
+              </div>
+            </div>
+            <a href="contact.html" class="w-full inline-flex justify-center items-center px-4 py-2.5 rounded-lg bg-[#711F35] text-white font-medium hover:bg-[#581829] transition-colors">
+              Register Now
+            </a>
+          </div>
+        </div>
+
+        <!-- Course Card 3 -->
+        <div class="bg-white rounded-2xl shadow-sm border border-[#E8DFC8] overflow-hidden flex flex-col transition-all hover:shadow-md hover:-translate-y-1">
+          <div class="h-48 bg-[#D39E57]/15 relative p-6 flex flex-col justify-between">
+            <span class="self-start px-3 py-1 bg-[#D39E57] text-white text-xs font-semibold rounded-full">Suhbah Gathering</span>
+            <div class="font-serif text-3xl text-[#711F35] font-bold">Heart & Soul</div>
+          </div>
+          <div class="p-6 flex-grow flex flex-col justify-between">
+            <div>
+              <div class="text-xs text-[#D39E57] font-semibold tracking-wider uppercase mb-2">Spiritual Development</div>
+              <h3 class="font-serif text-xl font-bold text-gray-900 mb-3">Reflections on Ibn Ata'illah's Hikam</h3>
+              <p class="text-sm text-gray-600 mb-6 line-clamp-3">
+                Weekly gatherings focusing on the purification of the heart, cultivation of sincere intentions, and practical spirituality through classic wisdom literature.
+              </p>
+            </div>
+            <div class="border-t border-gray-100 pt-4 space-y-2 text-xs text-gray-600 mb-6">
+              <div class="flex items-center justify-between">
+                <span><strong>Instructor:</strong> Sabeel Faculty</span>
+                <span><strong>Duration:</strong> Ongoing</span>
+              </div>
+              <div class="flex items-center justify-between">
+                <span><strong>Schedule:</strong> Bi-Weekly Saturdays</span>
+                <span><strong>Location:</strong> Sabeel Center</span>
+              </div>
+            </div>
+            <a href="contact.html" class="w-full inline-flex justify-center items-center px-4 py-2.5 rounded-lg bg-[#711F35] text-white font-medium hover:bg-[#581829] transition-colors">
+              Join Gathering
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Financial Aid CTA Banner -->
+    <section class="bg-[#FAF6F0] py-12 border-t border-[#E8DFC8]">
+      <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center bg-white p-8 sm:p-12 rounded-3xl border border-[#E8DFC8] shadow-sm">
+        <h2 class="font-serif text-2xl sm:text-3xl font-bold text-[#711F35] mb-4">Financial Need Should Never Be a Barrier to Sacred Knowledge</h2>
+        <p class="text-gray-600 max-w-2xl mx-auto mb-6">
+          Sabeel Institute offers partial and full tuition assistance through our Hikam Scholarship fund for dedicated students.
+        </p>
+        <a href="financial-aid.html" class="inline-flex items-center px-6 py-3 rounded-full bg-[#D39E57] text-white font-semibold hover:bg-[#b88644] transition-colors">
+          Apply for Financial Aid &rarr;
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <div id="site-footer"></div>
+  <script type="module" src="./src/main.js"></script>
+</body>
+</html>
