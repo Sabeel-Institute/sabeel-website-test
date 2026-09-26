@@ -24,11 +24,13 @@ export function renderHeader() {
         <div class="flex justify-between items-center h-20">
 
           <!-- Brand Logo -->
-          <a href="index.html" class="flex items-center gap-3 group">
-            <img src="/images/sabeel-institute-PNG-1.png" alt="Sabeel Institute Logo" class="h-10 w-auto transition transform group-hover:scale-105" onerror="this.onerror=null; this.src='/images/IMG_7959.png'" />
-            <div class="hidden md:block">
-              <span class="block font-serif text-lg font-bold tracking-wider text-sabeel-raspberry uppercase">Sabeel Institute</span>
-              <span class="block text-[10px] text-sabeel-taupe tracking-widest uppercase">Houston, Texas</span>
+          <a href="index.html" class="flex items-center gap-3 group py-1">
+            <div class="p-1.5 rounded-xl flex items-center justify-center bg-white shadow-xs border border-sabeel-raspberry/10">
+              <img src="/images/sabeel-logo.png" alt="Sabeel Institute Logo" class="h-10 sm:h-12 w-auto object-contain transition transform group-hover:scale-105" />
+            </div>
+            <div class="block">
+              <span class="block font-serif text-lg md:text-xl font-bold tracking-wider text-sabeel-raspberry uppercase leading-tight">Sabeel Institute</span>
+              <span class="block text-[10px] text-sabeel-taupe tracking-widest uppercase font-semibold">Houston, Texas</span>
             </div>
           </a>
 
@@ -119,9 +121,11 @@ export function renderFooter() {
           <!-- Col 1: Brand Info -->
           <div class="space-y-4">
             <a href="index.html" class="flex items-center gap-3">
-              <img src="/images/sabeel-institute-PNG-1.png" alt="Sabeel Institute" class="h-10 w-auto" onerror="this.onerror=null; this.src='/images/IMG_7959.png'" />
+              <div class="bg-white p-1.5 rounded-xl border border-sabeel-raspberry/20 flex items-center justify-center shadow-xs">
+                <img src="/images/sabeel-logo.png" alt="Sabeel Institute" class="h-10 w-auto object-contain" />
+              </div>
               <div>
-                <span class="block font-serif text-lg font-bold text-sabeel-raspberry uppercase">Sabeel Institute</span>
+                <span class="block font-serif text-lg font-bold text-sabeel-raspberry uppercase leading-tight">Sabeel Institute</span>
                 <span class="block text-xs text-sabeel-dark/80">Houston, Texas</span>
               </div>
             </a>

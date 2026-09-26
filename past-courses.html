@@ -4,53 +4,150 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Past Courses & Archive - Sabeel Institute Houston</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&display=swap" rel="stylesheet">
-  </head>
-<body class="bg-[#FAF6F0] text-[#1F1F1F] font-sans antialiased flex flex-col min-h-screen">
+  <script type="module" src="/src/main.js"></script>
+</head>
+<body class="bg-sabeel-ivory text-sabeel-dark font-sans antialiased flex flex-col min-h-screen">
   <div id="header-container"></div>
 
   <main class="flex-grow">
     <!-- Hero Banner -->
-    <section class="relative bg-gradient-to-b from-[#711F35] to-[#581829] text-white py-20 overflow-hidden">
+    <section class="relative bg-gradient-to-b from-sabeel-raspberry to-sabeel-raspberry-dark text-white py-20 overflow-hidden">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
-        <span class="inline-block px-4 py-1.5 rounded-full bg-[#D39E57]/20 text-[#D39E57] text-xs font-semibold tracking-wider uppercase mb-4">Course Archive</span>
+        <span class="inline-block px-4 py-1.5 rounded-full bg-sabeel-gold/20 text-sabeel-gold text-xs font-semibold tracking-wider uppercase mb-4 border border-sabeel-gold/30">Course Archive</span>
         <h1 class="font-serif text-4xl sm:text-5xl lg:text-6xl font-bold mb-6">Past Courses & Programs</h1>
-        <p class="text-xl max-w-2xl mx-auto text-[#FAF6F0]/90 font-light leading-relaxed">
-          Browse our catalog of previously offered seminars, seasonal intensives, and foundational modules.
+        <p class="text-lg sm:text-xl max-w-2xl mx-auto text-sabeel-ivory/90 font-light leading-relaxed">
+          Explore our complete archive of seminars, seasonal intensives, and gatherings hosted at Sabeel Institute.
         </p>
       </div>
     </section>
 
-    <!-- Past Courses Grid -->
+    <!-- Filters & Past Course Grid -->
     <section class="py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        <div class="bg-white rounded-2xl border border-[#E8DFC8] p-6 shadow-sm">
-          <span class="text-xs font-semibold text-[#711F35] bg-[#711F35]/10 px-3 py-1 rounded-full">Winter 2024</span>
-          <h3 class="font-serif text-xl font-bold text-gray-900 mt-4 mb-2">The Ethics of Disagreement (Adab al-Ikhtilaf)</h3>
-          <p class="text-sm text-gray-600 mb-4">A study in classic etiquette and tolerance among early Islamic jurists.</p>
-          <span class="text-xs text-gray-500 block">Instructor: Faculty Guest Scholars</span>
+      <div class="flex flex-wrap items-center justify-between gap-4 mb-12 border-b border-sabeel-gold/20 pb-6">
+        <div>
+          <h2 class="font-serif text-2xl font-bold text-sabeel-raspberry">Sabeel Program Archive</h2>
+          <p class="text-xs text-sabeel-taupe mt-1">Click on any flyer image to view full high-resolution details.</p>
         </div>
-
-        <div class="bg-white rounded-2xl border border-[#E8DFC8] p-6 shadow-sm">
-          <span class="text-xs font-semibold text-[#711F35] bg-[#711F35]/10 px-3 py-1 rounded-full">Fall 2023</span>
-          <h3 class="font-serif text-xl font-bold text-gray-900 mt-4 mb-2">Seerah: Lessons in Patience & Character</h3>
-          <p class="text-sm text-gray-600 mb-4">In-depth study of the Meccan period and personal transformation.</p>
-          <span class="text-xs text-gray-500 block">Instructor: Ustadha Farhana</span>
-        </div>
-
-        <div class="bg-white rounded-2xl border border-[#E8DFC8] p-6 shadow-sm">
-          <span class="text-xs font-semibold text-[#711F35] bg-[#711F35]/10 px-3 py-1 rounded-full">Summer 2023</span>
-          <h3 class="font-serif text-xl font-bold text-gray-900 mt-4 mb-2">Tajweed Fundamentals for Women</h3>
-          <p class="text-sm text-gray-600 mb-4">Practical recitation workshop and correction of common pronunciation errors.</p>
-          <span class="text-xs text-gray-500 block">Instructor: Qariyah Faculty</span>
+        <div class="flex items-center space-x-2">
+          <button id="btn-all" class="filter-tab px-4 py-2 rounded-full text-xs font-semibold bg-sabeel-raspberry text-white transition">All Archives</button>
+          <button id="btn-adult" class="filter-tab px-4 py-2 rounded-full text-xs font-semibold bg-white text-sabeel-dark border border-sabeel-gold/30 hover:bg-sabeel-ivory transition">Adult Programs</button>
+          <button id="btn-youth" class="filter-tab px-4 py-2 rounded-full text-xs font-semibold bg-white text-sabeel-dark border border-sabeel-gold/30 hover:bg-sabeel-ivory transition">Youth/Kids Programs</button>
         </div>
       </div>
+
+      <!-- Past Courses Grid -->
+      <div id="past-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        <!-- Dynamic rendering -->
+      </div>
     </section>
+
+    <!-- Lightbox Modal -->
+    <div id="lightbox-modal" class="fixed inset-0 bg-sabeel-dark/90 backdrop-blur-xs z-50 hidden flex items-center justify-center p-4 transition-opacity duration-300">
+      <div class="relative max-w-3xl w-full bg-white rounded-3xl p-4 sm:p-6 overflow-hidden shadow-2xl border border-sabeel-gold/30 flex flex-col items-center max-h-[90vh]">
+        <button id="lightbox-close" class="absolute top-4 right-4 bg-sabeel-ivory text-sabeel-raspberry hover:bg-sabeel-raspberry hover:text-white p-2 rounded-full text-sm font-bold transition">
+          ✕
+        </button>
+        <div class="overflow-y-auto max-h-[75vh] w-full flex justify-center p-2">
+          <img id="lightbox-img" src="" alt="Past Flyer" class="max-h-[70vh] w-auto object-contain rounded-xl" />
+        </div>
+        <h3 id="lightbox-title" class="font-serif text-lg font-bold text-sabeel-raspberry mt-4 text-center"></h3>
+      </div>
+    </div>
+
   </main>
 
   <div id="footer-container"></div>
-  <script type="module" src="./src/main.js"></script>
+
+  <script type="module">
+    import pastData from '/src/past_courses_data.json';
+
+    let currentFilter = 'all';
+
+    function renderPastGrid() {
+      const grid = document.getElementById('past-grid');
+      if (!grid) return;
+
+      const filtered = pastData.filter(item => {
+        if (currentFilter === 'all') return true;
+        if (currentFilter === 'adult') return item.category === 'Adult Programs';
+        if (currentFilter === 'youth') return item.category === 'Youth/Kids Programs';
+        return true;
+      });
+
+      grid.innerHTML = filtered.map(item => `
+        <div class="past-card bg-white rounded-2xl border border-sabeel-gold/20 overflow-hidden shadow-xs hover:shadow-md transition-all duration-300 cursor-pointer flex flex-col group" data-img="${item.image}" data-title="${item.title}">
+          <div class="h-64 bg-sabeel-sage-light/30 relative p-3 flex items-center justify-center overflow-hidden">
+            <img src="${item.image}" alt="${item.title}" class="h-full w-full object-cover rounded-xl transition-transform duration-300 group-hover:scale-105" onerror="this.onerror=null; this.src='/images/sabeel-institute-PNG-1.png'" />
+            <span class="absolute top-2 left-2 bg-sabeel-raspberry text-white text-[9px] uppercase font-bold px-2.5 py-0.5 rounded-full shadow-xs">
+              ${item.category}
+            </span>
+          </div>
+          <div class="p-4 flex-grow flex flex-col justify-between">
+            <h3 class="font-serif text-sm font-bold text-sabeel-raspberry line-clamp-2">${item.title}</h3>
+            <span class="text-[11px] text-sabeel-gold font-semibold mt-2 inline-flex items-center gap-1">
+              View Flyer &rarr;
+            </span>
+          </div>
+        </div>
+      `).join('');
+
+      // Add click handlers for lightbox
+      document.querySelectorAll('.past-card').forEach(card => {
+        card.addEventListener('click', () => {
+          const imgUrl = card.getAttribute('data-img');
+          const title = card.getAttribute('data-title');
+          openLightbox(imgUrl, title);
+        });
+      });
+    }
+
+    function openLightbox(imgUrl, title) {
+      const modal = document.getElementById('lightbox-modal');
+      const img = document.getElementById('lightbox-img');
+      const titleElem = document.getElementById('lightbox-title');
+      if (modal && img && titleElem) {
+        img.src = imgUrl;
+        titleElem.textContent = title;
+        modal.classList.remove('hidden');
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      renderPastGrid();
+
+      const modal = document.getElementById('lightbox-modal');
+      const closeBtn = document.getElementById('lightbox-close');
+      if (closeBtn && modal) {
+        closeBtn.addEventListener('click', () => modal.classList.add('hidden'));
+        modal.addEventListener('click', (e) => {
+          if (e.target === modal) modal.classList.add('hidden');
+        });
+      }
+
+      // Tab Buttons
+      const btnAll = document.getElementById('btn-all');
+      const btnAdult = document.getElementById('btn-adult');
+      const btnYouth = document.getElementById('btn-youth');
+
+      const tabs = [
+        { btn: btnAll, filter: 'all' },
+        { btn: btnAdult, filter: 'adult' },
+        { btn: btnYouth, filter: 'youth' }
+      ];
+
+      tabs.forEach(({ btn, filter }) => {
+        if (!btn) return;
+        btn.addEventListener('click', () => {
+          currentFilter = filter;
+          tabs.forEach(t => {
+            t.btn.className = t.filter === filter
+              ? 'filter-tab px-4 py-2 rounded-full text-xs font-semibold bg-sabeel-raspberry text-white transition'
+              : 'filter-tab px-4 py-2 rounded-full text-xs font-semibold bg-white text-sabeel-dark border border-sabeel-gold/30 hover:bg-sabeel-ivory transition';
+          });
+          renderPastGrid();
+        });
+      });
+    });
+  </script>
 </body>
 </html>

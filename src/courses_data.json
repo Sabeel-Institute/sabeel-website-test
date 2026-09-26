@@ -1,0 +1,86 @@
+[
+  {
+    "id": "anchored-hearts",
+    "title": "Anchored Hearts Sister's Circle",
+    "category": "Monthly Gathering",
+    "schedule": "First Friday of the Month @ 7:00 PM",
+    "instructor": "Sabeel Instructors",
+    "image": "/images/sabeel-institute-PNG-1.png",
+    "fee": "Free (Registration Required)",
+    "venue": "Sabeel Institute Houston",
+    "description": "A monthly space for sisters to connect, reflect upon spiritual reminders, and foster sisterhood in a warm, welcoming environment.",
+    "registrationUrl": "https://docs.google.com/forms/d/e/1FAIpQLSc-course1/viewform"
+  },
+  {
+    "id": "journey-to-excellence",
+    "title": "Journey To Excellence",
+    "category": "Youth & Young Professionals",
+    "schedule": "Saturdays @ 11:00 AM",
+    "instructor": "Ustadha Sameera Shan",
+    "image": "/images/sabeel-institute-PNG-1.png",
+    "fee": "$50 / Month",
+    "venue": "Sabeel Institute Houston",
+    "description": "An empowering study series exploring personal growth, prophetic character, and spiritual excellence for young women navigating modern life.",
+    "registrationUrl": "https://docs.google.com/forms/d/e/1FAIpQLSc-course2/viewform"
+  },
+  {
+    "id": "mommy-burnout",
+    "title": "Mommy Burnout Workshop",
+    "category": "Special Seminar",
+    "schedule": "Bi-weekly Sundays @ 10:30 AM",
+    "instructor": "Guest Scholars & Therapists",
+    "image": "/images/sabeel-institute-PNG-1.png",
+    "fee": "$35 One-time",
+    "venue": "Sabeel Institute Houston & Online",
+    "description": "Practical tools, emotional support, and Islamic spiritual perspective for mothers seeking balance, renewal, and sustainable self-care.",
+    "registrationUrl": "https://docs.google.com/forms/d/e/1FAIpQLSc-course3/viewform"
+  },
+  {
+    "id": "monthly-quran-room",
+    "title": "Monthly Qur\u2019an Room",
+    "category": "Qur\u2019anic Studies",
+    "schedule": "Last Sunday of the Month @ 5:00 PM",
+    "instructor": "Sabeel Qur\u2019an Faculty",
+    "image": "/images/sabeel-institute-PNG-1.png",
+    "fee": "Free",
+    "venue": "Sabeel Institute Houston",
+    "description": "Recitation correction, reflection on selected surahs, and group halaqah dedicated to building a lifelong relationship with the Book of Allah.",
+    "registrationUrl": "https://docs.google.com/forms/d/e/1FAIpQLSc-course4/viewform"
+  },
+  {
+    "id": "quran-immersion",
+    "title": "Quran Immersion Program",
+    "category": "Intensive Study",
+    "schedule": "Tuesdays & Thursdays @ 6:30 PM",
+    "instructor": "Ustadha Sameera Shan & Faculty",
+    "image": "/images/sabeel-institute-PNG-1.png",
+    "fee": "$120 / Semester",
+    "venue": "Sabeel Institute Houston",
+    "description": "Deep dive into Qur\u2019anic Arabic grammar, word-for-word translation, and classical tafsir for women seeking deeper comprehension.",
+    "registrationUrl": "https://docs.google.com/forms/d/e/1FAIpQLSc-course5/viewform"
+  },
+  {
+    "id": "raising-with-purpose",
+    "title": "Raising with Purpose",
+    "category": "Parenting & Family",
+    "schedule": "Wednesdays @ 7:00 PM",
+    "instructor": "Guest Educators & Scholars",
+    "image": "/images/sabeel-institute-PNG-1.png",
+    "fee": "$45 / Month",
+    "venue": "Sabeel Institute Houston",
+    "description": "Nurturing confident, faithful Muslim children in modern times through prophetic parenting principles and practical strategies.",
+    "registrationUrl": "https://docs.google.com/forms/d/e/1FAIpQLSc-course6/viewform"
+  },
+  {
+    "id": "teen-sundays",
+    "title": "Teen Sundays",
+    "category": "Youth Program",
+    "schedule": "Sundays @ 2:00 PM - 4:00 PM",
+    "instructor": "Sabeel Youth Mentors",
+    "image": "/images/sabeel-institute-PNG-1.png",
+    "fee": "$40 / Month",
+    "venue": "Sabeel Institute Houston",
+    "description": "Interactive mentorship, discussions on relevant youth topics, creative activities, and building righteous companionship for teenage girls.",
+    "registrationUrl": "https://docs.google.com/forms/d/e/1FAIpQLSc-course7/viewform"
+  }
+]
