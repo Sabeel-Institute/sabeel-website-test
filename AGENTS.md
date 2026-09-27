@@ -12,16 +12,14 @@ CSS v4; deployed to Firebase Hosting by GitHub Actions. There is no server,
 database, or CMS: every page is generated at build time from files in this
 repository.
 
-Sources of truth:
+The design uses Cormorant Garamond for headings, Inter for body text, and DM
+Sans for small labels; gold diamond dividers; ivory and sage sections; and
+raspberry for headings, links, and buttons. The colours are the Sabeel brand
+palette, defined as tokens in `src/styles/global.css` (see Design rules).
 
-- **Structure and copy:** the organisation's wireframes (Home, Programs,
-  program page, Past Programs, Hikam Foundations, Teachers & Team, About,
-  Support Our Work, Through the Years, Contact).
-- **Look:** the remake at `oursabeel.designrector.com` and the Sabeel brand
-  palette: Cormorant Garamond headings, gold diamond dividers, ivory and sage
-  sections, raspberry for actions.
-- **Facts** (dates, fees, names, links): the organisation. Never invent them.
-  If a fact is unknown, leave the field out and ask.
+Facts on the site (dates, fees, names, links, bios) come from the
+organisation. Never invent them: if a fact is unknown, leave the field out and
+ask.
 
 ## Commands
 
@@ -241,7 +239,8 @@ Pages have named photo slots. Drop a file named after the slot (`.jpg`,
 `.png`, or `.webp`) to fill it; until then the slot shows a geometric panel.
 Find slot names by searching `src/pages` and `src/components` for `slot="` and
 `photo="`. Use only real, approved Sabeel photos. `home-hero` and
-`hikam-hero` currently hold design mock-ups to be replaced.
+`hikam-hero` hold illustrative images, not photos of Sabeel classes; replace
+them with approved photos when available.
 
 ### Site settings (`src/site.config.ts`)
 
@@ -342,8 +341,9 @@ Keep every change easy to review and merge:
 
 1. **Start from the latest `main`** and create a branch for one task.
 2. **One concern per pull request.** Keep a content update separate from a
-   layout change. Several open pull requests often touch the same component
-   (`ProgramCard`, `CurrentPrograms`); small, focused diffs merge cleanly.
+   layout change. Many changes touch the same components (`ProgramCard`,
+   `CurrentPrograms`); small, focused diffs merge cleanly alongside each
+   other.
 3. **Change only what the task needs.** Do not reformat, reorder, or rename
    unrelated code, and do not rewrite whole files to change a few lines.
 4. **Do not commit** screenshots, notes, scratch files, `dist/`,
