@@ -1,6 +1,6 @@
 ---
 name: Sameera Shah
-honorific: Ust.
+honorific: Ustadhah
 group: founder
 order: 10
 role: Founder
