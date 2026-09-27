@@ -8,7 +8,7 @@ date: '2024-01-06'
 dateApprox: true
 audience: Women
 schedule: Jan 6 - Feb 10, Every Saturday, 11 AM - 12:30 PM
-format: On site
+format: On-site
 venue: Masjid Hamza (in-person)
 instructors:
 - sameera-shah

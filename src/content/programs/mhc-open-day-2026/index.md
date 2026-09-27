@@ -8,7 +8,7 @@ date: '2026-04-12'
 dateApprox: true
 audience: Boys
 schedule: Sunday, April 12, 12-1:30 PM
-format: On site
+format: On-site
 venue: Masjid Arafat
 flyer: ./flyer.webp
 ---

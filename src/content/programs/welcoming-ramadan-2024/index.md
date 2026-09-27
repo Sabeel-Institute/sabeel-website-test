@@ -7,7 +7,7 @@ date: '2024-03-02'
 dateApprox: true
 audience: Women
 schedule: Saturday, March 2, 11 AM - 1 PM
-format: On site
+format: On-site
 venue: Maryam Islamic Center, 504 Sartartia Rd, Sugar Land, TX 77479
 instructors:
 - sameera-shah

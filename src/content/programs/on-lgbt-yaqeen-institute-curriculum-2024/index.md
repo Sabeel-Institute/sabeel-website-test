@@ -7,7 +7,7 @@ date: '2024-09-09'
 dateApprox: true
 audience: Boys
 schedule: Sept 9, 11 AM-1 PM
-format: On site
+format: On-site
 venue: Masjid Hamza
 instructors:
 - sameera-shah

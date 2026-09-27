@@ -8,7 +8,7 @@ date: '2022-09-28'
 dateApprox: true
 audience: Women
 schedule: Sep 28 - Nov 16, Wednesdays, 12:00-1:15 PM
-format: Online & on site
+format: Online & on-site
 venue: Maryam Islamic Center, Women's Prayer Hall, and Online via Zoom
 instructors:
 - name: Sr. Selina Ali

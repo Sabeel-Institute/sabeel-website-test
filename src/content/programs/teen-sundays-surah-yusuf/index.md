@@ -7,7 +7,7 @@ area: youth-children
 date: 2026-09-13
 audience: Boys 12–16 · Girls 13+
 schedule: Sundays · 2:15–4:15 PM CT
-format: On site
+format: On-site
 venue: Masjid Istiqlal
 duration: Twice monthly — Sept 13, Sept 27, Oct 11, Oct 25
 fee: $100

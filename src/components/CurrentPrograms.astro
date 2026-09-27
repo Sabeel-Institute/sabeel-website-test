@@ -1,5 +1,5 @@
 ---
-/** Current programs grouped by where they meet: online, on site, or both. */
+/** Current programs grouped by where they meet: online, on-site, or both. */
 import ProgramCard from './ProgramCard.astro';
 import Icon, { type IconName } from './Icon.astro';
 import { PROGRAM_FORMATS } from '../content.config';
@@ -13,8 +13,8 @@ interface Props {
 
 const GROUP: Record<(typeof PROGRAM_FORMATS)[number], { icons: IconName[]; text: string }> = {
   Online: { icons: ['laptop'], text: 'Join live from anywhere.' },
-  'On site': { icons: ['map-pin'], text: 'In person in Houston.' },
-  'Online & on site': { icons: ['map-pin', 'laptop'], text: 'Join in person in Houston or live online.' },
+  'On-site': { icons: ['map-pin'], text: 'In person in Houston.' },
+  'Online & on-site': { icons: ['map-pin', 'laptop'], text: 'Join in person in Houston or live online.' },
 };
 
 const { programs, level: Heading = 'h3' } = Astro.props;

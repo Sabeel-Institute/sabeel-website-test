@@ -7,7 +7,7 @@ area: womens-learning
 date: '2026-09-05'
 audience: Adults
 schedule: Saturday, September 5 · 6:00–8:00 PM
-format: On site
+format: On-site
 venue: Masjid Istiqlal, 15303 Mc Kaskle Rd, Sugar Land, TX 77498
 flyer: ./flyer.webp
 ---

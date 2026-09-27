@@ -8,7 +8,7 @@ date: '2026-06-07'
 dateApprox: true
 audience: Women
 schedule: Sunday, June 7th at 9:30 AM
-format: On site
+format: On-site
 venue: Cullinan Park
 instructors:
 - sameera-shah

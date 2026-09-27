@@ -8,7 +8,7 @@ date: '2024-12-16'
 dateApprox: true
 audience: Girls
 schedule: Saturday, December 16th, 11:00 AM-1:30 PM
-format: On site
+format: On-site
 venue: Maryam Islamic Center, Upstairs Sisters Hall
 instructors:
 - sameera-shah

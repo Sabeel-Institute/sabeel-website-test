@@ -7,7 +7,7 @@ area: womens-learning
 date: '2026-05-05'
 audience: Women
 schedule: Tuesday, May 5th 2026, 5:00 PM-7:00 PM
-format: On site
+format: On-site
 venue: Maryam Islamic Center
 instructors:
 - sameera-shah

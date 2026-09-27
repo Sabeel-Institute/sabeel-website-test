@@ -8,7 +8,7 @@ date: '2026-01-19'
 dateApprox: true
 audience: Women
 schedule: January 19 - February 11; Mondays online 6-7 PM CT; Wednesdays online & in-person at Masjid Istiqlal 12-1 PM CT
-format: Online & on site
+format: Online & on-site
 venue: Online / Masjid Istiqlal
 flyer: ./flyer.webp
 ---

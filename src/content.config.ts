@@ -13,7 +13,7 @@ import { z } from 'astro/zod';
 export const PROGRAM_AREAS = ['hikam-foundations', 'womens-learning', 'youth-children'] as const;
 
 /** Where a program meets. Current programs are grouped by this on Programs and area pages. */
-export const PROGRAM_FORMATS = ['Online', 'On site', 'Online & on site'] as const;
+export const PROGRAM_FORMATS = ['Online', 'On-site', 'Online & on-site'] as const;
 
 /** Route segments under /programs/ that belong to pages, not programs. */
 const RESERVED_SLUGS = new Set(['womens-learning', 'youth-children']);

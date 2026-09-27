@@ -8,7 +8,7 @@ date: '2025-12-29'
 dateApprox: true
 audience: Girls
 schedule: Monday 12/29, 1:00-4:00 PM
-format: On site
+format: On-site
 venue: Private Residence, Richmond, TX
 flyer: ./flyer.webp
 ---
