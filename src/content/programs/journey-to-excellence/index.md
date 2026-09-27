@@ -16,6 +16,8 @@ outcomes:
   - The qualities of a believer — tawbah, shukr, sabr, dhikr, taqwa, and more
   - How these qualities help us grow in faith and character
   - What ihsān means for our relationship with Allah and the way we live
+image: ./image.webp
+imageAlt: Journey to Excellence course banner
 flyer: ./flyer.webp
 ---
 

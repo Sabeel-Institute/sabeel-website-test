@@ -21,6 +21,8 @@ outcomes:
 instructors:
   - sameera-shah
 expect: Meaningful discussion, reflection, snacks, and friendships — twice a month, on-site at Masjid Istiqlal.
+image: ./image.webp
+imageAlt: Teen Sundays Surah Yusuf banner
 flyer: ./flyer.webp
 ---
 

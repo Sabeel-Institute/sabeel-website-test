@@ -20,6 +20,8 @@ instructors:
   - name: Sr. Hira Jeddy
     role: House of Makers · Creative activity
 expect: An optional creative activity, then the halaqa. This month, make your own pearl bracelet and earrings with House of Makers, with snacks and favors — a special Sabeel rate of $15 (regularly $25).
+image: ./image.webp
+imageAlt: Anchored Hearts Sister’s Circle banner
 flyer: ./flyer.webp
 ---
 

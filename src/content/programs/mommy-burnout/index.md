@@ -29,6 +29,8 @@ instructors:
   - name: Sr. Heba (The Marriage Fairy)
     role: Guest speaker · Marriage & relationship coach
 expect: Seven weekly sessions combining Qur’anic guidance, Prophetic wisdom, and practical tools from psychology, in a compassionate space to slow down and reflect. Join in person at Masjid Istiqlal or live on Zoom.
+image: ./image.webp
+imageAlt: Mommy Burnout course banner
 flyer: ./flyer.webp
 ---
 
