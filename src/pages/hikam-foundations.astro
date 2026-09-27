@@ -292,15 +292,17 @@ const faqs = [
   <section class="py-14 md:py-16" aria-labelledby="faq-heading">
     <div class="container-page max-w-[52rem]">
       <SectionHeading title="Frequently asked questions" id="faq-heading" />
-      <div class="mt-8 divide-y divide-border border-y border-border">
+      <div class="mt-8 space-y-3">
         {
           faqs.map((f) => (
-            <details class="group py-2">
-              <summary class="flex min-h-12 cursor-pointer list-none items-center justify-between gap-4 text-lg font-semibold text-ink [&::-webkit-details-marker]:hidden">
-                {f.q}
-                <Icon name="chevron-down" class="size-5 shrink-0 text-gold-text transition-transform group-open:rotate-180" />
+            <details class="group rounded-card border border-border/80 bg-surface px-5 py-1.5 transition-colors duration-200 hover:border-gold hover:bg-sage-wash/30">
+              <summary class="flex min-h-12 cursor-pointer list-none items-center justify-between gap-4 py-2 text-lg font-semibold text-ink transition-colors group-hover:text-raspberry focus-visible:outline-2 focus-visible:outline-gold focus-visible:rounded-sm [&::-webkit-details-marker]:hidden">
+                <span>{f.q}</span>
+                <span class="flex size-8 shrink-0 items-center justify-center rounded-full bg-sage-wash text-gold-text transition-colors duration-200 group-hover:bg-raspberry group-hover:text-on-raspberry group-open:bg-raspberry group-open:text-on-raspberry">
+                  <Icon name="chevron-down" class="size-5 transition-transform duration-200 group-open:rotate-180" />
+                </span>
               </summary>
-              <p class="pb-4 leading-[1.8] text-ink-soft">
+              <p class="pt-1 pb-4 leading-[1.8] text-ink-soft">
                 {f.a}
                 {f.q === 'Is Arabic required?' && prep && (
                   <>
