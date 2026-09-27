@@ -53,10 +53,16 @@ is wrong, the error names the file and the field.
 
 ## Deploying
 
-Deploys run in GitHub Actions (`.github/workflows/firebase-hosting.yml`):
+Deploys run in GitHub Actions:
 
-- Opening or updating a pull request deploys a preview and comments its URL.
-- Merging to `main` deploys the live site.
+- `.github/workflows/site.yml` builds every pull request and every push to
+  `main`. Pushes to `main` (merged pull requests) deploy the live site.
+- `.github/workflows/preview.yml` runs after a pull request builds
+  successfully: it publishes that build to a preview channel and comments the
+  preview URL on the pull request.
+
+Only workflows running from `main` can deploy, so changes to these workflow
+files take effect after they are merged.
 
 ## Directory map
 
