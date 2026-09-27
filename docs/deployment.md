@@ -29,9 +29,8 @@ flowchart TB
   cannot change what it does. It never runs pull-request code: it downloads
   the built `dist/`, keeps only `cleanUrls`, `trailingSlash`, `redirects`,
   and `headers` from the pull request's `firebase.json` (the site name comes
-  from `main`'s copy), deploys to the
-  `pr-<number>` channel (expires after 7 days), comments the link, and adds
-  a `preview` check to the pull request.
+  from `main`'s copy), deploys to the `pr-<number>` channel (expires after
+  7 days), comments the link, and adds a `preview` check to the pull request.
 - Because deploy access depends on running from `main`, changes to either
   workflow take effect only after they are merged.
 
@@ -50,6 +49,15 @@ flowchart TB
 | Deploy branch | `main` | Provider condition; `site.yml` (`push: branches`) |
 | Build workflow name | `Site` | `site.yml` (`name:`) and `preview.yml` (`workflows: [Site]`) must match |
 
+The repository's hosting configuration:
+
+- `.firebaserc`: the default Firebase project.
+- `firebase.json`: `hosting.site` (the site to deploy to), `public: "dist"`,
+  `cleanUrls` and `trailingSlash` (pages are served at `/path/`),
+  `redirects` (other addresses for pages, so existing links keep working),
+  and long-lived cache headers for `/_astro/**` (fingerprinted build assets).
+  There are no rewrites; unknown paths get the built `404.html`.
+
 The provider maps these claims from GitHub's token:
 `google.subject=assertion.sub`, `attribute.repository=assertion.repository`,
 `attribute.repository_id=assertion.repository_id`,
@@ -65,7 +73,7 @@ The service account can be used by the pool through one binding:
 `roles/iam.workloadIdentityUser` for
 `principalSet://iam.googleapis.com/projects/176680257141/locations/global/workloadIdentityPools/github/attribute.repository_id/1388459667`.
 
-Its roles on the project are the set Firebase's own GitHub setup grants:
+Its roles on the project:
 
 | Role | Needed for |
 |---|---|
@@ -130,8 +138,8 @@ new one and point everything at it.
 6. If a custom domain is connected, add it to the new project and update its
    DNS records ([Connecting a custom domain](#connecting-a-custom-domain)).
 7. Update this file's [Where everything lives](#where-everything-lives) table.
-8. Merge the changes (the old project deploys nothing further), confirm the
-   new site, then delete the old project or its identity pool.
+8. Merge the changes. Deploys then go to the new project; confirm the site
+   there, then delete the previous project or its identity pool.
 
 ### Transferring the repository to another GitHub organization
 
@@ -172,19 +180,32 @@ or previews stop.
    `oursabeel.com`, then `www.oursabeel.com` set to redirect to it). Firebase
    shows the DNS records to add: a TXT record to prove ownership, then A
    records. Add them at the domain registrar where `oursabeel.com` is managed,
-   removing records that point at the old WordPress host. Verification and
-   the HTTPS certificate can take up to a day.
+   and remove any other A, AAAA, or CNAME records for those names.
+   Verification and the HTTPS certificate can take up to a day.
 2. `astro.config.mjs`: set `site` to the custom domain.
 3. GitHub repo Settings → General → "Website": the custom domain.
-4. `firebase.json` already redirects the old WordPress paths (`/courses/`,
-   `/our-team/`, `/donate/`, ...) to their new pages.
-5. Before switching off the old WordPress site, replace links that still
-   point at it: the giving links in `src/site.config.ts` (`giving`).
+4. `firebase.json` redirects the paths used by the WordPress site at
+   `oursabeel.com` (`/our-mission/`, `/my-courses/`, `/donate/`, and more) to
+   their pages here, so existing links keep working.
+5. The giving links in `src/site.config.ts` (`giving`) point at the donation
+   form on that WordPress site. Replace them before the domain moves.
 
 ## Setting up from scratch
 
-Everything needed to stand the deploys up again, in order. Each step shows
-the web-console route and, where one exists, the equivalent command.
+Everything needed to stand hosting and deploys up on a new Firebase project,
+in order. Each step shows the web-console route and, where one exists, the
+equivalent command.
+
+You need:
+
+- A Google account that can create projects in the `oursabeel.com` Google
+  organization, and a GitHub account that owns the `Sabeel-Institute`
+  organization.
+- On your computer: Node.js 24 with npm, the Google Cloud CLI (`gcloud`), and
+  the GitHub CLI (`gh`). The Firebase CLI runs through `npx firebase-tools@15`
+  and needs no install.
+- Nothing paid: the free Firebase Spark plan covers Hosting, preview channels,
+  and custom domains.
 
 ### Checklist
 
@@ -200,7 +221,7 @@ the web-console route and, where one exists, the equivalent command.
 | 8 | First deploy and a test preview | Merge a pull request | No |
 | 9 | Custom domain (when ready) | Firebase console and domain registrar | Yes |
 
-Use a Google account that owns the project (today faisal.shah@oursabeel.com)
+Use a Google account that owns the project (faisal.shah@oursabeel.com)
 and a GitHub account that is an organization owner. For the commands, sign in
 first with `gcloud auth login <account>` and `gh auth login`, then set:
 
@@ -382,8 +403,8 @@ npx firebase-tools@15 deploy --only hosting --project sabeel-website-test
 ```
 
 The deploy goes to the site named in `firebase.json`. The Firebase command
-line remembers the signed-in account per folder; if it
-picks the wrong one, run `npx firebase-tools@15 login:use faisal.shah@oursabeel.com`.
+line remembers the signed-in account per folder; if it picks the wrong one,
+run `npx firebase-tools@15 login:use faisal.shah@oursabeel.com`.
 
 ## Troubleshooting
 
@@ -391,9 +412,9 @@ picks the wrong one, run `npx firebase-tools@15 login:use faisal.shah@oursabeel.
 |---|---|
 | Deploy fails partway with a Firebase error that a re-run might clear (timeouts, "Assertion failed", HTTP 5xx) | Re-run the failed job: Actions → the run → "Re-run failed jobs" (or `gh run rerun <run-id> --failed`). |
 | Deploy fails with a "site not found" or "does not exist" error | `hosting.site` in `firebase.json` names a site that is not in the project `.firebaserc` points to. |
-| "The given credential is rejected by the attribute condition" | The workflow is not running from `main` (expected for branch workflows), or the repository, owner, or branch in the condition no longer match. Compare with the condition above. |
+| "The given credential is rejected by the attribute condition" | The workflow is not running from `main` (expected for branch workflows), or the repository, owner, or branch in the condition do not match this repository. Compare with the condition above. |
 | "Permission 'iam.serviceAccounts.getAccessToken' denied" | The service account's `workloadIdentityUser` binding is missing or names a different repo ID. |
 | Firebase returns 403 during deploy | The service account lacks a project role from the table above. |
 | A pull request has no preview comment | The pull request's Site build failed; the Preview run failed (Actions → Preview); the pull request comes from a fork; or a change to `preview.yml` is not yet on `main`. |
 | A preview ignores a `firebase.json` change | Previews use only `cleanUrls`, `trailingSlash`, `redirects`, and `headers` from the pull request; other settings apply after merging. |
-| Previews stop after renaming the build workflow | `preview.yml`'s `workflows: [Site]` no longer matches `site.yml`'s `name:`. |
+| Previews stop after renaming the build workflow | `preview.yml`'s `workflows: [Site]` does not match `site.yml`'s `name:`. |
