@@ -19,6 +19,8 @@ instructors:
   - name: Najia Salim
     role: Conversation guest
 expect: "Each session has three parts: Nourish — a halaqah; Connect — a conversation with guests; Create — a mindful reflection activity."
+image: ./image.webp
+imageAlt: Raising with Purpose support circle banner
 flyer: ./flyer.webp
 ---
 

@@ -18,6 +18,8 @@ outcomes:
   - Core tajweed rules, applied as you learn to recite Surah Qaf
   - A foundation for the Hikam Foundations program
 expect: One morning a week in three parts — Arabic grammar, tafsir, and tajweed practice on the same surah, so you apply what you learn immediately.
+image: ./image.webp
+imageAlt: Quran Immersion Fall Semester banner
 flyer: ./flyer.webp
 ---
 
