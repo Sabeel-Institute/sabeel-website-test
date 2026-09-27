@@ -5,6 +5,7 @@ import PageHero from './PageHero.astro';
 import SectionHeading from './SectionHeading.astro';
 import ProgramCard from './ProgramCard.astro';
 import CtaBand from './CtaBand.astro';
+import CurrentPrograms from './CurrentPrograms.astro';
 import { areas, type AreaId } from '../site.config';
 import { getCompletedPrograms, getCurrentPrograms, getUpcomingPrograms, programYear } from '../lib/content';
 
@@ -14,7 +15,8 @@ interface Props {
 }
 const { area: id, intro } = Astro.props;
 const area = areas[id];
-const current = [...(await getCurrentPrograms(id)), ...(await getUpcomingPrograms(id))];
+const current = await getCurrentPrograms(id);
+const upcoming = await getUpcomingPrograms(id);
 const past = await getCompletedPrograms(id);
 const years = [...new Set(past.map(programYear))];
 ---
@@ -29,13 +31,7 @@ const years = [...new Set(past.map(programYear))];
       <SectionHeading eyebrow="Now enrolling" title={`Current ${area.label.toLowerCase()} programs`} id="current-heading" />
       {
         current.length > 0 ? (
-          <ul class="mt-10 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-            {current.map((p) => (
-              <li>
-                <ProgramCard program={p} />
-              </li>
-            ))}
-          </ul>
+          <CurrentPrograms programs={current} />
         ) : (
           <p class="mt-10 rounded-card bg-surface p-7 text-ink-soft">
             Nothing is open in this area right now.
@@ -44,6 +40,20 @@ const years = [...new Set(past.map(programYear))];
             </a>{' '}
             to hear when the next program opens.
           </p>
+        )
+      }
+      {
+        upcoming.length > 0 && (
+          <div class="mt-12">
+            <h3 class="border-b border-gold/60 pb-3 font-display text-[1.75rem] font-bold text-raspberry">Coming soon</h3>
+            <ul class="mt-6 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+              {upcoming.map((p) => (
+                <li>
+                  <ProgramCard program={p} headingLevel="h4" />
+                </li>
+              ))}
+            </ul>
+          </div>
         )
       }
     </div>

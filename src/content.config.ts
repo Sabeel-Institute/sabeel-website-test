@@ -12,6 +12,9 @@ import { z } from 'astro/zod';
 /** The three program areas that organise Programs and the archive. */
 export const PROGRAM_AREAS = ['hikam-foundations', 'womens-learning', 'youth-children'] as const;
 
+/** Where a program meets. Current programs are grouped by this on Programs and area pages. */
+export const PROGRAM_FORMATS = ['Online', 'On site', 'Online & on site'] as const;
+
 /** Route segments under /programs/ that belong to pages, not programs. */
 const RESERVED_SLUGS = new Set(['womens-learning', 'youth-children']);
 const slugPattern = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
@@ -59,7 +62,7 @@ const programs = defineCollection({
       audience: z.string().min(1),
       /** Day, time, and zone, e.g. "Mondays · 12:00–1:30 PM CT". */
       schedule: z.string().min(1),
-      format: z.enum(['In person', 'Online', 'Hybrid']),
+      format: z.enum(PROGRAM_FORMATS),
       /** Where it meets, e.g. "Masjid Istiqlal" or "Masjid Istiqlal and Zoom". */
       venue: z.string().min(1),
       /** Length, e.g. "Seven sessions" or "Monthly gathering". */

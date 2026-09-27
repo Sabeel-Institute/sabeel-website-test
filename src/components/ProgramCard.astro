@@ -9,7 +9,7 @@ import { STATUS_LABEL, programHref, programYear, resolveInstructors, type Progra
 
 interface Props {
   program: Program;
-  headingLevel?: 'h2' | 'h3';
+  headingLevel?: 'h2' | 'h3' | 'h4';
 }
 
 const { program, headingLevel: Heading = 'h3' } = Astro.props;

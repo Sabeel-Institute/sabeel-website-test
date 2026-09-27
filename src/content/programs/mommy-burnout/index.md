@@ -7,7 +7,7 @@ area: womens-learning
 date: 2026-09-14
 audience: Adult women
 schedule: Mondays · 12:00–1:30 PM CT
-format: Hybrid
+format: Online & on site
 venue: Masjid Istiqlal and Zoom
 duration: Seven sessions, Sept 14 – Oct 26
 fee: $150

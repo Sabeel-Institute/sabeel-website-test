@@ -7,7 +7,7 @@ area: womens-learning
 date: 2026-09-27
 audience: Homeschooling mothers
 schedule: Sunday · 5:00–7:00 PM CT
-format: In person
+format: On site
 venue: Sabeel Classroom at Masjid Istiqlal
 duration: Monthly support circle
 fee: $5

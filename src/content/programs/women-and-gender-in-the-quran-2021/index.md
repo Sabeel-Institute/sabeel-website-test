@@ -8,7 +8,7 @@ date: '2021-07-04'
 dateApprox: true
 audience: Women
 schedule: Beginning Sunday, July 4, Sundays 11 AM-1 PM CST
-format: In person
+format: On site
 venue: Brand Lane Islamic Center (Masjid Sabireen / Dulles Masjid)
 instructors:
 - sameera-shah

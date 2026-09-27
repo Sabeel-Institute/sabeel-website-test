@@ -7,7 +7,7 @@ date: '2024-11-25'
 dateApprox: true
 audience: Boys
 schedule: Saturday, November 25th, 10:30 AM-1:00 PM
-format: In person
+format: On site
 venue: Maryam Islamic Center, Upstairs Sisters Hall
 instructors:
 - sameera-shah

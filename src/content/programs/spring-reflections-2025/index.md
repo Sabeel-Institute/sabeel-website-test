@@ -8,7 +8,7 @@ date: '2025-04-26'
 dateApprox: true
 audience: Women
 schedule: Saturdays, April 26th - May 31st, 11 AM-1 PM
-format: In person
+format: On site
 venue: Maryam Islamic Center, Upstairs Boys Hall
 instructors:
 - sameera-shah

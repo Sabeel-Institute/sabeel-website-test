@@ -1,0 +1,55 @@
+---
+/** Current programs grouped by where they meet: online, on site, or both. */
+import ProgramCard from './ProgramCard.astro';
+import Icon, { type IconName } from './Icon.astro';
+import { PROGRAM_FORMATS } from '../content.config';
+import type { Program } from '../lib/content';
+
+interface Props {
+  programs: Program[];
+  /** Heading level for group titles; cards use the next level down. */
+  level?: 'h3' | 'h4';
+}
+
+const GROUP: Record<(typeof PROGRAM_FORMATS)[number], { icons: IconName[]; text: string }> = {
+  Online: { icons: ['laptop'], text: 'Join live from anywhere.' },
+  'On site': { icons: ['map-pin'], text: 'In person in Houston.' },
+  'Online & on site': { icons: ['map-pin', 'laptop'], text: 'Join in person in Houston or live online.' },
+};
+
+const { programs, level: Heading = 'h3' } = Astro.props;
+const cardLevel = Heading === 'h3' ? 'h4' : 'h3';
+
+const groups = PROGRAM_FORMATS.map((format) => ({
+  format,
+  ...GROUP[format],
+  items: programs.filter((p) => p.data.format === format),
+})).filter((g) => g.items.length > 0);
+---
+
+<div class="mt-10 space-y-12">
+  {
+    groups.map((g) => (
+      <section aria-label={`${g.format} programs`}>
+        <div class="flex flex-wrap items-center gap-x-4 gap-y-1 border-b border-gold/60 pb-3">
+          <span class="flex items-center gap-1 text-raspberry">
+            {g.icons.map((icon) => (
+              <Icon name={icon} class="size-6" />
+            ))}
+          </span>
+          <Heading class="font-display text-[1.75rem] leading-tight font-bold text-raspberry">{g.format}</Heading>
+          <p class="text-[15px] text-ink">
+            {g.text} · {g.items.length} {g.items.length === 1 ? 'program' : 'programs'}
+          </p>
+        </div>
+        <ul class="mt-6 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+          {g.items.map((p) => (
+            <li>
+              <ProgramCard program={p} headingLevel={cardLevel} />
+            </li>
+          ))}
+        </ul>
+      </section>
+    ))
+  }
+</div>

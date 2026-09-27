@@ -7,7 +7,7 @@ date: '2025-08-23'
 dateApprox: true
 audience: Girls
 schedule: Aug 23rd & 24th, 11 AM-1 PM
-format: In person
+format: On site
 venue: Maryam Masjid
 flyer: ./flyer.webp
 ---

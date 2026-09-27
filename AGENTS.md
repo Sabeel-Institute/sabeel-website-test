@@ -88,6 +88,9 @@ folder name is its URL: `src/content/programs/mommy-burnout/` is
 | `upcoming` | Announced, registration not open yet | “Coming soon” on Programs and its area |
 | `completed` | Finished | Past Programs archive; its page stays as a record |
 
+On Programs and the area pages, open and ongoing programs are grouped by
+`format`: Online, On site, and Online & on site.
+
 When a program ends, change its `status` to `completed`. Nothing else. The
 page stays up without registration buttons, so shared links keep working.
 
@@ -118,7 +121,7 @@ date: 2027-01-12                              # first session, YYYY-MM-DD; order
 starts: January 12                            # optional; overrides how the start date is shown
 audience: Adult women
 schedule: Tuesdays · 10:00 AM–12:00 PM CT
-format: In person                             # In person, Online, or Hybrid
+format: On site                               # Online, On site, or Online & on site
 venue: Masjid Istiqlal
 duration: Eight weekly sessions
 fee: $50

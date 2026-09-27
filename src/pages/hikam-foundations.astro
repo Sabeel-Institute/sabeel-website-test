@@ -18,7 +18,7 @@ import { STATUS_LABEL, getCompletedPrograms, getCurrentPrograms, programHref, st
 const intake = (await getEntry('programs', 'hikam-foundations-2026'))!;
 const d = intake.data;
 const start = startLabel(intake);
-const formatLabel = d.format === 'Hybrid' ? 'In person & online' : d.format;
+const formatLabel = d.format;
 const applyUrl = d.status === 'open' || d.status === 'ongoing' ? d.registerUrl : undefined;
 const testimonials = (await getCollection('testimonials')).filter((t) => t.data.program === 'Certification Program');
 const pastCohorts = await getCompletedPrograms('hikam-foundations');
