@@ -1,7 +1,7 @@
 ---
-name: Marwah
+name: Marwah Tukdi
 honorific: Sr.
 group: board
-order: 30
-role: Board and Leadership
+order: 40
+role: Marketing Director
 ---

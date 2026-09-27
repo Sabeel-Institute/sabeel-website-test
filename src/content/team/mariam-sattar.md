@@ -1,9 +1,10 @@
 ---
 name: Mariam Sattar
-honorific: Ustadhah
-group: teachers
+honorific: Ust.
+group: board
 order: 10
-role: Program Director and Teacher
+role: Programming Lead
+sub: Teacher
 highlights:
 - ‘Alimiyyah (2015) · B.Sc. Biochemistry, University of Houston
 - Islamic sciences · Girls’ and women’s mentorship

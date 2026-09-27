@@ -1,9 +1,10 @@
 ---
 name: Sameera Shah
-honorific: Ustadhah
+honorific: Ust.
 group: founder
 order: 10
-role: Founder & President
+role: Founder
+sub: Executive Director and Teacher
 highlights:
 - B.Sc. (Hons.) Economics, LUMS
 - ‘Alimiyyah, Wifaq ul Madaris (2009)
