@@ -40,7 +40,9 @@ jobs:
     steps:
       - uses: actions/checkout@v7
         with:
-          sparse-checkout: .firebaserc
+          sparse-checkout: |
+            .firebaserc
+            firebase.json
           sparse-checkout-cone-mode: false
 
       - name: Find the pull request
@@ -69,12 +71,15 @@ jobs:
 
       # Keep only static hosting settings from the pull request's firebase.json,
       # so a pull request cannot add deploy hooks or change the deploy target.
+      # The site name comes from main's firebase.json.
       - name: Prepare hosting config
         run: |
-          jq '.hosting
+          jq --slurpfile main firebase.json '.hosting
             | {cleanUrls, trailingSlash, redirects, headers}
             | with_entries(select(.value != null))
-            | {hosting: (. + {public: "artifact/dist"})}' artifact/firebase.json > firebase.json
+            | {hosting: ({site: $main[0].hosting.site} + . + {public: "artifact/dist"})}' \
+            artifact/firebase.json > hosting.json
+          mv hosting.json firebase.json
           cat firebase.json
 
       - uses: google-github-actions/auth@v3

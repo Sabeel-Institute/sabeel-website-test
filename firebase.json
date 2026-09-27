@@ -1,5 +1,6 @@
 {
   "hosting": {
+    "site": "sabeel-website-test",
     "public": "dist",
     "ignore": [
       "firebase.json",
