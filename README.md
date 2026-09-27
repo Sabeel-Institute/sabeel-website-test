@@ -13,4 +13,5 @@ npm run build    # validates content and builds to dist/
 Programs, team bios, milestones, and testimonials are Markdown/YAML files in
 `src/content/`; photos go in `src/assets/photos/`. See [AGENTS.md](AGENTS.md)
 for how to add or update them, how bespoke program pages work, and the design
-rules.
+rules, and [docs/deployment.md](docs/deployment.md) for how deploys work and
+how to set them up or move them.
