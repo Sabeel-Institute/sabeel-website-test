@@ -1,0 +1,71 @@
+name: Site
+
+# Builds every pull request and every push to main. Only pushes to main deploy
+# the live site. Pull request previews are published by preview.yml, which
+# runs from main after this workflow succeeds.
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: site-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+defaults:
+  run:
+    shell: bash
+
+env:
+  FIREBASE_TOOLS: firebase-tools@15
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+
+      - run: npm ci
+
+      - run: npm run build
+
+      - uses: actions/upload-artifact@v7
+        with:
+          name: site
+          path: |
+            dist
+            firebase.json
+          if-no-files-found: error
+          retention-days: 7
+
+  deploy-live:
+    if: github.event_name == 'push'
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/download-artifact@v8
+        with:
+          name: site
+
+      # Google grants deploy access only to workflows running from main.
+      - uses: google-github-actions/auth@v3
+        with:
+          workload_identity_provider: projects/176680257141/locations/global/workloadIdentityPools/github/providers/github-oidc
+          service_account: github-action-1388459667@sabeel-website-test.iam.gserviceaccount.com
+
+      - name: Deploy live site
+        run: npx --yes "$FIREBASE_TOOLS" deploy --only hosting --non-interactive

@@ -21,3 +21,10 @@
   inferred from the flyer's weekday and upload month.
 - `firebase.json` redirects the earlier paths (`/courses/`, `/our-team/`,
   `/seminary/`, `/donate/`) and the old WordPress paths to their new pages.
+- Deploy credentials come from Google Workload Identity Federation. The
+  provider's attribute condition accepts only tokens from this repository
+  whose `ref` is `refs/heads/main` and whose `job_workflow_ref` ends in
+  `@refs/heads/main`, so workflows edited on a branch cannot deploy.
+  `preview.yml` runs from `main` via `workflow_run`; it must never execute
+  pull-request code. It deploys the PR's built `dist/` with a `firebase.json`
+  reduced to `cleanUrls`, `trailingSlash`, `redirects`, and `headers`.

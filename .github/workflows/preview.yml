@@ -1,0 +1,119 @@
+name: Preview
+
+# Publishes a pull request's built site to a preview channel and comments the
+# link on the pull request. GitHub always runs this file from main, so pull
+# request branches cannot change what it does. It never executes code from the
+# pull request: it only publishes the static files that site.yml built.
+
+on:
+  workflow_run:
+    workflows: [Site]
+    types: [completed]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: preview-${{ github.event.workflow_run.head_branch }}
+  cancel-in-progress: true
+
+defaults:
+  run:
+    shell: bash
+
+env:
+  FIREBASE_TOOLS: firebase-tools@15
+
+jobs:
+  deploy-preview:
+    if: >-
+      github.event.workflow_run.event == 'pull_request' &&
+      github.event.workflow_run.conclusion == 'success' &&
+      github.event.workflow_run.head_repository.full_name == github.repository
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      actions: read
+      id-token: write
+      pull-requests: write
+      statuses: write
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          sparse-checkout: .firebaserc
+          sparse-checkout-cone-mode: false
+
+      - name: Find the pull request
+        id: pr
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ github.event.workflow_run.pull_requests[0].number }}
+          HEAD_SHA: ${{ github.event.workflow_run.head_sha }}
+        run: |
+          number="$PR_NUMBER"
+          if [[ -z "$number" ]]; then
+            number="$(gh api "repos/$GITHUB_REPOSITORY/commits/$HEAD_SHA/pulls" -q '.[0].number')"
+          fi
+          if [[ ! "$number" =~ ^[0-9]+$ ]]; then
+            echo "No pull request found for $HEAD_SHA" >&2
+            exit 1
+          fi
+          echo "number=$number" >> "$GITHUB_OUTPUT"
+
+      - uses: actions/download-artifact@v8
+        with:
+          name: site
+          path: artifact
+          run-id: ${{ github.event.workflow_run.id }}
+          github-token: ${{ github.token }}
+
+      # Keep only static hosting settings from the pull request's firebase.json,
+      # so a pull request cannot add deploy hooks or change the deploy target.
+      - name: Prepare hosting config
+        run: |
+          jq '.hosting
+            | {cleanUrls, trailingSlash, redirects, headers}
+            | with_entries(select(.value != null))
+            | {hosting: (. + {public: "artifact/dist"})}' artifact/firebase.json > firebase.json
+          cat firebase.json
+
+      - uses: google-github-actions/auth@v3
+        with:
+          workload_identity_provider: projects/176680257141/locations/global/workloadIdentityPools/github/providers/github-oidc
+          service_account: github-action-1388459667@sabeel-website-test.iam.gserviceaccount.com
+
+      - name: Deploy preview channel
+        id: preview
+        run: |
+          npx --yes "$FIREBASE_TOOLS" hosting:channel:deploy "pr-${{ steps.pr.outputs.number }}" --expires 7d --json | tee deploy.json
+          echo "url=$(jq -r '.result[].url' deploy.json)" >> "$GITHUB_OUTPUT"
+          echo "expires=$(jq -r '.result[].expireTime' deploy.json)" >> "$GITHUB_OUTPUT"
+
+      - name: Comment preview URL
+        uses: actions/github-script@v9
+        env:
+          URL: ${{ steps.preview.outputs.url }}
+          EXPIRES: ${{ steps.preview.outputs.expires }}
+          PR_NUMBER: ${{ steps.pr.outputs.number }}
+          HEAD_SHA: ${{ github.event.workflow_run.head_sha }}
+        with:
+          script: |
+            const marker = '<!-- firebase-preview -->';
+            const { owner, repo } = context.repo;
+            const issue_number = Number(process.env.PR_NUMBER);
+            const sha = process.env.HEAD_SHA;
+            const body = `${marker}\n**Preview:** ${process.env.URL}\n\nBuilt from ${sha.slice(0, 7)}. Expires ${process.env.EXPIRES}.`;
+            const comments = await github.paginate(github.rest.issues.listComments, { owner, repo, issue_number });
+            const existing = comments.find((c) => c.body?.includes(marker));
+            if (existing) {
+              await github.rest.issues.updateComment({ owner, repo, comment_id: existing.id, body });
+            } else {
+              await github.rest.issues.createComment({ owner, repo, issue_number, body });
+            }
+            await github.rest.repos.createCommitStatus({
+              owner, repo, sha,
+              state: 'success',
+              context: 'preview',
+              description: 'Preview deployed',
+              target_url: process.env.URL,
+            });
