@@ -3,11 +3,11 @@ import { Image } from 'astro:assets';
 import logo from '../assets/images/logo.png';
 import Icon from './Icon.astro';
 import { mainNav } from '../site.config';
-import { hasPosts } from '../lib/content';
 
-const nav = mainNav.filter((item) => item.href !== '/blog/' || hasPosts);
+const nav = mainNav;
 const path = Astro.url.pathname;
-const isActive = (href: string) => path === href || path.startsWith(href);
+const isActive = (item: (typeof nav)[number]) =>
+  [item.href, ...(item.match ?? [])].some((prefix) => path.startsWith(prefix));
 ---
 
 <header class="relative z-40 bg-canvas">
@@ -24,21 +24,21 @@ const isActive = (href: string) => path === href || path.startsWith(href);
     </a>
 
     <nav aria-label="Main" class="hidden lg:block">
-      <ul class="flex items-center gap-1 xl:gap-2">
+      <ul class="flex items-center gap-2 xl:gap-4">
         {
           nav.map((item) => (
             <li>
               <a
                 href={item.href}
-                aria-current={isActive(item.href) ? 'page' : undefined}
-                class="relative rounded px-2 py-1.5 text-[15px] text-ink transition-colors hover:text-raspberry aria-[current=page]:text-raspberry xl:px-2.5 xl:text-base"
+                aria-current={isActive(item) ? 'page' : undefined}
+                class="relative rounded px-2 py-1.5 text-base text-ink transition-colors hover:text-raspberry aria-[current=page]:text-raspberry xl:px-3 xl:text-[17px]"
               >
                 {item.label}
                 <span
                   aria-hidden="true"
                   class:list={[
-                    'absolute inset-x-2 -bottom-0.5 h-px bg-gold transition-opacity',
-                    isActive(item.href) ? 'opacity-100' : 'opacity-0',
+                    'absolute inset-x-2 -bottom-1 h-px bg-gold transition-opacity',
+                    isActive(item) ? 'opacity-100' : 'opacity-0',
                   ]}
                 />
               </a>
@@ -49,8 +49,8 @@ const isActive = (href: string) => path === href || path.startsWith(href);
     </nav>
 
     <div class="flex items-center gap-2">
-      <a href="/donate/" class="btn btn-primary hidden px-5 text-base sm:inline-flex lg:px-7 lg:text-[17px]">
-        Donate Now
+      <a href="/support/" class="btn btn-primary hidden px-5 text-base sm:inline-flex lg:px-6 lg:text-[16px]">
+        Support Our Work
       </a>
       <button
         type="button"
@@ -77,7 +77,7 @@ const isActive = (href: string) => path === href || path.startsWith(href);
           <li>
             <a
               href={item.href}
-              aria-current={isActive(item.href) ? 'page' : undefined}
+              aria-current={isActive(item) ? 'page' : undefined}
               class="flex min-h-12 items-center border-b border-border/70 text-lg text-ink aria-[current=page]:font-semibold aria-[current=page]:text-raspberry"
             >
               {item.label}
@@ -86,7 +86,7 @@ const isActive = (href: string) => path === href || path.startsWith(href);
         ))
       }
       <li class="pt-4 pb-2">
-        <a href="/donate/" class="btn btn-primary w-full text-base">Donate Now</a>
+        <a href="/support/" class="btn btn-primary w-full text-base">Support Our Work</a>
       </li>
     </ul>
   </nav>

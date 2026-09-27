@@ -1,58 +1,49 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import PageHero from '../components/PageHero.astro';
-import Divider from '../components/Divider.astro';
+import CtaBand from '../components/CtaBand.astro';
 import Icon from '../components/Icon.astro';
 import { site } from '../site.config';
+
+const steps = [
+  { icon: 'book-open', title: 'Find your program', text: 'Choose the program you would like to join.', href: '/programs/', link: 'View programs' },
+  { icon: 'hand-heart', title: 'Apply for aid', text: 'Complete the short financial aid form.', href: site.financialAidFormUrl, link: 'Open the form' },
+  { icon: 'mail', title: 'Questions?', text: `Email ${site.email} and we will be glad to help.`, href: `mailto:${site.email}`, link: 'Email us' },
+] as const;
 ---
 
 <BaseLayout
   title="Financial Aid"
-  description="Finances should never be a barrier to learning. Apply for financial aid for Sabeel Institute courses."
+  description="Finances should never be a barrier to learning. Apply for financial aid for Sabeel Institute programs."
 >
-  <PageHero title="Financial Aid">
-    <p>
-      We believe finances should never be a barrier to learning. If you or your family are facing financial
-      hardship, you may be eligible for financial aid.
-    </p>
-    <a href={site.financialAidFormUrl} class="btn btn-primary mt-7 px-8 text-base" target="_blank" rel="noopener">
-      Apply Here <Icon name="external" class="size-4" />
+  <PageHero eyebrow="Financial aid" title="Finances should never be a barrier to learning.">
+    <p>If you or your family are facing financial hardship, you may be eligible for financial aid.</p>
+    <a slot="actions" href={site.financialAidFormUrl} class="btn btn-primary px-7 text-base" target="_blank" rel="noopener">
+      Apply for Financial Aid <Icon name="external" class="size-4" />
     </a>
-  </PageHero>
-
-  <section class="bg-sage-wash py-14 md:py-16">
-    <div class="container-page grid gap-6 md:grid-cols-3">
+    <ol slot="media" class="grid gap-4">
       {
-        [
-          { icon: 'book-open', title: 'Find your course', text: 'Choose the course you would like to join from our current offerings.', href: '/courses/', link: 'View courses' },
-          { icon: 'hand-heart', title: 'Apply for aid', text: 'Complete the short financial aid form.', href: site.financialAidFormUrl, link: 'Open the form' },
-          { icon: 'mail', title: 'Questions?', text: `Email us at ${site.email} and we will be glad to help.`, href: `mailto:${site.email}`, link: 'Email us' },
-        ].map((step, i) => (
-          <div class="rounded-card bg-surface p-7">
-            <span class="flex size-14 items-center justify-center rounded-full bg-canvas text-gold-text">
-              <Icon name={step.icon as 'mail'} class="size-7" />
+        steps.map((s, i) => (
+          <li class="flex gap-5 rounded-card border border-gold/60 bg-surface p-6">
+            <span class="flex size-12 shrink-0 items-center justify-center rounded-full bg-canvas text-gold-text">
+              <Icon name={s.icon} class="size-6" />
             </span>
-            <p class="mt-5 text-sm font-bold tracking-wide text-gold-text uppercase">Step {i + 1}</p>
-            <h2 class="mt-1 font-display text-2xl font-bold text-raspberry">{step.title}</h2>
-            <p class="mt-2 text-ink-soft">{step.text}</p>
-            <a href={step.href} class="link-arrow mt-4">
-              {step.link} <Icon name="arrow-right" class="size-5" />
-            </a>
-          </div>
+            <span>
+              <span class="block text-sm font-bold tracking-wide text-gold-text uppercase">Step {i + 1}</span>
+              <span class="block text-lg font-semibold text-ink">{s.title}</span>
+              <span class="block text-ink-soft">{s.text}</span>
+              <a href={s.href} class="link-arrow mt-1 text-[15px]">
+                {s.link} <Icon name="arrow-right" class="size-4" />
+              </a>
+            </span>
+          </li>
         ))
       }
-    </div>
-  </section>
+    </ol>
+  </PageHero>
 
-  <section class="py-14 md:py-16">
-    <div class="container-page max-w-[46rem] text-center">
-      <h2 class="display-md">Help Keep Learning Open</h2>
-      <Divider align="center" class="mt-4" />
-      <p class="mt-5 leading-[1.8] text-ink-soft">
-        Financial aid is funded by the generosity of our community. If you are able, a gift helps another sister
-        take her next step in learning.
-      </p>
-      <a href="/donate/" class="btn btn-outline mt-7 px-8 text-base">Donate</a>
-    </div>
-  </section>
+  <CtaBand title="Help keep learning open.">
+    <p>Gifts to Programs &amp; Access support teachers, curriculum, youth programming, and scholarships.</p>
+    <a slot="actions" href="/support/" class="btn btn-primary px-7 text-base">Support Our Work</a>
+  </CtaBand>
 </BaseLayout>

@@ -1,0 +1,83 @@
+---
+/**
+ * Newsletter / interest-list signup. Posts to the Mailchimp form in
+ * site.config.ts; without one, it opens a pre-filled email instead.
+ */
+import { site, areas } from '../site.config';
+
+interface Props {
+  id: string;
+  /** Ask which program areas the person is interested in. */
+  withInterests?: boolean;
+  submitLabel?: string;
+  tone?: 'light' | 'dark';
+}
+const { id, withInterests = false, submitLabel = 'Sign Up', tone = 'light' } = Astro.props;
+const action = site.mailingListAction;
+---
+
+<form
+  class="grid gap-4"
+  method="post"
+  action={action ?? `mailto:${site.email}`}
+  target={action ? '_blank' : undefined}
+  data-mailing-list
+  data-fallback-email={action ? undefined : site.email}
+>
+  {
+    withInterests && (
+      <fieldset>
+        <legend class="text-[15px] font-medium text-ink">I’d like to hear about</legend>
+        <div class="mt-2 grid gap-2 sm:grid-cols-3">
+          {Object.entries(areas).map(([key, area]) => (
+            <label class="flex min-h-11 items-center gap-2 rounded-lg border border-border-strong bg-canvas px-3 text-[15px] text-ink has-checked:border-raspberry">
+              <input type="checkbox" name="INTERESTS" value={area.label} class="size-4 accent-raspberry" checked={key !== 'hikam-foundations'} />
+              {area.label}
+            </label>
+          ))}
+        </div>
+      </fieldset>
+    )
+  }
+  <div class="flex w-full">
+    <label for={`${id}-email`} class="sr-only">Email address</label>
+    <input
+      id={`${id}-email`}
+      type="email"
+      name="EMAIL"
+      required
+      autocomplete="email"
+      placeholder="Email address"
+      class:list={[
+        'min-h-[52px] w-full min-w-0 rounded-l-[10px] border border-r-0 px-5 text-base text-ink placeholder:text-ink-soft focus:outline-none',
+        tone === 'dark' ? 'border-transparent bg-surface focus:border-gold' : 'border-border-strong bg-surface focus:border-raspberry',
+      ]}
+    />
+    <button
+      type="submit"
+      class:list={[
+        'min-h-[52px] shrink-0 rounded-r-[10px] px-5 text-[15px] font-medium transition-colors',
+        tone === 'dark'
+          ? 'border border-gold bg-transparent text-on-raspberry hover:bg-on-raspberry hover:text-raspberry'
+          : 'bg-raspberry text-on-raspberry hover:bg-raspberry-deep',
+      ]}
+    >
+      {submitLabel}
+    </button>
+  </div>
+</form>
+
+<script>
+  // Without a mailing-list endpoint, signing up opens a pre-filled email.
+  for (const form of document.querySelectorAll<HTMLFormElement>('form[data-mailing-list][data-fallback-email]')) {
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const data = new FormData(form);
+      const interests = data.getAll('INTERESTS').map(String);
+      const lines = [`Please add ${data.get('EMAIL')} to the Sabeel Institute mailing list.`];
+      if (interests.length) lines.push(`Interested in: ${interests.join(', ')}.`);
+      const subject = encodeURIComponent(interests.length ? 'Program interest list' : 'Newsletter subscription');
+      window.location.href = `mailto:${form.dataset.fallbackEmail}?subject=${subject}&body=${encodeURIComponent(lines.join('\n'))}`;
+    });
+  }
+</script>

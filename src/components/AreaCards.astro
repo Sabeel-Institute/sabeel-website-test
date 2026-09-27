@@ -1,0 +1,37 @@
+---
+/** The three program-area cards used on Programs and Past Programs. */
+import Icon from './Icon.astro';
+import { areas, type AreaId } from '../site.config';
+
+interface Props {
+  /** "programs" links to each area; "archive" links to each area's past programs. */
+  mode: 'programs' | 'archive';
+}
+const { mode } = Astro.props;
+const entries = Object.entries(areas) as [AreaId, (typeof areas)[AreaId]][];
+---
+
+<ul class="grid gap-5 md:grid-cols-3">
+  {
+    entries.map(([, area]) => (
+      <li>
+        <article class="group relative flex h-full flex-col rounded-card border border-gold/60 border-t-4 border-t-gold bg-surface p-7 transition-shadow hover:shadow-card">
+          <span class="flex size-12 items-center justify-center rounded-full bg-canvas text-gold-text">
+            <Icon name={area.icon} class="size-6" />
+          </span>
+          <h3 class="mt-4 text-xl font-semibold text-ink">{area.label}</h3>
+          <p class="mt-2 text-[15px] leading-relaxed text-ink-soft">
+            {mode === 'programs' ? area.description : area.archiveText}
+          </p>
+          <a
+            href={mode === 'programs' ? area.href : `${area.href}#past`}
+            class="link-arrow mt-auto pt-5 text-[15px] after:absolute after:inset-0 after:content-['']"
+          >
+            {mode === 'programs' ? `Explore ${area.label}` : `View past ${area.short} programs`}
+            <Icon name="arrow-right" class="size-4" />
+          </a>
+        </article>
+      </li>
+    ))
+  }
+</ul>

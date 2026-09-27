@@ -1,0 +1,29 @@
+---
+/** Eyebrow, serif heading, and gold divider; optional aside text on the right. */
+import Divider from './Divider.astro';
+
+interface Props {
+  eyebrow?: string;
+  title: string;
+  id?: string;
+  align?: 'start' | 'center';
+  level?: 'h2' | 'h3';
+  class?: string;
+}
+const { eyebrow, title, id, align = 'start', level: Tag = 'h2', class: className = '' } = Astro.props;
+const hasAside = Astro.slots.has('default');
+---
+
+<div
+  class:list={[
+    align === 'center' ? 'text-center' : hasAside && 'grid gap-4 md:grid-cols-2 md:items-end md:gap-12',
+    className,
+  ]}
+>
+  <div>
+    {eyebrow && <p class="eyebrow">{eyebrow}</p>}
+    <Tag id={id} class="display-md mt-1 sm:text-[2.35rem]">{title}</Tag>
+    <Divider align={align} class="mt-4" />
+  </div>
+  {hasAside && <div class="max-w-[36rem] leading-[1.8] text-ink-soft md:pb-1"><slot /></div>}
+</div>

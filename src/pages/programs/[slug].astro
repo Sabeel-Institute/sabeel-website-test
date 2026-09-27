@@ -1,0 +1,313 @@
+---
+/**
+ * Standard program page. Programs with a `page:` field have a bespoke page
+ * instead and are skipped here.
+ */
+import type { GetStaticPaths } from 'astro';
+import { Image, getImage } from 'astro:assets';
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Divider from '../../components/Divider.astro';
+import Icon from '../../components/Icon.astro';
+import Photo from '../../components/Photo.astro';
+import FactsBar from '../../components/FactsBar.astro';
+import CtaBand from '../../components/CtaBand.astro';
+import Lightbox from '../../components/Lightbox.astro';
+import { areas } from '../../site.config';
+import {
+  STATUS_LABEL,
+  assertBespokePages,
+  resolveInstructors,
+  startLabel,
+  type Program,
+} from '../../lib/content';
+
+export const getStaticPaths = (async () => {
+  const programs = await getCollection('programs');
+  assertBespokePages(programs);
+  return programs.filter((p) => !p.data.page).map((program) => ({ params: { slug: program.id }, props: { program } }));
+}) satisfies GetStaticPaths;
+
+interface Props {
+  program: Program;
+}
+
+const { program } = Astro.props;
+const d = program.data;
+const area = areas[d.area];
+const registering = d.status === 'open' || d.status === 'ongoing';
+const completed = d.status === 'completed';
+const { Content } = await render(program);
+const body = program.body?.trim();
+const instructors = await resolveInstructors(d.instructors);
+const flyerFull = d.flyer ? await getImage({ src: d.flyer, width: 1600 }) : undefined;
+const start = startLabel(program);
+const place = [d.format, d.venue].filter(Boolean).join(' · ');
+const askHref = `/contact/?inquiry=program&program=${encodeURIComponent(d.title)}`;
+const outcomesFirst = Boolean(d.outcomes?.length);
+/** Flyer-only records put the flyer in the About column instead of repeating the summary. */
+const flyerInAbout = !outcomesFirst && !body && Boolean(flyerFull);
+const glance = [
+  { icon: 'calendar', label: 'Length', value: d.duration },
+  { icon: 'users', label: instructors.length > 1 ? 'Instructors' : 'Instructor', value: completed ? undefined : instructors.map((i) => i.name).join(', ') },
+  { icon: 'tag', label: 'Fee', value: completed ? undefined : d.fee },
+  { icon: 'book-open', label: 'Materials & prerequisites', value: d.prerequisites },
+  { icon: 'clock', label: 'Registration deadline', value: completed ? undefined : d.deadline },
+].filter((r) => r.value);
+const showGlance = glance.length > 0 || (registering && Boolean(d.registerUrl));
+const cards = [
+  instructors.length > 0 && 'instructor',
+  d.expect && 'expect',
+  d.policies && 'policies',
+].filter(Boolean);
+---
+
+<BaseLayout title={d.title} description={d.summary ?? d.subtitle ?? d.title} shareImage={d.image ?? d.flyer}>
+  <!-- Hero -->
+  <section class="border-b border-border bg-linear-to-br from-surface via-canvas to-canvas">
+    <div class="container-page pt-6 pb-12 md:pb-16">
+      <nav aria-label="Breadcrumb" class="text-[15px] text-ink-soft">
+        <ol class="flex flex-wrap items-center gap-2">
+          <li><a href={completed ? '/past-programs/' : '/programs/'} class="hover:text-raspberry">{completed ? 'Past Programs' : 'Programs'}</a></li>
+          <li aria-hidden="true">/</li>
+          <li><a href={area.href} class="hover:text-raspberry">{area.label}</a></li>
+        </ol>
+      </nav>
+      <div class="mt-8 grid items-center gap-10 md:grid-cols-[1.05fr_1fr] md:gap-12">
+        <div>
+          <p class="eyebrow">{STATUS_LABEL[d.status]} · {area.label}</p>
+          <Divider width="sm" class="mt-3" />
+          <h1 class="display-lg mt-5 lg:text-[3.1rem]">{d.title}</h1>
+          {d.subtitle && <p class="mt-3 font-display text-2xl leading-snug text-ink-soft italic">{d.subtitle}</p>}
+          {d.summary && <p class="mt-5 max-w-[36rem] text-lg leading-relaxed text-ink-soft">{d.summary}</p>}
+          <div class="mt-8 flex flex-wrap gap-3">
+            {
+              registering && d.registerUrl ? (
+                <a href={d.registerUrl} class="btn btn-primary px-7 text-base" target="_blank" rel="noopener">
+                  Register <Icon name="external" class="size-4" />
+                </a>
+              ) : (
+                <a href="/contact/?inquiry=interest-list" data-interest class="btn btn-primary px-7 text-base">
+                  Join the Interest List
+                </a>
+              )
+            }
+            <a href={completed ? '/programs/' : askHref} class="btn btn-outline px-6 text-base">
+              {completed ? 'View Current Programs' : 'Ask a Question'}
+            </a>
+          </div>
+        </div>
+        <Photo
+          image={d.image}
+          alt={d.imageAlt ?? ''}
+          icon={area.icon}
+          class="aspect-[4/3] shadow-card"
+          sizes="(min-width: 768px) 48vw, 100vw"
+          eager
+        />
+      </div>
+    </div>
+  </section>
+
+  <!-- Key facts -->
+  <section class="py-8 md:py-10">
+    <div class="container-page">
+      <FactsBar
+        facts={[
+          { label: 'Audience', value: d.audience },
+          { label: completed ? 'Started' : 'Starts', value: start },
+          { label: 'Schedule', value: d.schedule },
+          { label: 'Format', value: place },
+        ]}
+      />
+    </div>
+  </section>
+
+  <!-- What students will learn + at a glance -->
+  <section class="border-y border-border bg-surface py-12 md:py-16">
+    <div class:list={['container-page grid gap-10', showGlance && 'lg:grid-cols-[1.2fr_1fr] lg:gap-14']}>
+      <div>
+        <p class="eyebrow">About this program</p>
+        {
+          outcomesFirst ? (
+            <>
+              <h2 class="display-md mt-1">What students will learn</h2>
+              <Divider class="mt-4" />
+              <div class="prose-sabeel mt-6 text-[17px]">
+                <ul>
+                  {d.outcomes!.map((o) => (
+                    <li>{o}</li>
+                  ))}
+                </ul>
+              </div>
+            </>
+          ) : (
+            <>
+              <h2 class="display-md mt-1">{flyerInAbout ? 'Original flyer' : completed ? 'About the program' : 'What to know'}</h2>
+              <Divider class="mt-4" />
+              {flyerInAbout && flyerFull && d.flyer ? (
+                <a
+                  href={flyerFull.src}
+                  data-lightbox="flyer"
+                  data-title={d.title}
+                  data-alt={`Flyer for ${d.title}`}
+                  class="group relative mt-6 block max-w-[480px] overflow-hidden rounded-sm border border-border shadow-card"
+                >
+                  <Image src={d.flyer} alt={`Original flyer for ${d.title}`} widths={[480, 960]} sizes="480px" class="w-full" />
+                  <span class="absolute right-3 bottom-3 flex items-center gap-1.5 rounded-full bg-surface/95 px-3 py-1.5 text-sm font-medium text-ink shadow-card">
+                    <Icon name="zoom-in" class="size-4" /> Enlarge
+                  </span>
+                </a>
+              ) : (
+                <div class="prose-sabeel mt-6 text-[17px] leading-[1.8]">
+                  {body ? <Content /> : <p>{d.summary}</p>}
+                </div>
+              )}
+            </>
+          )
+        }
+      </div>
+
+      {showGlance && (
+      <aside class="self-start rounded-card border border-gold/70 border-t-4 border-t-gold bg-canvas p-6 sm:p-8" aria-labelledby="glance-heading">
+        <h2 id="glance-heading" class="font-display text-2xl font-bold text-raspberry">At a glance</h2>
+        <dl class="mt-4 divide-y divide-border text-[15px]">
+          {
+            glance.map((r) => (
+              <div class="grid grid-cols-[1.5rem_1fr] gap-3 py-3">
+                <Icon name={r.icon as 'tag'} class="mt-0.5 size-5 text-gold-text" />
+                <div>
+                  <dt class="text-sm text-ink-soft">{r.label}</dt>
+                  <dd class="font-medium text-ink">{r.value}</dd>
+                </div>
+              </div>
+            ))
+          }
+        </dl>
+        {
+          registering && d.registerUrl && (
+            <>
+              <a href={d.registerUrl} class="btn btn-primary mt-5 w-full text-base" target="_blank" rel="noopener">
+                Register <Icon name="external" class="size-4" />
+              </a>
+              <p class="mt-3 text-center text-sm text-ink-soft">
+                Need help with the fee?{' '}
+                <a href="/financial-aid/" class="text-raspberry underline decoration-gold underline-offset-4">Financial aid</a>
+              </p>
+            </>
+          )
+        }
+      </aside>
+      )}
+    </div>
+  </section>
+
+  <!-- Instructor, what to expect, policies -->
+  {
+    cards.length > 0 && (
+      <section class="py-12 md:py-14">
+        <div class:list={['container-page grid gap-5', cards.length === 3 ? 'lg:grid-cols-3' : cards.length === 2 ? 'md:grid-cols-2' : '']}>
+          {instructors.length > 0 && (
+            <div class="rounded-card border border-gold/60 bg-surface p-7">
+              <h2 class="text-xl font-semibold text-ink">{instructors.length > 1 ? 'Instructors' : 'Instructor'}</h2>
+              <ul class="mt-4 space-y-4">
+                {instructors.map((i) => (
+                  <li>
+                    <p class="font-semibold text-raspberry">
+                      {i.href ? <a href={i.href} class="underline decoration-gold underline-offset-4 hover:decoration-raspberry">{i.name}</a> : i.name}
+                    </p>
+                    {i.role && <p class="text-[15px] text-ink-soft">{i.role}</p>}
+                    {i.highlights?.map((h) => <p class="text-[15px] text-ink-soft">{h}</p>)}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+          {d.expect && (
+            <div class="rounded-card border border-gold/60 bg-surface p-7">
+              <h2 class="text-xl font-semibold text-ink">What to expect</h2>
+              <p class="mt-3 leading-[1.75] text-ink-soft">{d.expect}</p>
+            </div>
+          )}
+          {d.policies && (
+            <div class="rounded-card border border-gold/60 bg-surface p-7">
+              <h2 class="text-xl font-semibold text-ink">Policies</h2>
+              <p class="mt-3 leading-[1.75] text-ink-soft">{d.policies}</p>
+            </div>
+          )}
+        </div>
+      </section>
+    )
+  }
+
+  <!-- Full details and original flyer -->
+  {
+    ((outcomesFirst && body) || (flyerFull && !flyerInAbout)) && (
+      <section class:list={['py-12 md:py-14', cards.length > 0 && 'pt-0 md:pt-0']}>
+        <div class:list={['container-page grid gap-10', outcomesFirst && body && flyerFull && 'lg:grid-cols-[1fr_minmax(0,340px)] lg:gap-16']}>
+          {outcomesFirst && body && (
+            <div>
+              <h2 class="display-md">Program details</h2>
+              <Divider class="mt-4" />
+              <div class="prose-sabeel mt-6 max-w-[46rem] text-[17px] leading-[1.8]">
+                <Content />
+              </div>
+            </div>
+          )}
+          {flyerFull && d.flyer && !flyerInAbout && (
+            <figure class:list={['self-start', !(outcomesFirst && body) && 'max-w-[340px]']}>
+              <figcaption class="mb-3 text-sm font-bold tracking-wide text-gold-text uppercase">Original flyer</figcaption>
+              <a
+                href={flyerFull.src}
+                data-lightbox="flyer"
+                data-title={d.title}
+                data-alt={`Flyer for ${d.title}`}
+                class="group relative block overflow-hidden rounded-sm border border-border shadow-card"
+              >
+                <Image src={d.flyer} alt={`Flyer for ${d.title}`} widths={[340, 680]} sizes="340px" class="w-full" />
+                <span class="absolute right-3 bottom-3 flex items-center gap-1.5 rounded-full bg-surface/95 px-3 py-1.5 text-sm font-medium text-ink shadow-card">
+                  <Icon name="zoom-in" class="size-4" /> Enlarge
+                </span>
+              </a>
+            </figure>
+          )}
+        </div>
+      </section>
+    )
+  }
+
+  <!-- Closing action -->
+  {
+    registering ? (
+      <CtaBand title="Ready to join?">
+        <p>{[start && `Starts ${start}`, place, d.fee].filter(Boolean).join(' · ')}</p>
+        <Fragment slot="actions">
+          <a href={d.registerUrl} class="btn btn-primary px-7 text-base" target="_blank" rel="noopener">
+            Register Now <Icon name="external" class="size-4" />
+          </a>
+          <a href="/financial-aid/" class="btn btn-outline bg-surface/60 px-6 text-base">Financial Aid</a>
+        </Fragment>
+      </CtaBand>
+    ) : completed ? (
+      <CtaBand title="Interested in a future offering?" eyebrow="Program completed" tone="mist">
+        <p>This page is kept as a record of the program. Join the interest list to hear when similar programs open.</p>
+        <Fragment slot="actions">
+          <a href="/contact/?inquiry=interest-list" data-interest class="btn btn-outline bg-surface/60 px-6 text-base">
+            Join the Interest List
+          </a>
+          <a href="/programs/" class="link-arrow text-base">View Current Programs <Icon name="arrow-right" class="size-5" /></a>
+        </Fragment>
+      </CtaBand>
+    ) : (
+      <CtaBand title="Registration opens soon.">
+        <p>Join the interest list and we’ll tell you as soon as registration opens.</p>
+        <Fragment slot="actions">
+          <a href="/contact/?inquiry=interest-list" data-interest class="btn btn-primary px-7 text-base">Join the Interest List</a>
+          <a href={askHref} class="btn btn-outline bg-surface/60 px-6 text-base">Ask a Question</a>
+        </Fragment>
+      </CtaBand>
+    )
+  }
+
+  <Lightbox />
+</BaseLayout>

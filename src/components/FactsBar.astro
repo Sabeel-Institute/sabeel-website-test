@@ -1,0 +1,26 @@
+---
+/** Row of labelled facts (Audience, Starts, Schedule, Format ...). */
+interface Props {
+  facts: { label: string; value?: string }[];
+  class?: string;
+}
+const { facts, class: className = '' } = Astro.props;
+const shown = facts.filter((f) => f.value);
+---
+
+<dl
+  class:list={[
+    'grid overflow-hidden rounded-card border border-gold/70 bg-surface sm:grid-cols-2',
+    shown.length >= 4 ? 'lg:grid-cols-4' : shown.length === 3 ? 'lg:grid-cols-3' : '',
+    className,
+  ]}
+>
+  {
+    shown.map((f) => (
+      <div class="border-b border-gold/40 px-5 py-4 last:border-b-0 sm:border-r sm:[&:nth-child(2n)]:border-r-0 lg:border-b-0 lg:[&:nth-child(2n)]:border-r lg:last:border-r-0">
+        <dt class="text-sm text-ink-soft">{f.label}</dt>
+        <dd class="mt-0.5 text-[17px] font-semibold text-ink">{f.value}</dd>
+      </div>
+    ))
+  }
+</dl>

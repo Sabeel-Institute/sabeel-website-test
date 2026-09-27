@@ -1,9 +1,12 @@
 ---
 name: Sameera Shah
 honorific: Ustadhah
-group: board
+group: founder
 order: 10
-role: Founder
+role: Founder & President
+highlights:
+- B.Sc. (Hons.) Economics, LUMS
+- ‘Alimiyyah, Wifaq ul Madaris (2009)
 ---
 
 Ustadhah Sameera Shah is the founder of Sabeel Institute and has dedicated over 15 years to teaching and developing educational programs that help Muslims deepen their understanding of Islam, strengthen their character, and cultivate a closer relationship with Allah. Her passion lies in making classical Islamic knowledge relevant, practical, and transformative for everyday life.

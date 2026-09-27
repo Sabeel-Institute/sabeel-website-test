@@ -1,48 +1,48 @@
 ---
 import { Image } from 'astro:assets';
 import Icon from './Icon.astro';
-import { displayName, excerpt, initials, teamHasPage, type TeamMember } from '../lib/content';
+import { displayName, initials, teamHasPage, type TeamMember } from '../lib/content';
 
 interface Props {
   member: TeamMember;
 }
 
 const { member } = Astro.props;
-const { name, role, photo } = member.data;
-const href = teamHasPage(member) ? `/our-team/${member.id}/` : undefined;
+const { name, role, highlights, photo } = member.data;
+const href = teamHasPage(member) ? `/teachers-and-team/${member.id}/` : undefined;
 ---
 
-<article class="group relative flex h-full flex-col overflow-hidden rounded-card bg-sage-mist shadow-card">
-  <div class="relative aspect-[16/10] overflow-hidden bg-sage-wash">
-    {
-      photo ? (
-        <Image src={photo} alt="" widths={[320, 480]} sizes="(min-width: 1024px) 360px, 100vw" class="size-full object-cover" />
-      ) : (
-        <div class="flex size-full items-center justify-center" aria-hidden="true">
-          <svg viewBox="0 0 120 150" class="h-[78%] text-gold" fill="none" stroke="currentColor" stroke-width="1.2">
-            <path d="M10 148V62C10 32 32 8 60 3c28 5 50 29 50 59v86" />
-            <path d="M18 148V64C18 38 37 17 60 12c23 5 42 26 42 52v84" opacity=".55" />
-            <path d="M60 0v6M57 3h6" />
-          </svg>
-          <span class="absolute font-display text-[3.4rem] font-semibold tracking-wide text-raspberry/85">
-            {initials(name)}
-          </span>
-        </div>
-      )
-    }
-  </div>
-  <div class="flex flex-1 flex-col p-6">
-    <h3 class="font-display text-[1.35rem] leading-tight font-bold tracking-wide text-ink uppercase">
-      {href ? <a href={href} class="after:absolute after:inset-0 after:content-['']">{displayName(member)}</a> : displayName(member)}
-    </h3>
-    {role && <p class="mt-1 text-sm font-bold tracking-wide text-gold-text uppercase">{role}</p>}
-    {member.body?.trim() && <p class="mt-3 text-[15px] leading-relaxed text-ink-soft">{excerpt(member.body, 20)}</p>}
-    {
-      href && (
-        <p class="mt-auto flex items-center gap-2 pt-5 font-display text-lg font-bold text-raspberry transition-[gap] group-hover:gap-3">
-          Read More <Icon name="arrow-right" class="size-5" />
-        </p>
-      )
-    }
-  </div>
+<article class="group relative flex h-full flex-col rounded-card border border-border bg-surface p-6 transition-shadow hover:shadow-card sm:p-7">
+  {
+    photo ? (
+      <Image src={photo} alt="" width={128} class="size-16 rounded-full object-cover" />
+    ) : (
+      <span
+        aria-hidden="true"
+        class="flex size-16 items-center justify-center rounded-full border border-gold/60 bg-sage-mist font-display text-2xl font-semibold text-raspberry"
+      >
+        {initials(name)}
+      </span>
+    )
+  }
+  <h3 class="mt-5 text-xl leading-snug font-semibold text-ink">
+    {href ? <a href={href} class="after:absolute after:inset-0 after:content-['']">{displayName(member)}</a> : displayName(member)}
+  </h3>
+  {role && <p class="mt-1 text-[15px] font-medium text-gold-text">{role}</p>}
+  {
+    highlights && (
+      <ul class="mt-4 space-y-2 text-[15px] leading-snug text-ink-soft">
+        {highlights.map((h) => (
+          <li>{h}</li>
+        ))}
+      </ul>
+    )
+  }
+  {
+    href && (
+      <p class="link-arrow mt-auto pt-5 text-[15px]">
+        Read bio <Icon name="arrow-right" class="size-4" />
+      </p>
+    )
+  }
 </article>

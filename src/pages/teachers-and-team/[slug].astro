@@ -1,0 +1,83 @@
+---
+import type { GetStaticPaths } from 'astro';
+import { Image } from 'astro:assets';
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Divider from '../../components/Divider.astro';
+import Icon from '../../components/Icon.astro';
+import { displayName, excerpt, initials, teamHasPage, type TeamMember } from '../../lib/content';
+
+export const getStaticPaths = (async () => {
+  const members = await getCollection('team', teamHasPage);
+  return members.map((member) => ({ params: { slug: member.id }, props: { member } }));
+}) satisfies GetStaticPaths;
+
+interface Props {
+  member: TeamMember;
+}
+
+const GROUP = {
+  founder: { title: 'Founder & President', anchor: 'founder' },
+  board: { title: 'Board & Leadership', anchor: 'board' },
+  teachers: { title: 'Teaching Team', anchor: 'teachers' },
+  volunteers: { title: 'Volunteers', anchor: 'serve' },
+} as const;
+
+const { member } = Astro.props;
+const { Content } = await render(member);
+const group = GROUP[member.data.group];
+const name = displayName(member);
+---
+
+<BaseLayout title={name} description={excerpt(member.body, 40)}>
+  <section class="bg-canvas pt-6 pb-16 md:pb-20">
+    <div class="container-page">
+      <nav aria-label="Breadcrumb" class="text-[15px] text-ink-soft">
+        <ol class="flex flex-wrap items-center gap-2">
+          <li><a href="/teachers-and-team/" class="hover:text-raspberry">Teachers &amp; Team</a></li>
+          <li aria-hidden="true">/</li>
+          <li aria-current="page" class="text-ink">{name}</li>
+        </ol>
+      </nav>
+
+      <div class="mt-10 grid gap-10 md:grid-cols-[minmax(0,280px)_1fr] md:gap-16">
+        <div class="mx-auto w-full max-w-[280px]">
+          <div class="relative flex aspect-[4/5] items-center justify-center overflow-hidden rounded-t-full border border-gold/60 bg-sage-mist shadow-card">
+            {
+              member.data.photo ? (
+                <Image src={member.data.photo} alt={name} width={560} class="size-full object-cover" />
+              ) : (
+                <span class="font-display text-7xl font-semibold text-raspberry/85" aria-hidden="true">
+                  {initials(member.data.name)}
+                </span>
+              )
+            }
+          </div>
+        </div>
+
+        <div>
+          <p class="eyebrow">{group.title}</p>
+          <Divider width="sm" class="mt-3" />
+          <h1 class="display-lg mt-4">{name}</h1>
+          {member.data.role && <p class="mt-2 text-lg font-semibold text-gold-text">{member.data.role}</p>}
+          {
+            member.data.highlights && (
+              <ul class="mt-4 space-y-1 text-ink-soft">
+                {member.data.highlights.map((h) => (
+                  <li>{h}</li>
+                ))}
+              </ul>
+            )
+          }
+          <Divider class="mt-6" />
+          <div class="prose-sabeel mt-8 max-w-[44rem] text-[17px] leading-[1.85] text-ink-soft">
+            <Content />
+          </div>
+          <a href={`/teachers-and-team/#${group.anchor}`} class="link-arrow mt-10">
+            <Icon name="arrow-left" class="size-5" /> Back to Teachers &amp; Team
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

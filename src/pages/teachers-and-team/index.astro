@@ -1,0 +1,120 @@
+---
+import { getEntry } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/PageHero.astro';
+import SectionHeading from '../../components/SectionHeading.astro';
+import Divider from '../../components/Divider.astro';
+import Icon from '../../components/Icon.astro';
+import Photo from '../../components/Photo.astro';
+import TeamCard from '../../components/TeamCard.astro';
+import CtaBand from '../../components/CtaBand.astro';
+import { getTeamGroup, initials } from '../../lib/content';
+
+const founder = (await getEntry('team', 'sameera-shah'))!;
+const board = await getTeamGroup('board');
+const teachers = await getTeamGroup('teachers');
+const words = ['No', 'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine', 'Ten'];
+const count = (n: number) => words[n] ?? String(n);
+---
+
+<BaseLayout
+  title="Teachers & Team"
+  description="Sabeel Institute’s Houston-based teaching team: women trained in traditional Islamic scholarship, Qur’an recitation, education, and mentoring."
+>
+  <PageHero
+    eyebrow="Teachers and program leaders"
+    title="Women trained to teach, mentor, and carry learning forward."
+    photo="team-hero"
+    photoAlt="Sabeel’s teaching team"
+    photoIcon="users"
+  >
+    <p>
+      Sabeel Institute’s Houston-based teaching team brings together women trained in traditional Islamic
+      scholarship, Qur’an recitation, education, and mentoring. In person and live online, they teach Arabic grammar,
+      Qur’an and tafsir, hadith, fiqh, spirituality, character, and service.
+    </p>
+  </PageHero>
+
+  <!-- Founder -->
+  <section id="founder" class="scroll-mt-6 bg-sage-mist py-14 md:py-16" aria-labelledby="founder-heading">
+    <div class="container-page grid items-center gap-10 md:grid-cols-2 md:gap-16">
+      <Photo slot="founder" alt="Ustadhah Sameera Shah teaching" monogram={initials(founder.data.name)} class="aspect-[4/3] shadow-card" />
+      <div>
+        <p class="eyebrow">Founder &amp; President</p>
+        <h2 id="founder-heading" class="display-md mt-2 sm:text-[2.4rem]">Meet Sameera Shah.</h2>
+        <Divider class="mt-4" />
+        <p class="mt-5 text-[17px] leading-[1.85] text-ink">
+          Founder and President Sameera Shah leads Sabeel’s educational vision. She earned a B.Sc. (Honors) in
+          Economics from LUMS, completed her ‘Alimiyyah credential through Wifaq ul Madaris in 2009, and later
+          completed advanced certificates in Qur’an study and tafsir and in Islamic jurisprudence through Whitethread
+          Institute.
+        </p>
+        <a href={`/teachers-and-team/${founder.id}/`} class="link-arrow mt-5 text-lg">
+          Read Sameera’s bio <Icon name="arrow-right" class="size-5" />
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Board -->
+  <section id="board" class="scroll-mt-6 py-14 md:py-16" aria-labelledby="board-heading">
+    <div class="container-page">
+      <SectionHeading eyebrow="Board & leadership" title="Guiding Sabeel’s work" id="board-heading">
+        <p>{count(board.length)} women serving Sabeel’s mission, programs, and community.</p>
+      </SectionHeading>
+      <ul class="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        {
+          board.map((m) => (
+            <li>
+              <TeamCard member={m} />
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <!-- Teaching team -->
+  <section id="teachers" class="scroll-mt-6 border-t border-border bg-surface py-14 md:py-16" aria-labelledby="teachers-heading">
+    <div class="container-page">
+      <SectionHeading eyebrow="Teaching team" title="Who students will learn from" id="teachers-heading">
+        <p>{count(teachers.length)} educators teaching Islamic studies, Qur’an, Seerah, and related subjects.</p>
+      </SectionHeading>
+      <ul class="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        {
+          teachers.map((m) => (
+            <li>
+              <TeamCard member={m} />
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <!-- Qualified / serve -->
+  <section class="py-14 md:py-16">
+    <div class="container-page grid gap-5 md:grid-cols-2">
+      <div class="rounded-card border border-gold/60 border-t-4 border-t-gold bg-surface p-7 sm:p-9">
+        <h2 class="font-display text-[1.8rem] font-bold text-raspberry">What “qualified” means here</h2>
+        <p class="mt-3 leading-[1.8] text-ink-soft">
+          An ‘Alimiyyah is a traditional, multi-year program of Islamic scholarship. It commonly covers Arabic, Qur’an
+          and tafsir, hadith, fiqh, and related classical disciplines. It is not one standardized U.S. university
+          degree.
+        </p>
+      </div>
+      <div id="serve" class="scroll-mt-6 rounded-card border border-gold/60 border-t-4 border-t-gold bg-surface p-7 sm:p-9">
+        <h2 class="font-display text-[1.8rem] font-bold text-raspberry">Students who return to serve</h2>
+        <p class="mt-3 leading-[1.8] text-ink-soft">
+          Several members of Sabeel’s leadership and teaching team first joined as students, then returned as mentors,
+          teachers, volunteers, and program leaders — carrying knowledge forward through service.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <CtaBand title="Learn with the team">
+    <p>Explore current programs for women, youth, and families, offered in Houston and live online.</p>
+    <a slot="actions" href="/programs/" class="btn btn-primary px-7 text-base">View Programs</a>
+  </CtaBand>
+</BaseLayout>
