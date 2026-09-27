@@ -1,0 +1,26 @@
+# Through the Years timeline, ordered by `order`. Add `year` only after
+# checking registration records, flyers, and program leads. `program` links a
+# program record (its folder name); its photo or flyer illustrates the milestone.
+- id: early-sustained-study
+  order: 10
+  title: Early sustained study
+  text: Multi-year coursework shows deep study of the Islamic sciences has long been part of Sabeel’s work.
+- id: summer-garden
+  order: 20
+  title: Summer Garden
+  text: A long-running girls’ program joining Islamic learning, honest conversation, sisterhood, and purposeful enrichment.
+  program: girls-summer-garden-at-bcic-2021
+- id: light-of-knowledge
+  order: 30
+  title: Light of Knowledge
+  text: A compact pathway making Qur’an, hadith, fiqh, and Arabic accessible to women with full lives.
+- id: hikam-foundations
+  order: 40
+  title: Hikam Foundations
+  text: Sustained learning became a clear two-year pathway grounded in Islamic sciences, reflection, mentorship, and service.
+  program: hikam-foundations-2024
+- id: three-program-areas
+  order: 50
+  year: Today
+  title: Three public program areas
+  text: Hikam Foundations, Women’s Learning, and Youth & Children give the public program portfolio a clear, stable structure.

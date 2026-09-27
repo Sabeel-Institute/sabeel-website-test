@@ -1,0 +1,48 @@
+---
+/**
+ * "Join the Interest List" dialog, available on every page. Any link with
+ * `data-interest` opens it; without JavaScript the link goes to Contact.
+ */
+import Icon from './Icon.astro';
+import Divider from './Divider.astro';
+import MailingListForm from './MailingListForm.astro';
+---
+
+<dialog
+  id="interest-dialog"
+  aria-labelledby="interest-title"
+  class="m-auto w-[calc(100%-2rem)] max-w-xl rounded-card bg-surface p-0 shadow-card backdrop:bg-ink/60 backdrop:backdrop-blur-sm"
+>
+  <div class="relative p-7 sm:p-9">
+    <button
+      type="button"
+      data-interest-close
+      class="absolute top-4 right-4 flex size-11 items-center justify-center rounded-full text-ink hover:bg-inset"
+    >
+      <Icon name="x" class="size-5" label="Close" />
+    </button>
+    <p class="eyebrow">Interest list</p>
+    <h2 id="interest-title" class="display-md mt-1">Hear about upcoming programs.</h2>
+    <Divider class="mt-4" />
+    <p class="mt-4 text-ink-soft">
+      Choose the areas you care about and we’ll let you know when new programs open for registration.
+    </p>
+    <div class="mt-6">
+      <MailingListForm id="interest" withInterests submitLabel="Join" />
+    </div>
+  </div>
+</dialog>
+
+<script>
+  const dialog = document.getElementById('interest-dialog') as HTMLDialogElement;
+  document.addEventListener('click', (e) => {
+    const trigger = (e.target as Element).closest('[data-interest]');
+    if (!trigger) return;
+    e.preventDefault();
+    dialog.showModal();
+  });
+  dialog.querySelector('[data-interest-close]')!.addEventListener('click', () => dialog.close());
+  dialog.addEventListener('click', (e) => {
+    if (e.target === dialog) dialog.close();
+  });
+</script>

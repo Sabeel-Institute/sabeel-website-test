@@ -1,0 +1,31 @@
+---
+/** Three stacked photo slots with captions, e.g. women · teens · children. */
+import Photo from './Photo.astro';
+import type { IconName } from './Icon.astro';
+
+interface Props {
+  tiles: { slot: string; label: string; alt: string; icon: IconName }[];
+}
+const { tiles } = Astro.props;
+---
+
+<div class="grid h-[300px] grid-cols-6 grid-rows-2 gap-3 sm:h-[360px] sm:gap-4">
+  {
+    tiles.map((t, i) => (
+      <figure class:list={['relative', i === 0 ? 'col-span-4 row-span-2' : 'col-span-2 row-span-1']}>
+        <Photo
+          slot={t.slot}
+          alt={t.alt}
+          icon={t.icon}
+          class="h-full shadow-card"
+          compact={i > 0}
+          sizes={i === 0 ? '(min-width: 768px) 32vw, 66vw' : '(min-width: 768px) 16vw, 33vw'}
+          eager
+        />
+        <figcaption class="absolute bottom-2 left-2 rounded-full bg-surface/95 px-3 py-1 text-[13px] font-semibold text-ink shadow-card">
+          {t.label}
+        </figcaption>
+      </figure>
+    ))
+  }
+</div>

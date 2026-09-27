@@ -1,0 +1,14 @@
+---
+status: completed
+title: Girls Summer Garden at BCIC
+summary: An in-person summer program for girls 11+ covering stories, Seerah, and the history of Al-Aqsa, with crafts, speakers, and sessions led by Ustadha Sameera Shah.
+area: youth-children
+date: '2021-06-26'
+audience: Girls
+schedule: Sat June 26th-Wed June 30th, 11 AM-2 PM
+format: In person
+venue: Bear Creek Islamic Center community hall (on-site)
+instructors:
+- sameera-shah
+flyer: ./flyer.webp
+---

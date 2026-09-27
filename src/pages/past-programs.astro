@@ -1,0 +1,63 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import SectionHeading from '../components/SectionHeading.astro';
+import ProgramCard from '../components/ProgramCard.astro';
+import AreaCards from '../components/AreaCards.astro';
+import CtaBand from '../components/CtaBand.astro';
+import { getCompletedPrograms } from '../lib/content';
+
+const all = await getCompletedPrograms();
+const recent = all.slice(0, 6);
+---
+
+<BaseLayout
+  title="Past Programs"
+  description="A growing record of the courses, camps, and gatherings Sabeel Institute has offered to women, youth, and children."
+>
+  <PageHero
+    eyebrow="Past programs"
+    title="A growing record of learning at Sabeel."
+    photo="past-programs-hero"
+    photoAlt="A past Sabeel class"
+    photoIcon="book-open"
+  >
+    <p>
+      Explore selected previous offerings for women, youth, and children. Each completed program remains connected to
+      the area of learning it belongs to.
+    </p>
+  </PageHero>
+
+  <section class="py-14 md:py-16" aria-labelledby="ways-heading">
+    <div class="container-page">
+      <SectionHeading eyebrow="Explore by program area" title="Three ways into the archive." id="ways-heading">
+        <p>Each area keeps its completed programs together, grouped by year — {all.length} programs so far.</p>
+      </SectionHeading>
+      <div class="mt-10">
+        <AreaCards mode="archive" />
+      </div>
+    </div>
+  </section>
+
+  <section class="border-t border-border bg-surface py-14 md:py-16" aria-labelledby="recent-heading">
+    <div class="container-page">
+      <SectionHeading eyebrow="Completed programs" title="Begin with selected recent programs." id="recent-heading">
+        <p>The most recently completed programs across all three areas.</p>
+      </SectionHeading>
+      <ul class="mt-10 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+        {
+          recent.map((p) => (
+            <li>
+              <ProgramCard program={p} />
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <CtaBand title="Looking for something current?">
+    <p>Return to Programs to see what is open for registration now.</p>
+    <a slot="actions" href="/programs/" class="btn btn-primary px-7 text-base">View Current Programs</a>
+  </CtaBand>
+</BaseLayout>

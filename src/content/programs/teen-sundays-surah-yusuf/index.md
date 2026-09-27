@@ -1,0 +1,33 @@
+---
+status: ongoing
+title: Teen Sundays
+subtitle: "Surah Yusuf: Trusting Allah When Life Doesn’t Make Sense"
+summary: A twice-monthly Qur’an program where teens explore Surah Yusuf and what it teaches about resilience, patience, identity, forgiveness, and trust in Allah’s plan.
+area: youth-children
+date: 2026-09-13
+audience: Boys 12–16 · Girls 13+
+schedule: Sundays · 2:15–4:15 PM CT
+format: In person
+venue: Masjid Istiqlal
+duration: Twice monthly — Sept 13, Sept 27, Oct 11, Oct 25
+fee: $100
+registerUrl: https://forms.gle/6Y4ezUaPhMtX7jLH9
+outcomes:
+  - How to stay strong when life feels uncertain
+  - Who we are when no one is watching
+  - How waiting and patience can bring us closer to Allah
+  - What forgiveness teaches us about strength
+  - How to trust Allah while our story is still unfolding
+instructors:
+  - sameera-shah
+expect: Meaningful discussion, reflection, snacks, and friendships — twice a month, on-site at Masjid Istiqlal.
+flyer: ./flyer.webp
+---
+
+## The Quran hits different when you see yourself in it
+
+Have you ever wondered where Allah’s plan is in everything you’re going through?
+
+Surah Yusuf is more than the story of Prophet Yusuf (AS). It is a story about facing hardship, making difficult choices, staying true to who you are, and trusting Allah — even when you cannot see what comes next.
+
+Through meaningful discussions, reflection, and good company, students explore resilience, patience, identity, forgiveness, and trust in Allah’s plan.

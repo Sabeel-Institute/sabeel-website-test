@@ -1,77 +1,130 @@
 /**
- * Content schemas. Every course, team member, testimonial and blog post is
+ * Content schemas. Every program, team member, testimonial and milestone is
  * validated against these at build time, so a missing or mistyped field fails
  * `npm run build` with a message naming the file and the field.
  *
  * How to add or change content: see AGENTS.md.
  */
-import { defineCollection } from 'astro:content';
+import { defineCollection, reference } from 'astro:content';
 import { glob, file } from 'astro/loaders';
 import { z } from 'astro/zod';
 
-/** Course categories, as used on the course pages and the past-courses filter. */
-export const COURSE_CATEGORIES = [
-  'Ladies',
-  'Adults',
-  'Youth Girls',
-  'Youth Boys',
-  'Youth',
-  'Kids',
-  'Families',
-  'Everyone',
-] as const;
+/** The three program areas that organise Programs and the archive. */
+export const PROGRAM_AREAS = ['hikam-foundations', 'womens-learning', 'youth-children'] as const;
 
-/** Folder-per-entry collections use the folder name as the id and URL slug. */
-const folderId = ({ entry }: { entry: string }) => entry.split('/')[0]!;
-
+/** Route segments under /programs/ that belong to pages, not programs. */
+const RESERVED_SLUGS = new Set(['womens-learning', 'youth-children']);
 const slugPattern = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 
-const courses = defineCollection({
+const programs = defineCollection({
   loader: glob({
     pattern: '*/index.md',
-    base: './src/content/courses',
-    generateId: (o) => {
-      const id = folderId(o);
+    base: './src/content/programs',
+    generateId: ({ entry }) => {
+      const id = entry.split('/')[0]!;
       if (!slugPattern.test(id)) {
-        throw new Error(
-          `Course folder "${id}" must be lowercase words joined by hyphens, e.g. "mommy-burnout-2026".`,
-        );
+        throw new Error(`Program folder "${id}" must be lowercase words joined by hyphens, e.g. "mommy-burnout-2026".`);
+      }
+      if (RESERVED_SLUGS.has(id)) {
+        throw new Error(`Program folder "${id}" is reserved for a program-area page; choose another name.`);
       }
       return id;
     },
   }),
   schema: ({ image }) => {
-    const openCourse = z.object({
-      /** "open" = shown under Open for Registration; "past" = shown in the Past Courses archive. */
-      status: z.literal('open'),
+    /** A team member id (file name in src/content/team) or a guest written inline. */
+    const instructor = z.union([
+      reference('team'),
+      z.object({
+        name: z.string().min(1),
+        role: z.string().min(1).optional(),
+        highlights: z.array(z.string().min(1)).max(3).optional(),
+      }),
+    ]);
+
+    const fields = {
       title: z.string().min(1),
-      /** Short line shown under the title, e.g. "A Journey from Burnout to Barakah". */
+      /** Optional tagline under the title. */
       subtitle: z.string().min(1).optional(),
-      /** One or two sentences for course cards and link previews. */
+      /** One clear sentence: what students will learn and why it matters. */
       summary: z.string().min(1).max(240),
-      category: z.enum(COURSE_CATEGORIES),
-      /** Date of the first session (YYYY-MM-DD). Orders course listings, newest first. */
+      area: z.enum(PROGRAM_AREAS),
+      /** First session (YYYY-MM-DD). Orders listings and archives. */
       date: z.coerce.date(),
-      /** Schedule as people should read it, e.g. "Mondays, Sept 14 – Oct 26". */
-      dates: z.string().min(1),
-      time: z.string().min(1),
-      venue: z.string().min(1),
-      /** Who may attend, e.g. "Ladies only" or "Boys 12–16, Girls 13+". */
+      /** Only the year of `date` is known; pages show the year alone. */
+      dateApprox: z.boolean().optional(),
+      /** How the start is shown when a plain date does not fit, e.g. "Fall 2026". */
+      starts: z.string().min(1).optional(),
+      /** Who may attend, e.g. "Adult women" or "Boys 12–16, Girls 13+". */
       audience: z.string().min(1),
+      /** Day, time, and zone, e.g. "Mondays · 12:00–1:30 PM CT". */
+      schedule: z.string().min(1),
+      format: z.enum(['In person', 'Online', 'Hybrid']),
+      /** Where it meets, e.g. "Masjid Istiqlal" or "Masjid Istiqlal and Zoom". */
+      venue: z.string().min(1),
+      /** Length, e.g. "Seven sessions" or "Monthly gathering". */
+      duration: z.string().min(1),
       fee: z.string().min(1),
-      /** Registration form link (Google Forms etc.). */
       registerUrl: z.url(),
-      /** Flyer image in the same folder, e.g. "./flyer.webp". */
-      flyer: image(),
+      /** Registration deadline as people should read it. */
+      deadline: z.string().min(1).optional(),
+      /** Materials or prerequisites. */
+      prerequisites: z.string().min(1).optional(),
+      /** Three to five things students will learn. */
+      outcomes: z.array(z.string().min(1)).min(1).max(8).optional(),
+      instructors: z.array(instructor).min(1).optional(),
+      /** Teaching format, activities, homework, parent role, participation. */
+      expect: z.string().min(1).optional(),
+      /** Attendance, refunds, recording, accessibility, safeguarding. */
+      policies: z.string().min(1).optional(),
+      /** A photograph for the top of the page (not the flyer). */
+      image: image().optional(),
+      imageAlt: z.string().min(1).optional(),
+      /** The original flyer, shown lower on the page. */
+      flyer: image().optional(),
+      /**
+       * Bespoke page path (e.g. "/hikam-foundations/"). When set, listings link
+       * there and the standard template does not render this program.
+       */
+      page: z
+        .string()
+        .regex(/^\/[a-z0-9-]+(?:\/[a-z0-9-]+)*\/$/, 'page must look like "/hikam-foundations/"')
+        .optional(),
+    };
+
+    /** Taking registrations now. */
+    const open = z.object({ ...fields, status: z.literal('open') });
+    /** A running series people can still join. */
+    const ongoing = z.object({ ...fields, status: z.literal('ongoing') });
+    /** Announced; registration not open yet. */
+    const upcoming = z.object({
+      ...fields,
+      status: z.literal('upcoming'),
+      schedule: fields.schedule.optional(),
+      format: fields.format.optional(),
+      venue: fields.venue.optional(),
+      duration: fields.duration.optional(),
+      fee: fields.fee.optional(),
+      registerUrl: fields.registerUrl.optional(),
     });
-    const pastCourse = openCourse.partial().extend({
-      status: z.literal('past'),
-      title: z.string().min(1),
-      category: z.enum(COURSE_CATEGORIES),
-      date: z.coerce.date(),
-      flyer: image(),
+    /** Finished; kept as an archive record. */
+    const completed = z.object({
+      ...fields,
+      status: z.literal('completed'),
+      summary: fields.summary.optional(),
+      audience: fields.audience.optional(),
+      schedule: fields.schedule.optional(),
+      format: fields.format.optional(),
+      venue: fields.venue.optional(),
+      duration: fields.duration.optional(),
+      fee: fields.fee.optional(),
+      registerUrl: fields.registerUrl.optional(),
     });
-    return z.discriminatedUnion('status', [openCourse, pastCourse]);
+    return z.discriminatedUnion('status', [open, ongoing, upcoming, completed]).superRefine((d, ctx) => {
+      if (d.image && !d.imageAlt) {
+        ctx.addIssue({ code: 'custom', path: ['imageAlt'], message: 'imageAlt is required when image is set' });
+      }
+    });
   },
 });
 
@@ -81,12 +134,16 @@ const team = defineCollection({
     z.object({
       name: z.string().min(1),
       honorific: z.enum(['Ustadhah', 'Sr.', 'Br.', 'Dr.']),
-      /** Section on the Our Team page. */
-      group: z.enum(['board', 'teachers', 'admin']),
+      /** Section on the Teachers & Team page. */
+      group: z.enum(['founder', 'board', 'teachers', 'volunteers']),
       /** Position within the group, ascending. */
       order: z.number().int(),
-      /** Optional role line, e.g. "Founder" or "Treasurer". */
+      /** e.g. "Program Director and Teacher". */
       role: z.string().min(1).optional(),
+      /** One or two short lines: credentials, subjects taught. */
+      highlights: z.array(z.string().min(1)).max(3).optional(),
+      /** false keeps the file but hides the person from the site. */
+      listed: z.boolean().default(true),
       photo: image().optional(),
     }),
 });
@@ -99,16 +156,18 @@ const testimonials = defineCollection({
   }),
 });
 
-const posts = defineCollection({
-  loader: glob({ pattern: '*.md', base: './src/content/posts' }),
-  schema: ({ image }) =>
-    z.object({
-      title: z.string().min(1),
-      date: z.coerce.date(),
-      summary: z.string().min(1).max(240),
-      author: z.string().min(1).optional(),
-      cover: image().optional(),
-    }),
+const milestones = defineCollection({
+  loader: file('src/content/milestones.yaml'),
+  schema: z.object({
+    /** Position on the timeline, ascending. */
+    order: z.number().int(),
+    /** Leave out until the year is verified against records. */
+    year: z.string().min(1).optional(),
+    title: z.string().min(1),
+    text: z.string().min(1),
+    /** A related program record; its flyer or photo illustrates the milestone. */
+    program: reference('programs').optional(),
+  }),
 });
 
-export const collections = { courses, team, testimonials, posts };
+export const collections = { programs, team, testimonials, milestones };

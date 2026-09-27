@@ -1,177 +1,74 @@
 ---
-import { Image } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import PageHero from '../components/PageHero.astro';
 import Divider from '../components/Divider.astro';
 import Icon from '../components/Icon.astro';
-import SuggestedGiving from '../components/SuggestedGiving.astro';
-import sprigSage from '../assets/decor/sprig-sage.png';
-import sprigTall from '../assets/decor/sprig-sage-tall.png';
-import sprigInk from '../assets/decor/sprig-ink.png';
-import archLantern from '../assets/images/arch-lantern.png';
-
-const values = [
-  { icon: 'book-open', title: 'Authenticity', text: 'We are committed to teaching authentic Islamic knowledge rooted in the Qur’an and Sunnah.' },
-  { icon: 'users', title: 'Sisterhood', text: 'We cultivate a warm, inclusive community where women support, encourage, and learn from one another.' },
-  { icon: 'heart', title: 'Compassion', text: 'We lead with kindness and understanding, meeting every learner where she is.' },
-  { icon: 'leaf', title: 'Growth', text: 'We inspire continuous spiritual and personal growth through knowledge and reflection.' },
-  { icon: 'hand-heart', title: 'Service', text: 'We strive to make a positive impact in our homes, communities, and the world.' },
-] as const;
+import Photo from '../components/Photo.astro';
+import SabeelDifference from '../components/SabeelDifference.astro';
 ---
 
 <BaseLayout
-  title="About Us"
-  description="Sabeel Institute is a nurturing community dedicated to authentic Islamic education that strengthens hearts, minds, and souls."
+  title="About"
+  description="Since 2009, Sabeel has brought women together for structured, in-person Islamic learning in Houston."
 >
-  <PageHero title="About Us">
+  <PageHero
+    eyebrow="Who we are"
+    title="A women-led home for Islamic learning in Houston."
+    photo="about-hero"
+    photoAlt="A Sabeel class in session"
+    photoIcon="users"
+  >
     <p>
-      Sabeel Institute is a nurturing community dedicated to authentic Islamic education that strengthens hearts,
-      minds, and souls. We walk alongside women on their journey of faith, offering knowledge, support, and
-      sisterhood every step of the way.
+      Since 2009, Sabeel has brought women together for structured, in-person Islamic learning in Houston. Today, its
+      programs serve adult women, university students, teens, and children.
     </p>
   </PageHero>
 
   <!-- Mission and vision -->
-  <section class="bg-sage-wash py-14 md:py-12">
-    <div class="container-page grid items-center gap-10 md:grid-cols-[1fr_auto_1fr] md:gap-12">
-      <div class="md:pl-10">
-        <h2 class="display-md">Our Mission</h2>
+  <section class="py-14 md:py-20">
+    <div class="container-page grid gap-12 md:grid-cols-2 md:gap-16 lg:px-20">
+      <div>
+        <p class="eyebrow">Mission</p>
+        <h2 class="display-md mt-2 sm:text-[2.4rem]">Sound knowledge for faithful lives.</h2>
         <Divider class="mt-4" />
-        <p class="mt-5 max-w-[26rem] text-[17px] leading-[1.8] text-ink">
-          To provide authentic, accessible, and compassionate Islamic education that empowers women to live with
-          purpose, faith, and confidence.
+        <p class="mt-5 text-[17px] leading-[1.85] text-ink-soft">
+          Sabeel equips women and families through structured, in-person study rooted in the Qur’an, Sunnah, and
+          scholarly tradition — nurturing sound knowledge, faithful practice, and service.
         </p>
       </div>
-      <div class="mx-auto flex size-52 items-center justify-center rounded-full bg-canvas md:size-60" aria-hidden="true">
-        <Image src={sprigSage} alt="" width={200} class="h-[78%] w-auto" />
-      </div>
       <div>
-        <h2 class="display-md">Our Vision</h2>
+        <p class="eyebrow">Vision</p>
+        <h2 class="display-md mt-2 sm:text-[2.4rem]">Knowledge that multiplies into service.</h2>
         <Divider class="mt-4" />
-        <p class="mt-5 max-w-[26rem] text-[17px] leading-[1.8] text-ink">
-          Your support helps us provide life-changing Islamic education, create meaningful programs, and build a
-          stronger community of knowledgeable, confident, and compassionate women.
+        <p class="mt-5 text-[17px] leading-[1.85] text-ink-soft">
+          We envision generations of learners whose knowledge strengthens their homes, masjids, and communities.
         </p>
       </div>
     </div>
   </section>
 
   <!-- Our story -->
-  <section class="py-14 md:py-16" aria-labelledby="story-heading">
-    <div class="container-page max-w-[52rem] text-center">
-      <h2 id="story-heading" class="display-md">Our Story</h2>
-      <Divider align="center" class="mt-4" />
-      <p class="mt-6 text-[17px] leading-[1.85] text-ink-soft">
-        Sabeel Institute was born from a simple yet powerful belief: that every Muslim woman deserves access to
-        authentic knowledge in a supportive and nurturing environment.
-      </p>
-      <p class="mt-4 text-[17px] leading-[1.85] text-ink-soft">
-        What began as a small circle of sisters seeking to grow together in faith has blossomed into a vibrant
-        community of learners, mentors, and friends. Through dedication, trust in Allah, and the generosity of our
-        supporters, Sabeel Institute continues to grow — one heart, one mind, and one soul at a time.
-      </p>
-    </div>
-  </section>
-
-  <!-- What we do (from oursabeel.com About) -->
-  <section class="pb-14 md:pb-16" aria-labelledby="approach-heading">
-    <div class="container-page">
-      <div class="grid gap-8 rounded-card border border-gold/60 bg-surface p-7 sm:p-10 lg:grid-cols-2 lg:gap-14">
-        <div>
-          <h2 id="approach-heading" class="display-md">What We Do</h2>
-          <Divider class="mt-4" />
-          <p class="mt-5 leading-[1.8] text-ink-soft">
-            We are a not-for-profit Islamic educational institution based in Houston, TX, dedicated to providing
-            authentic Islamic education to our community through qualified teachers. The philosophy of our courses
-            is distinct in its embrace of the entire academic tradition of the Ahl al-Sunnah wal-Jama’a, with
-            respect for all scholars of Tafsir, Hadith, Fiqh, and Usul al-Fiqh.
-          </p>
-          <p class="mt-4 leading-[1.8] text-ink-soft">
-            We conduct Islamic courses, thematic workshops, and lectures focusing on the religious sciences and
-            spiritual development, offered at masajid and private venues and live online. Our students include
-            moms, working professionals, and students — and alhamdulillah, we have been offering mostly free
-            Islamic courses in Houston and online for more than ten years.
-          </p>
-        </div>
-        <div>
-          <h2 class="display-md">Our Name</h2>
-          <Divider class="mt-4" />
-          <p class="mt-5 leading-[1.8] text-ink-soft">
-            Sabeel Institute was founded as Sameera Institute. <em>Sabeel</em> means “path”: just as the Sunnah of
-            the Prophet (peace be upon him) exemplifies the importance of righteous companionship, we strive to build a community of
-            women who uplift one another, share knowledge, and walk the path of faith with sincerity.
-          </p>
-          <p class="mt-4 leading-[1.8] text-ink-soft">
-            While our name has changed, our mission remains the same: to provide a space where women can learn,
-            grow, and support one another on their path of faith.
-          </p>
+  <section class="border-t border-border bg-surface py-14 md:py-20" aria-labelledby="story-heading">
+    <div class="container-page grid items-center gap-10 md:grid-cols-2 md:gap-16">
+      <Photo slot="about-story" alt="An early Sabeel class" icon="book-open" class="aspect-[5/4] shadow-card" />
+      <div>
+        <p class="eyebrow">Our story</p>
+        <h2 id="story-heading" class="display-md mt-2 sm:text-[2.4rem]">Built by women, growing across generations.</h2>
+        <Divider class="mt-4" />
+        <p class="mt-5 text-[17px] leading-[1.85] text-ink-soft">
+          Since 2009, Sabeel has grown from one teacher offering classes to university students and adult women in
+          masjids across southwest Houston into a teaching faculty of seven Alimaat. Graduates of Sabeel’s own
+          programs continue their studies and now serve in teaching, administration, and program support. What began
+          with adult classes now includes learning for children and teens — forming an intergenerational community
+          rooted in knowledge, suhbah, and service.
+        </p>
+        <div class="mt-6 flex flex-wrap gap-x-8 gap-y-3">
+          <a href="/teachers-and-team/" class="link-arrow text-lg">Meet Our Teachers <Icon name="arrow-right" class="size-5" /></a>
+          <a href="/through-the-years/" class="link-arrow text-lg">Through the Years <Icon name="arrow-right" class="size-5" /></a>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- Core values -->
-  <section class="relative overflow-hidden bg-sage-wash py-14 md:py-16" aria-labelledby="values-heading">
-    <Image
-      src={sprigTall}
-      alt=""
-      width={160}
-      class="pointer-events-none absolute top-10 left-2 hidden w-[110px] opacity-80 xl:block"
-    />
-    <div class="container-page">
-      <h2 id="values-heading" class="display-md text-center">Our Core Values</h2>
-      <Divider align="center" class="mt-4" />
-      <ul class="mt-10 grid gap-8 sm:grid-cols-2 lg:grid-cols-5 lg:gap-0">
-        {
-          values.map((v, i) => (
-            <li class:list={['px-4 text-center lg:px-6', i > 0 && 'lg:border-l lg:border-gold']}>
-              <span class="mx-auto flex size-[70px] items-center justify-center rounded-full bg-canvas text-gold-text">
-                <Icon name={v.icon} class="size-8" />
-              </span>
-              <h3 class="mt-4 font-display text-[1.9rem] font-bold text-raspberry">{v.title}</h3>
-              <p class="mt-2 text-[15px] leading-[1.75] text-ink">{v.text}</p>
-            </li>
-          ))
-        }
-      </ul>
-    </div>
-  </section>
-
-  <!-- A community that cares -->
-  <section class="relative overflow-hidden bg-canvas" aria-labelledby="community-heading">
-    <Image
-      src={sprigInk}
-      alt=""
-      width={220}
-      class="pointer-events-none absolute right-0 bottom-6 hidden w-[170px] opacity-70 xl:block"
-    />
-    <div class="grid md:grid-cols-[minmax(0,26%)_1fr]">
-      <div class="hidden items-center justify-center bg-sage-mist md:flex">
-        <Image
-          src={archLantern}
-          alt=""
-          width={245}
-          class="h-[300px] w-[230px] rounded-t-full object-cover shadow-card lg:h-[330px] lg:w-[245px]"
-        />
-      </div>
-      <div class="px-4 py-14 sm:px-8 md:py-16 lg:px-16">
-        <div class="mx-auto max-w-[40rem] text-center">
-          <h2 id="community-heading" class="display-lg">A Community That Cares</h2>
-          <Divider align="center" class="mt-4" />
-          <p class="mt-5 text-[17px] leading-[1.75] text-ink-soft">
-            At Sabeel Institute, you are never alone on your journey. Whether you are seeking knowledge,
-            friendship, or spiritual growth, you will find a place where you belong.
-          </p>
-          <p class="mt-8 text-[15px] font-semibold tracking-wide text-ink uppercase">Suggested monthly giving</p>
-          <SuggestedGiving class="mt-4" />
-          <a href="/donate/" class="btn btn-primary mt-7 w-full max-w-[34rem] py-4 text-lg">
-            Donate now <Icon name="arrow-right" class="size-5" />
-          </a>
-          <p class="mt-4 flex items-center justify-center gap-2 text-sm text-ink-soft">
-            <Icon name="lock" class="size-4 text-success" /> 100% secure donation · Tax-deductible
-          </p>
-        </div>
-      </div>
-    </div>
-  </section>
+  <SabeelDifference />
 </BaseLayout>

@@ -1,69 +1,122 @@
-import { getCollection, type CollectionEntry } from 'astro:content';
+import { getCollection, getEntry, type CollectionEntry } from 'astro:content';
+import type { AreaId } from '../site.config';
 
-export type Course = CollectionEntry<'courses'>;
+export type Program = CollectionEntry<'programs'>;
 export type TeamMember = CollectionEntry<'team'>;
-export type Post = CollectionEntry<'posts'>;
+export type Instructor = { name: string; role?: string; highlights?: readonly string[]; href?: string };
 
-/** Checked by file presence so an empty blog does not trigger empty-collection warnings. */
-export const hasPosts = Object.keys(import.meta.glob('../content/posts/*.md')).length > 0;
+/* ---------- Programs ---------- */
 
-export async function getPosts(): Promise<Post[]> {
-  if (!hasPosts) return [];
-  return (await getCollection('posts')).sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+const newestFirst = (a: Program, b: Program) => b.data.date.getTime() - a.data.date.getTime();
+const statusRank = { open: 0, ongoing: 1, upcoming: 2, completed: 3 } as const;
+
+/** Open and ongoing programs: open first, then newest start first. */
+export async function getCurrentPrograms(area?: AreaId): Promise<Program[]> {
+  const list = await getCollection(
+    'programs',
+    (p) => (p.data.status === 'open' || p.data.status === 'ongoing') && (!area || p.data.area === area),
+  );
+  return list.sort((a, b) => statusRank[a.data.status] - statusRank[b.data.status] || newestFirst(a, b));
 }
 
-const newestFirst = (a: Course, b: Course) => b.data.date.getTime() - a.data.date.getTime();
-
-export async function getOpenCourses(): Promise<Course[]> {
-  return (await getCollection('courses', (c) => c.data.status === 'open')).sort(newestFirst);
+export async function getUpcomingPrograms(area?: AreaId): Promise<Program[]> {
+  const list = await getCollection('programs', (p) => p.data.status === 'upcoming' && (!area || p.data.area === area));
+  return list.sort((a, b) => a.data.date.getTime() - b.data.date.getTime());
 }
 
-export async function getPastCourses(): Promise<Course[]> {
-  return (await getCollection('courses', (c) => c.data.status === 'past')).sort(newestFirst);
+export async function getCompletedPrograms(area?: AreaId): Promise<Program[]> {
+  const list = await getCollection('programs', (p) => p.data.status === 'completed' && (!area || p.data.area === area));
+  return list.sort(newestFirst);
+}
+
+/** Where a program lives: its bespoke page, or the standard template page. */
+export function programHref(program: Program): string {
+  return program.data.page ?? `/programs/${program.id}/`;
+}
+
+export const STATUS_LABEL = {
+  open: 'Registration open',
+  ongoing: 'Ongoing series',
+  upcoming: 'Coming soon',
+  completed: 'Program completed',
+} as const;
+
+const longDate = new Intl.DateTimeFormat('en-US', { dateStyle: 'long', timeZone: 'UTC' });
+
+/** The start as people should read it. */
+export function startLabel(program: Program): string {
+  const d = program.data;
+  if (d.starts) return d.starts;
+  return d.dateApprox ? String(d.date.getUTCFullYear()) : longDate.format(d.date);
+}
+
+export function programYear(program: Program): number {
+  return program.data.date.getUTCFullYear();
+}
+
+/** Team references become linked names; inline guests pass through. */
+export async function resolveInstructors(list: Program['data']['instructors']): Promise<Instructor[]> {
+  if (!list) return [];
+  return Promise.all(
+    list.map(async (item) => {
+      if ('name' in item) return item;
+      const member = (await getEntry(item))!;
+      return {
+        name: displayName(member),
+        role: member.data.role,
+        highlights: member.data.highlights,
+        href: teamHasPage(member) ? `/teachers-and-team/${member.id}/` : undefined,
+      };
+    }),
+  );
 }
 
 /**
- * Open courses always get a page. Past courses keep theirs only when they have
- * written details, so links shared while a course was open keep working;
- * flyer-only archive entries are shown in the Past Courses lightbox instead.
+ * Every `page:` a program points to must exist, so a listing can never link to
+ * a missing page. Called while the build generates program pages.
  */
-export function courseHasPage(course: Course): boolean {
-  return course.data.status === 'open' || Boolean(course.body?.trim());
+const pageRoutes = new Set(
+  Object.keys(import.meta.glob('/src/pages/**/*.astro')).map((file) =>
+    file
+      .replace(/^\/src\/pages/, '')
+      .replace(/(\/index)?\.astro$/, '/')
+      .replace(/\/+$/, '/'),
+  ),
+);
+
+export function assertBespokePages(programs: Program[]): void {
+  for (const p of programs) {
+    if (p.data.page && !pageRoutes.has(p.data.page)) {
+      throw new Error(
+        `Program "${p.id}" sets page: ${p.data.page}, but there is no page file for it in src/pages/. ` +
+          `Create src/pages${p.data.page.replace(/\/$/, '')}.astro or remove the page field.`,
+      );
+    }
+  }
 }
 
-export const TEAM_GROUPS = [
-  {
-    key: 'board',
-    anchor: 'board',
-    title: 'Board of Directors',
-    intro: 'The directors who guide Sabeel Institute’s mission and programs.',
-  },
-  {
-    key: 'teachers',
-    anchor: 'teachers',
-    title: 'Our Teachers',
-    intro:
-      'At Sabeel Institute, we are dedicated to providing authentic Islamic education to our community through qualified teachers.',
-  },
-  {
-    key: 'admin',
-    anchor: 'admin',
-    title: 'Admin Staff & Volunteers',
-    intro:
-      'Our successes are a testament to the tireless efforts and dedication of our administration and volunteer staff. Meet the team behind our achievements.',
-  },
-] as const satisfies ReadonlyArray<{ key: TeamMember['data']['group']; anchor: string; title: string; intro: string }>;
+/* ---------- Team ---------- */
 
 export async function getTeamGroup(group: TeamMember['data']['group']): Promise<TeamMember[]> {
-  return (await getCollection('team', (m) => m.data.group === group)).sort((a, b) => a.data.order - b.data.order);
+  const list = await getCollection('team', (m) => m.data.listed && m.data.group === group);
+  return list.sort((a, b) => a.data.order - b.data.order);
 }
 
 export function teamHasPage(member: TeamMember): boolean {
-  return Boolean(member.body?.trim());
+  return member.data.listed && Boolean(member.body?.trim());
 }
 
 export function displayName(member: TeamMember): string {
   return `${member.data.honorific} ${member.data.name}`;
+}
+
+export function initials(name: string): string {
+  return name
+    .split(/\s+/)
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((w) => w[0]!.toUpperCase())
+    .join('');
 }
 
 /** First `words` words of a Markdown body as plain text. */
@@ -75,13 +128,4 @@ export function excerpt(markdown: string | undefined, words = 22): string {
     .trim();
   const parts = text.split(' ');
   return parts.length <= words ? text : `${parts.slice(0, words).join(' ')}…`;
-}
-
-export function initials(name: string): string {
-  return name
-    .split(/\s+/)
-    .filter(Boolean)
-    .slice(0, 2)
-    .map((w) => w[0]!.toUpperCase())
-    .join('');
 }

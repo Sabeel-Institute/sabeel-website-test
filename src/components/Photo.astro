@@ -1,0 +1,78 @@
+---
+/**
+ * A named photo slot. Drop `src/assets/photos/<slot>.jpg` (or .png/.webp) in
+ * place and it appears here; until then the slot shows a geometric panel, so
+ * no page ever shows a stock or placeholder photograph.
+ */
+import type { ImageMetadata } from 'astro';
+import { Image } from 'astro:assets';
+import Icon, { type IconName } from './Icon.astro';
+
+interface Props {
+  /** Named slot in src/assets/photos/. */
+  slot?: string;
+  /** A specific image instead of a named slot. */
+  image?: ImageMetadata;
+  alt: string;
+  /** Tailwind aspect/size classes for the frame. */
+  class?: string;
+  /** Shown centred on the geometric panel when there is no photo. */
+  icon?: IconName;
+  monogram?: string;
+  sizes?: string;
+  eager?: boolean;
+  /** Smaller centre medallion for small tiles. */
+  compact?: boolean;
+}
+
+const files = import.meta.glob<{ default: ImageMetadata }>('../assets/photos/*.{jpg,jpeg,png,webp}', { eager: true });
+const { slot, image, alt, class: className = 'aspect-[4/3]', icon, monogram, sizes = '(min-width: 1024px) 50vw, 100vw', eager = false, compact = false } =
+  Astro.props;
+const match = slot ? Object.entries(files).find(([path]) => path.replace(/^.*\//, '').replace(/\.\w+$/, '') === slot) : undefined;
+const src = image ?? match?.[1].default;
+const patternId = `lattice-${slot ?? icon ?? monogram ?? "plain"}`;
+---
+
+<div class:list={['relative overflow-hidden rounded-card', className]}>
+  {
+    src ? (
+      <Image
+        src={src}
+        alt={alt}
+        widths={[480, 720, 960, 1280]}
+        sizes={sizes}
+        class="absolute inset-0 size-full object-cover"
+        loading={eager ? 'eager' : 'lazy'}
+        fetchpriority={eager ? 'high' : undefined}
+      />
+    ) : (
+      <div class="absolute inset-0 bg-sage-wash" role="presentation">
+        <svg class="absolute inset-0 size-full text-gold" aria-hidden="true">
+          <defs>
+            <pattern id={patternId} width="72" height="72" patternUnits="userSpaceOnUse">
+              <g fill="none" stroke="currentColor" stroke-width="1" opacity=".55">
+                <path d="M18 18h36v36H18z" />
+                <path d="M36 10.5 61.5 36 36 61.5 10.5 36z" />
+                <path d="M36 0v10.5M36 61.5V72M0 36h10.5M61.5 36H72M0 0l18 18M72 0 54 18M0 72l18-18M72 72 54 54" />
+              </g>
+            </pattern>
+          </defs>
+          <rect width="100%" height="100%" fill={`url(#${patternId})`} />
+        </svg>
+        {
+          (icon || monogram) && (
+            <div class="absolute inset-0 flex items-center justify-center">
+              <span class:list={['flex items-center justify-center rounded-full border border-gold bg-canvas text-raspberry shadow-card', compact ? 'size-16' : 'size-28 sm:size-32']}>
+                {icon ? (
+                  <Icon name={icon} class={compact ? 'size-7' : 'size-12'} strokeWidth={1.4} />
+                ) : (
+                  <span class="font-display text-5xl font-semibold">{monogram}</span>
+                )}
+              </span>
+            </div>
+          )
+        }
+      </div>
+    )
+  }
+</div>

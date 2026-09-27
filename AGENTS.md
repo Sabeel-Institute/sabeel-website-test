@@ -8,31 +8,34 @@ site. Read it fully before editing.
 A static website for Sabeel Institute, built with [Astro](https://astro.build)
 and Tailwind CSS v4, hosted on Firebase Hosting.
 
-- **Design source:** the remake at `oursabeel.designrector.com` (home page and
-  About page are final copy and layout; other pages follow the same design
-  system).
-- **Content source:** the established site `oursabeel.com` (courses, team
-  bios, testimonials, donation and financial-aid details).
+- **Structure and copy:** the organisation's wireframes (Programs, program
+  page, Past Programs, Hikam Foundations, Teachers & Team, About, Support Our
+  Work, Through the Years, Home, Contact).
+- **Visual language:** the remake at `oursabeel.designrector.com` — Cormorant
+  Garamond headings, gold diamond dividers, ivory and sage sections.
+- **Programs are organised into three areas:** Hikam Foundations, Women’s
+  Learning, and Youth & Children.
 
 Almost everything that changes week to week is a content file. Pages read
-those files and render them; you rarely need to touch page code.
+those files and render them.
 
 ```mermaid
 flowchart LR
   subgraph content["src/content/ (you edit these)"]
-    C["courses/&lt;slug&gt;/index.md<br/>+ flyer image"]
+    P["programs/&lt;slug&gt;/index.md<br/>+ flyer / photo"]
     T["team/&lt;slug&gt;.md"]
+    M["milestones.yaml"]
     Q["testimonials.yaml"]
-    P["posts/&lt;slug&gt;.md"]
   end
-  S["src/site.config.ts<br/>email, links, nav"]
-  C --> H["/ (Open for Registration)"]
-  C --> CL["/courses/ and /courses/&lt;slug&gt;/"]
-  C --> PC["/past-courses/"]
-  T --> OT["/our-team/ and /our-team/&lt;slug&gt;/"]
-  Q --> TS["/testimonials/ and /seminary/"]
-  P --> B["/blog/"]
-  S --> ALL["header, footer, every page"]
+  PH["src/assets/photos/&lt;slot&gt;.jpg"]
+  S["src/site.config.ts<br/>email, links, areas, nav"]
+  P --> PR["/programs/ · area pages · /past-programs/ · home"]
+  P --> PP["/programs/&lt;slug&gt;/ (standard)<br/>or its bespoke page"]
+  T --> TT["/teachers-and-team/"]
+  M --> TY["/through-the-years/"]
+  Q --> HF["/hikam-foundations/"]
+  PH --> ALL["photo slots on every page"]
+  S --> ALL
 ```
 
 ## Commands
@@ -46,227 +49,207 @@ npm run preview   # serve the built dist/ at http://localhost:4321
 
 `npm run build` must finish with `0 errors` before you commit. It validates
 every content file against the schemas in `src/content.config.ts`; when a file
-is wrong, the error names the file and the field. Until the first blog post
-exists, the build also prints `No files found matching "*.md" in directory
-"src/content/posts"`; that line is expected.
+is wrong, the error names the file and the field.
 
 ## Deploying
 
 Deploys run in GitHub Actions (`.github/workflows/firebase-hosting.yml`):
 
-- Opening or updating a pull request deploys a preview and comments its URL on
-  the PR.
+- Opening or updating a pull request deploys a preview and comments its URL.
 - Merging to `main` deploys the live site.
-
-Nothing needs to be run locally to deploy.
 
 ## Directory map
 
 | Path | What it holds |
 |---|---|
-| `src/content/courses/` | One folder per course: `index.md` + flyer image |
+| `src/content/programs/` | One folder per program: `index.md` + optional flyer and photo |
 | `src/content/team/` | One Markdown file per team member |
-| `src/content/testimonials.yaml` | Student and parent quotes |
-| `src/content/posts/` | Blog posts (the Blog link appears once one exists) |
+| `src/content/milestones.yaml` | Through the Years timeline |
+| `src/content/testimonials.yaml` | Student quotes (shown on Hikam Foundations) |
+| `src/assets/photos/` | Photos for named slots on pages (see Photos) |
 | `src/content.config.ts` | Schemas: the fields each content file must have |
-| `src/site.config.ts` | Email, social links, form links, navigation |
+| `src/site.config.ts` | Email, links, program areas, navigation |
 | `src/pages/` | One file per page; `[slug].astro` files render content entries |
-| `src/components/` | Shared pieces: header, footer, cards, lightbox |
+| `src/components/` | Shared pieces: header, footer, cards, hero, photo slots |
 | `src/styles/global.css` | Design tokens (colours, fonts) and shared styles |
-| `src/assets/` | Site images and decorative artwork |
-| `public/` | Files served as-is (favicons) |
 
-## Courses
+## Programs
 
-Every course is a folder in `src/content/courses/`. The folder name is the
-course's URL: `src/content/courses/mommy-burnout/` is served at
-`/courses/mommy-burnout/`.
+Every program — current or past — is a folder in `src/content/programs/`. The
+folder name is its URL: `src/content/programs/mommy-burnout/` is
+`/programs/mommy-burnout/`.
 
-### Add a new course
+### Status
 
-1. Copy an existing open course folder that resembles the new one, e.g.
-   `mommy-burnout/` for a multi-week class or `anchored-hearts/` for a
-   gathering. Name the new folder in lowercase words joined by hyphens,
+| `status` | Meaning | Shown |
+|---|---|---|
+| `open` | Taking registrations | Open for registration (home, Programs, its area) |
+| `ongoing` | A running series people can still join | Same, labelled “Ongoing series” |
+| `upcoming` | Announced, registration not open yet | “Coming soon” on Programs and its area |
+| `completed` | Finished | Past Programs archive; its page stays as a record |
+
+When a program ends, change its `status` to `completed`. Nothing else. The
+page stays up without registration buttons, so shared links keep working.
+
+### Add a new program (standard page)
+
+1. Copy an existing current program folder that resembles the new one, e.g.
+   `mommy-burnout/` for a multi-week course or `anchored-hearts/` for a
+   monthly gathering. Name the folder in lowercase words joined by hyphens,
    e.g. `tafsir-surah-kahf-2027`.
-2. Replace `flyer.webp` with the new flyer (`.webp`, `.jpg`, or `.png`; about
-   1600 px on the long edge is plenty). Keep the file name referenced by the
-   `flyer:` field.
-3. Edit `index.md`. The block between the `---` lines is the course's data;
-   everything after it is the course description in Markdown.
+2. Put the flyer in the folder as `flyer.webp` (or `.jpg`/`.png`). It is shown
+   lower on the page, not at the top. If you have a real photo from the class,
+   add it as `photo.jpg` and set `image: ./photo.jpg`.
+3. Edit `index.md`: the block between the `---` lines is the program’s data;
+   everything after it is the optional “Program details” text in Markdown.
 4. Run `npm run build` and fix anything it reports. Check the page in
    `npm run dev`.
 
-Template (every field is required for an open course unless marked optional):
+Template (fields marked optional may be left out):
 
 ```markdown
 ---
 status: open
 title: Tafsir of Surah Al-Kahf
-subtitle: Lessons for a Changing World          # optional
-summary: One or two sentences for course cards and link previews (240 characters max).
-category: Ladies
-date: 2027-01-12                                  # first session, YYYY-MM-DD
-dates: Tuesdays, January 12 – March 2
-time: 10:00 AM – 12:00 PM
+subtitle: Lessons for a Changing World        # optional
+summary: One clear sentence explaining what students will learn and why it matters.
+area: womens-learning                         # hikam-foundations, womens-learning, youth-children
+date: 2027-01-12                              # first session, YYYY-MM-DD; orders listings
+starts: January 12                            # optional; overrides how the start date is shown
+audience: Adult women
+schedule: Tuesdays · 10:00 AM–12:00 PM CT
+format: In person                             # In person, Online, or Hybrid
 venue: Masjid Istiqlal
-audience: Ladies only
+duration: Eight weekly sessions
 fee: $50
 registerUrl: https://forms.gle/xxxxxxxx
-flyer: ./flyer.webp
+deadline: January 5                           # optional
+prerequisites: None                           # optional
+outcomes:                                     # optional; three to five
+  - First thing students will learn
+  - Second thing
+  - Third thing
+instructors:                                  # optional
+  - sameera-shah                              # a team member's file name
+  - name: Dr. Guest Speaker                   # or a guest written inline
+    role: Guest speaker
+expect: Teaching format, activities, homework, parent role.   # optional
+policies: Attendance, refunds, recordings.                    # optional
+flyer: ./flyer.webp                           # optional
+image: ./photo.jpg                            # optional; real photo for the top
+imageAlt: Students in the Tafsir class        # required with image
 ---
 
-Opening paragraph about the course.
-
-## What you’ll study
-
-- First topic
-- Second topic
-
-## Your instructor
-
-### Ustadhah Sameera Shah
-
-Short bio. [Read her full bio](/our-team/sameera-shah/).
+Optional longer description: sessions, extra details. Use `##` for section
+headings and `###` for sub-headings; `-` for bullets; `**bold**` for emphasis.
 ```
 
-Field reference:
+The page is built from these fields in a fixed order: title and summary,
+Audience · Starts · Schedule · Format, “What students will learn” with an “At
+a glance” panel, Instructor / What to expect / Policies cards, program
+details, the original flyer, and a closing “Ready to join?” band. Sections
+with no data are left out.
 
-| Field | Meaning |
-|---|---|
-| `status` | `open` (listed under Open for Registration) or `past` (archive) |
-| `title` | Course name as it appears on the flyer |
-| `subtitle` | Optional tagline shown under the title |
-| `summary` | Card text and link-preview text; one or two sentences |
-| `category` | Exactly one of: `Ladies`, `Adults`, `Youth Girls`, `Youth Boys`, `Youth`, `Kids`, `Families`, `Everyone` |
-| `date` | First session as `YYYY-MM-DD`; listings are ordered newest first |
-| `dates` | The schedule as people should read it |
-| `time` | Session time, e.g. `7:00 – 8:00 PM` |
-| `venue` | Where it meets, e.g. `Masjid Istiqlal` or `Online via Zoom` |
-| `audience` | Who may attend, e.g. `Boys 12–16, Girls 13+` |
-| `fee` | Price text, e.g. `$5 per session, or $35 for the series` or `Free` |
-| `registerUrl` | The registration form link, copied exactly |
-| `flyer` | Path to the flyer image in the same folder, starting with `./` |
+For a `completed` program only `title`, `area`, and `date` are required; add
+`dateApprox: true` when only the year is known.
 
-The home page shows the three open courses with the latest `date`; the
-Courses page shows all open courses.
+Never invent dates, fees, instructors, or registration links. If something is
+unknown, leave the optional field out and ask.
 
-Writing the description:
+### Recurring gatherings
 
-- Use `##` for section headings and `###` for sub-headings (sessions,
-  instructors). Do not use `#`; the page already has the title.
-- Use `-` for bullet lists and `**bold**` for emphasis.
-- Link to other pages on this site with paths like `/seminary/` or
-  `/our-team/mariam-sattar/`.
-- Copy wording from the flyer or the organisers. Never invent dates, fees,
-  instructors, or registration links; if something is unknown, ask.
+For a recurring program whose topic changes (e.g. Anchored Hearts), edit the
+existing folder each cycle: `date`, `starts`, the flyer, the registration
+link, the instructors, and the “This month” section.
 
-### When a course ends
+### Bespoke program pages
 
-Change `status: open` to `status: past`. Nothing else. The course moves to the
-Past Courses archive, and its page stays up (marked as ended) so links people
-shared keep working.
+A program can have a hand-designed page instead of the standard one, like
+Hikam Foundations. It still appears in every listing and the archive, because
+its facts stay in its program folder.
 
-### Monthly or recurring gatherings
+1. Create the page in `src/pages/`, e.g. `src/pages/summer-garden.astro`.
+   Design it freely with the shared components and the design rules below.
+   Read the program’s facts from its entry instead of retyping them:
+   `const program = await getEntry('programs', 'summer-garden-2027')`.
+2. In the program’s `index.md`, add `page: /summer-garden/`.
 
-For a recurring course whose topic changes (e.g. Anchored Hearts), edit the
-existing folder each cycle: update `date`, `dates`, the flyer, the
-registration link, and the "This month" section of the description.
+Listings then link to the bespoke page, and the standard template skips that
+program. If `page` points to a file that does not exist, the build fails and
+says which file to create. Bespoke pages are design work; ask before creating
+one.
 
-### Add a flyer to the archive only
+## Photos
 
-For a past program that only needs its flyer in the archive, create a folder
-with `status: past` and no description after the closing `---`. Only
-`title`, `category`, `date`, and `flyer` are required; `subtitle`, `summary`,
-`dates`, and `venue` are optional and appear in the archive viewer. Entries
-with no description get no page of their own.
+Pages have named photo slots (for example `home-hero`, `about-story`,
+`team-hero`, `founder`, `rukaiya`, `support-hero`, `programs-women`). To fill
+one, add an image named after the slot to `src/assets/photos/`, e.g.
+`src/assets/photos/about-story.jpg`. Until a photo exists the slot shows a
+geometric panel. Use only real, approved Sabeel photographs. To find a slot’s
+name, search `src/pages` for `slot="` or `photo="`.
 
-```markdown
----
-status: past
-title: Summer Garden
-subtitle: Glow Up — Inside and Out
-summary: A summer sisterhood program for girls.
-category: Youth Girls
-date: 2025-06-29
-flyer: ./flyer.webp
----
-```
+`home-hero` and `hikam-hero` currently hold the design mock-up images from
+the remake; replace them with real photographs when available.
 
-## Team members
+## Team
 
-Each person is one file in `src/content/team/`, named after them, e.g.
-`mariam-sattar.md` (served at `/our-team/mariam-sattar/`).
+Each person is one file in `src/content/team/`, named after them (served at
+`/teachers-and-team/<file-name>/`).
 
 ```markdown
 ---
 name: Mariam Sattar
 honorific: Ustadhah          # Ustadhah, Sr., Br., or Dr.
-group: teachers              # board, teachers, or admin
+group: teachers              # founder, board, teachers, or volunteers
 order: 10                    # position within the group, ascending
-role: Treasurer              # optional
-photo: ./photos/mariam-sattar.jpg   # optional; omit to show initials
+role: Program Director and Teacher
+highlights:                  # one or two short lines
+  - ‘Alimiyyah (2015) · B.Sc. Biochemistry, University of Houston
+  - Islamic sciences · Girls’ and women’s mentorship
+listed: false                # optional; hides the person from the site
+photo: ./photos/mariam-sattar.jpg   # optional
 ---
 
-Bio in Markdown. A member with no bio text is listed without a bio page.
+Bio in Markdown. A member without a bio is listed without a bio page.
 ```
 
-To reorder people, change `order` (use steps of 10 so you can insert between).
-If you add photos, put them in `src/content/team/photos/`.
+The Teachers & Team page shows the founder, `board`, and `teachers`. People
+with `listed: false` are kept in the files but not shown.
+
+## Through the Years
+
+Edit `src/content/milestones.yaml`. Each milestone has an `id`, an `order`, a
+`title`, and `text`. Add `year` only after checking it against registration
+records, flyers, and program leads. `program` links a program folder; its
+photo or flyer illustrates the milestone.
 
 ## Testimonials
 
-Edit `src/content/testimonials.yaml`. Each entry needs a unique `id`, a
-`program`, and a `quote`. Quotes whose `program` is exactly
-`Certification Program` also appear on the Seminary page.
-
-## Blog posts
-
-Add `src/content/posts/<slug>.md`:
-
-```markdown
----
-title: Preparing Our Hearts for Ramadan
-date: 2027-02-01
-summary: One or two sentences for the blog list and link previews.
-author: Ustadhah Sameera Shah     # optional
-cover: ./covers/ramadan.jpg       # optional
----
-
-Post body in Markdown.
-```
-
-The Blog link appears in the header and footer automatically once the first
-post exists.
-
-## Seminary page
-
-The Hikam Seminary details live in the `seminary` object at the top of
-`src/pages/seminary.astro`. Each cycle, update `term` and `status`. When
-applications open, set `applyUrl` to the application form; the page then
-shows an "Apply Now" button instead of "Ask About the Seminary".
+Edit `src/content/testimonials.yaml`. Quotes whose `program` is exactly
+`Certification Program` appear on the Hikam Foundations page.
 
 ## Site-wide settings
 
-`src/site.config.ts` holds the contact email, social links, donation and
-financial-aid form links, the Zelle address, the tax ID, and the navigation
-menus. `newsletterFormAction` takes a Mailchimp embedded-form URL; while it is
-`null`, the newsletter form opens a pre-filled email instead.
+`src/site.config.ts` holds the contact email, social links, financial-aid form,
+giving links per designation, the Zelle address, the tax ID, the program-area
+names and descriptions, and the navigation menus.
+
+- `mailingListAction`: a Mailchimp embedded-form URL. While `null`, the
+  newsletter and interest-list forms open a pre-filled email.
+- `hikamOverviewPdf`: the Hikam program overview; the download button appears
+  once it is set.
 
 ## Design rules
 
 - Colours come only from the tokens in `src/styles/global.css` (`bg-canvas`,
   `text-ink`, `text-raspberry`, `bg-sage-wash`, `text-gold-text`, ...). Do not
   write hex colours in pages or components.
-- Body text is `text-ink` or `text-ink-soft`. Gold and taupe are decoration;
-  gold text uses `text-gold-text`, which is darkened to stay readable. On
-  sage backgrounds (`bg-sage-wash`), use `text-ink` for paragraphs.
-- Raspberry is for headings, links, and buttons, not large backgrounds.
-- The site has one light theme. Do not add a dark mode.
-- Headings: page titles use `display-xl`; section titles use `display-md` or
-  `heading-sans` (the home page style); small labels above headings use
-  `eyebrow`.
-- Reuse `PageHero`, `Divider`, `CourseCard`, `TeamCard`, and `Icon` rather
-  than re-creating them. New icons go in `src/components/Icon.astro`.
+- Body text is `text-ink` or `text-ink-soft`; on sage backgrounds use
+  `text-ink`. Gold text uses `text-gold-text`. Raspberry is for headings,
+  links, buttons, and small bands — not large page backgrounds.
+- One light theme. Do not add a dark mode.
+- Page titles use `PageHero`; sections open with `SectionHeading` (eyebrow,
+  serif heading, gold divider); closing actions use `CtaBand`.
 - Check changes at phone width (about 390 px) as well as desktop.
 
 ## Before you commit

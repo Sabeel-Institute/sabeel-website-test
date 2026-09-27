@@ -10,6 +10,7 @@ npm run dev      # http://localhost:4321
 npm run build    # validates content and builds to dist/
 ```
 
-Courses, team bios, testimonials, and blog posts are Markdown/YAML files in
-`src/content/`. See [AGENTS.md](AGENTS.md) for how to add or update them and
-for the design rules.
+Programs, team bios, milestones, and testimonials are Markdown/YAML files in
+`src/content/`; photos go in `src/assets/photos/`. See [AGENTS.md](AGENTS.md)
+for how to add or update them, how bespoke program pages work, and the design
+rules.

@@ -1,0 +1,274 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import SectionHeading from '../components/SectionHeading.astro';
+import Divider from '../components/Divider.astro';
+import Icon from '../components/Icon.astro';
+import Photo from '../components/Photo.astro';
+import { site } from '../site.config';
+
+const possible = [
+  { icon: 'book-open', title: 'Learn together', text: 'Reliable rooms for women’s classes, youth programs, teachers, curriculum, and sustained study.' },
+  { icon: 'sparkle', title: 'Gather for dhikr', text: 'A welcoming place to remember Allah together, deepen suhbah, and build spiritual rhythms beyond class.' },
+  { icon: 'users', title: 'Share life', text: 'Space to socialize, share meals, organize meal trains, and show up for births, weddings, and life’s milestones.' },
+  { icon: 'heart', title: 'Belong beyond class', text: 'Extend the care already lived by students and team members so the whole student body can feel connected.' },
+] as const;
+
+const designations = [
+  { id: 'home', title: 'Permanent Home', text: 'Direct your gift to the approved space campaign.' },
+  { id: 'programs', title: 'Programs & Access', text: 'Support teachers, curriculum, youth programming, and scholarships.' },
+] as const;
+
+const amounts = ['50', '100', '250'];
+---
+
+<BaseLayout
+  title="Support Our Work"
+  description="Help Sabeel Institute move toward a permanent home for women’s and youth Islamic learning in Houston. Donations are tax-deductible."
+>
+  <PageHero
+    eyebrow="Fifteen years of learning in shared spaces"
+    title="Help Sabeel move toward a permanent home."
+    photo="support-hero"
+    photoAlt="Sabeel classes in borrowed and rented rooms over the years"
+    photoIcon="hand-heart"
+  >
+    <p>
+      For fifteen years, Sabeel has taught in borrowed and shared spaces, grateful to every masjid and community venue
+      that welcomed us. Today, we continue to rent small rooms and shape our programs around the space available. We
+      are ready for the next chapter: a permanent home where learning, teaching, suhbah, youth programs, and service
+      can grow together.
+    </p>
+    <dl class="mt-6 grid grid-cols-2 overflow-hidden rounded-card border border-gold/60 bg-surface text-sm sm:grid-cols-4">
+      {
+        [
+          ['For 15 years', 'Borrowed and shared spaces'],
+          ['With gratitude', 'Masajid and venues welcomed us'],
+          ['Today', 'Small rented rooms shape capacity'],
+          ['Next chapter', 'A permanent home for Sabeel'],
+        ].map(([k, v]) => (
+          <div class="border-gold/40 p-3 not-last:border-r max-sm:[&:nth-child(2)]:border-r-0 max-sm:[&:nth-child(-n+2)]:border-b">
+            <dt class="text-ink-soft">{k}</dt>
+            <dd class="mt-0.5 leading-snug font-semibold text-ink">{v}</dd>
+          </div>
+        ))
+      }
+    </dl>
+    <Fragment slot="actions">
+      <a href="#give" data-designation="home" class="btn btn-primary px-6 text-base">Support the Home Effort</a>
+      <a href="#give" data-designation="programs" class="btn btn-outline px-6 text-base">Support Sabeel’s Programs</a>
+    </Fragment>
+  </PageHero>
+
+  <!-- What a home makes possible -->
+  <section class="py-14 md:py-16" aria-labelledby="possible-heading">
+    <div class="container-page">
+      <SectionHeading eyebrow="What a permanent home could make possible" title="A place for learning — and for life together." id="possible-heading">
+        <p>
+          Among Sabeel’s students and team, community is already taking shape: they organize meal trains and show up for
+          one another at births and weddings. A permanent home would help extend that same care and belonging to the
+          whole student body — with room to learn, gather for dhikr, socialize, and serve.
+        </p>
+      </SectionHeading>
+      <ul class="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+        {
+          possible.map((p) => (
+            <li class="rounded-card border border-gold/60 border-t-4 border-t-gold bg-surface p-6">
+              <span class="flex size-12 items-center justify-center rounded-full bg-canvas text-gold-text">
+                <Icon name={p.icon} class="size-6" />
+              </span>
+              <h3 class="mt-4 text-xl font-semibold text-ink">{p.title}</h3>
+              <p class="mt-2 text-[15px] leading-relaxed text-ink-soft">{p.text}</p>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <!-- Choose where to help -->
+  <section id="give" class="scroll-mt-6 border-y border-border bg-surface py-14 md:py-16" aria-labelledby="give-heading">
+    <div class="container-page grid gap-10 lg:grid-cols-[1fr_minmax(0,32rem)] lg:gap-14">
+      <div>
+        <SectionHeading eyebrow="Choose where to help" title="Support the home — or the work happening now." id="give-heading" />
+        <ul class="mt-8 grid gap-4 sm:grid-cols-2">
+          {
+            designations.map((d) => (
+              <li>
+                <button
+                  type="button"
+                  data-designation={d.id}
+                  class="flex h-full w-full flex-col rounded-card border border-gold/60 bg-canvas p-6 text-left transition-colors hover:border-raspberry aria-pressed:border-2 aria-pressed:border-raspberry"
+                  aria-pressed={d.id === 'home' ? 'true' : 'false'}
+                >
+                  <span class="text-xl font-semibold text-ink">{d.title}</span>
+                  <span class="mt-2 text-[15px] leading-relaxed text-ink-soft">{d.text}</span>
+                </button>
+              </li>
+            ))
+          }
+        </ul>
+        <p class="mt-6 text-[15px] leading-relaxed text-ink-soft">
+          Prefer Zelle? Send to{' '}
+          <a href={`mailto:${site.zelle}`} class="font-medium text-raspberry underline decoration-gold underline-offset-4">{site.zelle}</a>
+          {' '}and note where you’d like your gift to go.
+        </p>
+      </div>
+
+      <form
+        class="self-start rounded-card border border-gold/70 border-t-4 border-t-gold bg-canvas p-6 shadow-card sm:p-8"
+        method="get"
+        action={site.giving.home}
+        target="_blank"
+        data-gift-form
+        data-urls={JSON.stringify(site.giving)}
+      >
+        <p class="eyebrow">Donation</p>
+        <h3 class="mt-1 text-2xl font-semibold text-ink">Choose your gift</h3>
+
+        <fieldset class="mt-5">
+          <legend class="sr-only">Frequency</legend>
+          <div class="grid grid-cols-2 gap-2">
+            {
+              ['One time', 'Monthly'].map((f, i) => (
+                <label class="flex min-h-11 cursor-pointer items-center justify-center rounded-lg border border-border-strong bg-surface text-[15px] font-medium text-ink has-checked:border-raspberry has-checked:bg-raspberry has-checked:text-on-raspberry">
+                  <input type="radio" name="frequency" value={f} class="sr-only" checked={i === 0} />
+                  {f}
+                </label>
+              ))
+            }
+          </div>
+        </fieldset>
+
+        <fieldset class="mt-4">
+          <legend class="sr-only">Amount</legend>
+          <div class="grid grid-cols-3 gap-2">
+            {
+              amounts.map((a, i) => (
+                <label class="flex min-h-12 cursor-pointer items-center justify-center rounded-lg border border-border-strong bg-surface text-lg font-semibold text-ink has-checked:border-raspberry has-checked:bg-raspberry has-checked:text-on-raspberry">
+                  <input type="radio" name="amount" value={a} class="sr-only" checked={i === 1} />${a}
+                </label>
+              ))
+            }
+          </div>
+          <label class="mt-2 block">
+            <span class="sr-only">Other amount in dollars</span>
+            <input
+              type="number"
+              name="other"
+              min="1"
+              step="1"
+              inputmode="numeric"
+              placeholder="Other amount"
+              class="min-h-12 w-full rounded-lg border border-border-strong bg-surface px-4 text-base text-ink placeholder:text-ink-soft focus:border-raspberry focus:outline-none"
+            />
+          </label>
+        </fieldset>
+
+        <label class="mt-4 block text-[15px] font-medium text-ink">
+          Designation
+          <select
+            name="designation"
+            class="mt-1.5 min-h-12 w-full rounded-lg border border-border-strong bg-surface px-4 text-base font-normal text-ink focus:border-raspberry focus:outline-none"
+          >
+            <option value="home">Permanent Home</option>
+            <option value="programs">Programs &amp; Access</option>
+            <option value="general">Where most needed</option>
+          </select>
+        </label>
+
+        <button type="submit" class="btn btn-primary mt-6 w-full py-4 text-base">
+          Continue to secure checkout <Icon name="external" class="size-4" />
+        </button>
+        <p class="mt-3 hidden rounded-lg bg-sage-mist p-3 text-[15px] text-ink" role="status" data-gift-summary></p>
+        <p class="mt-3 flex items-center justify-center gap-2 text-sm text-ink-soft">
+          <Icon name="lock" class="size-4 text-success" /> Secure donation · Tax-deductible
+        </p>
+      </form>
+    </div>
+  </section>
+
+  <!-- Rukaiya's story -->
+  <section class="py-14 md:py-16" aria-labelledby="story-heading">
+    <div class="container-page grid items-center gap-10 md:grid-cols-2 md:gap-16">
+      <Photo slot="rukaiya" alt="Sr. Rukaiya Ahamed" monogram="RA" class="aspect-[4/3] shadow-card" />
+      <div>
+        <p class="eyebrow">Rukaiya’s story</p>
+        <h2 id="story-heading" class="display-md mt-2 sm:text-[2.4rem]">From a summer garden to the board.</h2>
+        <Divider class="mt-4" />
+        <p class="mt-5 text-[17px] leading-[1.85] text-ink-soft">
+          Rukaiya first joined Sabeel in high school through our Summer Garden program. She then joined Hikam,
+          continuing her journey as a Sabeel student. Today, she serves as a member of Sabeel’s board. Her story shows
+          what becomes possible when a young woman has a pathway to learn, belong, and lead.
+        </p>
+        <ol class="mt-6 grid overflow-hidden rounded-card border border-gold/60 bg-surface text-sm sm:grid-cols-3">
+          {
+            [
+              ['High school', 'Summer Garden'],
+              ['Next chapter', 'Hikam'],
+              ['Today', 'Sabeel board member'],
+            ].map(([k, v]) => (
+              <li class="border-gold/40 p-4 not-last:border-b sm:not-last:border-r sm:not-last:border-b-0">
+                <p class="text-ink-soft">{k}</p>
+                <p class="mt-0.5 font-semibold text-ink">{v}</p>
+              </li>
+            ))
+          }
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <!-- Trust -->
+  <section id="trust" class="scroll-mt-6 border-t border-border bg-sage-mist py-14 md:py-16" aria-labelledby="trust-heading">
+    <div class="container-page">
+      <SectionHeading eyebrow="Nonprofit information" title="Give with confidence." id="trust-heading" />
+      <dl class="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+        <div class="rounded-card bg-surface p-6">
+          <dt class="text-sm font-bold tracking-wide text-gold-text uppercase">Not-for-profit</dt>
+          <dd class="mt-2 text-ink">Sabeel Institute is a not-for-profit Islamic educational institution based in Houston, Texas.</dd>
+        </div>
+        <div class="rounded-card bg-surface p-6">
+          <dt class="text-sm font-bold tracking-wide text-gold-text uppercase">Tax-deductible</dt>
+          <dd class="mt-2 text-ink">Donations are tax-deductible. Our tax ID is <span class="font-semibold">{site.taxId}</span>.</dd>
+        </div>
+        <div class="rounded-card bg-surface p-6">
+          <dt class="text-sm font-bold tracking-wide text-gold-text uppercase">Secure payment</dt>
+          <dd class="mt-2 text-ink">Online gifts are completed on our secure donation form. Zelle is also available.</dd>
+        </div>
+        <div class="rounded-card bg-surface p-6">
+          <dt class="text-sm font-bold tracking-wide text-gold-text uppercase">Questions</dt>
+          <dd class="mt-2 text-ink">
+            Email <a href={`mailto:${site.email}`} class="font-medium text-raspberry underline decoration-gold underline-offset-4">{site.email}</a> about any gift.
+          </dd>
+        </div>
+      </dl>
+    </div>
+  </section>
+</BaseLayout>
+
+<script>
+  const form = document.querySelector<HTMLFormElement>('[data-gift-form]')!;
+  const urls = JSON.parse(form.dataset.urls!) as Record<string, string>;
+  const select = form.elements.namedItem('designation') as HTMLSelectElement;
+  const summary = form.querySelector<HTMLElement>('[data-gift-summary]')!;
+  const cards = document.querySelectorAll<HTMLButtonElement>('button[data-designation]');
+
+  function setDesignation(id: string) {
+    select.value = id;
+    form.action = urls[id]!;
+    cards.forEach((c) => c.setAttribute('aria-pressed', String(c.dataset.designation === id)));
+  }
+  select.addEventListener('change', () => setDesignation(select.value));
+  document.querySelectorAll<HTMLElement>('[data-designation]').forEach((el) =>
+    el.addEventListener('click', () => setDesignation(el.dataset.designation!)),
+  );
+
+  form.addEventListener('submit', () => {
+    const data = new FormData(form);
+    const amount = String(data.get('other') || data.get('amount'));
+    const label = select.options[select.selectedIndex]!.text;
+    summary.textContent = `Your gift: $${amount}, ${String(data.get('frequency')).toLowerCase()}, for ${label}. Enter the same amount on the secure form that just opened.`;
+    summary.classList.remove('hidden');
+  });
+</script>

@@ -1,6 +1,7 @@
 ---
 name: Misbah Shah
 honorific: Sr.
-group: admin
+group: volunteers
 order: 60
+listed: false
 ---

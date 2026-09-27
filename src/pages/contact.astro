@@ -1,87 +1,147 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import PageHero from '../components/PageHero.astro';
+import SectionHeading from '../components/SectionHeading.astro';
+import CtaBand from '../components/CtaBand.astro';
 import Icon from '../components/Icon.astro';
 import { site } from '../site.config';
 
-const channels = [
-  { icon: 'mail', title: 'Email Us', value: site.email, href: `mailto:${site.email}` },
-  { icon: 'instagram', title: 'Instagram', value: '@sabeel_institute', href: site.social.instagram },
-  { icon: 'facebook', title: 'Facebook', value: 'Sabeel Institute', href: site.social.facebook },
+const reasons = [
+  { id: 'program', icon: 'book-open', title: 'Program questions', text: 'Eligibility, schedule, registration, format, and financial aid.' },
+  { id: 'partnership', icon: 'users', title: 'Partnerships & speaking', text: 'Masjid partnerships, guest teaching, schools, and community collaboration.' },
+  { id: 'giving', icon: 'hand-heart', title: 'Giving & support', text: 'Donations, sponsorships, in-kind support, or questions for the board.' },
 ] as const;
+
+const inquiryTypes = [
+  { value: 'program', label: 'Program question' },
+  { value: 'interest-list', label: 'Join the interest list' },
+  { value: 'partnership', label: 'Partnerships & speaking' },
+  { value: 'giving', label: 'Giving & support' },
+  { value: 'other', label: 'Something else' },
+];
+const field =
+  'min-h-12 w-full rounded-lg border border-border-strong bg-surface px-4 text-base font-normal text-ink placeholder:text-ink-soft focus:border-raspberry focus:outline-none';
 ---
 
-<BaseLayout title="Contact" description={`Get in touch with Sabeel Institute: ${site.email}.`}>
-  <PageHero title="Contact Us">
+<BaseLayout title="Contact" description={`Contact Sabeel Institute in Houston, Texas: ${site.email}.`}>
+  <PageHero eyebrow="Contact" title="How can we help?">
     <p>
-      Have a question about a course, the seminary, financial aid, or volunteering? We would love to hear from
-      you.
+      Choose the reason for your message so it reaches the right person. For course dates and fees, check the
+      <a href="/programs/" class="text-raspberry underline decoration-gold underline-offset-4">program page</a> first.
     </p>
-  </PageHero>
-
-  <section class="bg-sage-wash py-14 md:py-16">
-    <div class="container-page grid gap-10 lg:grid-cols-[1fr_1.1fr]">
-      <ul class="grid content-start gap-4">
-        {
-          channels.map((c) => (
-            <li>
-              <a href={c.href} class="group flex items-center gap-5 rounded-card bg-surface p-6 transition-shadow hover:shadow-card">
-                <span class="flex size-14 shrink-0 items-center justify-center rounded-full bg-canvas text-gold-text">
-                  <Icon name={c.icon} class="size-6" />
-                </span>
-                <span class="min-w-0">
-                  <span class="block text-sm font-bold tracking-wide text-gold-text uppercase">{c.title}</span>
-                  <span class="block truncate text-lg text-ink group-hover:text-raspberry">{c.value}</span>
-                </span>
-              </a>
-            </li>
-          ))
-        }
-        <li class="flex items-center gap-5 rounded-card bg-surface p-6">
-          <span class="flex size-14 shrink-0 items-center justify-center rounded-full bg-canvas text-gold-text">
-            <Icon name="map-pin" class="size-6" />
-          </span>
-          <span>
-            <span class="block text-sm font-bold tracking-wide text-gold-text uppercase">Where we meet</span>
-            <span class="block text-lg text-ink">{site.location}, at local masajid and online</span>
-          </span>
+    <div slot="media" class="rounded-card border border-gold/70 border-t-4 border-t-gold bg-surface p-7 shadow-card sm:p-9">
+      <h2 class="text-2xl font-semibold text-ink">Contact Sabeel</h2>
+      <ul class="mt-5 space-y-4 text-ink">
+        <li class="flex items-center gap-3">
+          <Icon name="map-pin" class="size-5 text-gold-text" />{site.location}
+        </li>
+        <li>
+          <a href={`mailto:${site.email}`} class="flex items-center gap-3 text-raspberry underline decoration-gold underline-offset-4">
+            <Icon name="mail" class="size-5 text-gold-text" />{site.email}
+          </a>
+        </li>
+        <li class="flex items-center gap-4 pt-1">
+          <a href={site.social.instagram} class="flex items-center gap-2 text-ink-soft hover:text-raspberry">
+            <Icon name="instagram" class="size-5 text-gold-text" /> Instagram
+          </a>
+          <a href={site.social.facebook} class="flex items-center gap-2 text-ink-soft hover:text-raspberry">
+            <Icon name="facebook" class="size-5 text-gold-text" /> Facebook
+          </a>
         </li>
       </ul>
+    </div>
+  </PageHero>
 
-      <div class="rounded-card bg-surface p-7 sm:p-10">
-        <h2 class="display-md">Send a Message</h2>
-        <p class="mt-2 text-ink-soft">This opens a pre-addressed email in your mail app.</p>
-        <form class="mt-6 grid gap-4" data-contact-form data-to={site.email}>
-          <div class="grid gap-4 sm:grid-cols-2">
-            <label class="grid gap-1.5 text-[15px] font-medium text-ink">
-              Name
-              <input name="name" required autocomplete="name" class="min-h-12 rounded-lg border border-border-strong bg-canvas px-4 text-base font-normal focus:border-raspberry focus:outline-none" />
-            </label>
-            <label class="grid gap-1.5 text-[15px] font-medium text-ink">
-              Subject
-              <input name="subject" required class="min-h-12 rounded-lg border border-border-strong bg-canvas px-4 text-base font-normal focus:border-raspberry focus:outline-none" />
-            </label>
-          </div>
+  <section class="py-12 md:py-14">
+    <ul class="container-page grid gap-5 md:grid-cols-3">
+      {
+        reasons.map((r) => (
+          <li>
+            <a
+              href={`?inquiry=${r.id}#message`}
+              data-inquiry={r.id}
+              class="flex h-full flex-col rounded-card border border-gold/60 bg-surface p-7 transition-shadow hover:shadow-card"
+            >
+              <span class="flex size-12 items-center justify-center rounded-full bg-canvas text-gold-text">
+                <Icon name={r.icon} class="size-6" />
+              </span>
+              <span class="mt-4 text-xl font-semibold text-ink">{r.title}</span>
+              <span class="mt-2 leading-relaxed text-ink-soft">{r.text}</span>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+
+  <section id="message" class="scroll-mt-6 border-t border-border bg-surface py-14 md:py-16" aria-labelledby="message-heading">
+    <div class="container-page grid gap-10 lg:grid-cols-[1fr_1.3fr] lg:gap-14">
+      <SectionHeading eyebrow="Send a message" title="Tell us what you need." id="message-heading" />
+      <form class="grid gap-4" data-contact-form data-to={site.email}>
+        <div class="grid gap-4 sm:grid-cols-2">
           <label class="grid gap-1.5 text-[15px] font-medium text-ink">
-            Message
-            <textarea name="message" required rows="6" class="rounded-lg border border-border-strong bg-canvas px-4 py-3 text-base font-normal focus:border-raspberry focus:outline-none"></textarea>
+            Name
+            <input name="name" required autocomplete="name" class={field} />
           </label>
-          <button type="submit" class="btn btn-primary justify-self-start px-8 text-base">
-            Send Message <Icon name="arrow-right" class="size-5" />
-          </button>
-        </form>
-      </div>
+          <label class="grid gap-1.5 text-[15px] font-medium text-ink">
+            Email
+            <input name="email" type="email" required autocomplete="email" class={field} />
+          </label>
+          <label class="grid gap-1.5 text-[15px] font-medium text-ink">
+            Inquiry type
+            <select name="inquiry" required class={field}>
+              {inquiryTypes.map((t) => <option value={t.value}>{t.label}</option>)}
+            </select>
+          </label>
+          <label class="grid gap-1.5 text-[15px] font-medium text-ink">
+            Program name, if relevant
+            <input name="program" class={field} />
+          </label>
+        </div>
+        <label class="grid gap-1.5 text-[15px] font-medium text-ink">
+          Message
+          <textarea name="message" required rows="6" class={`${field} py-3`}></textarea>
+        </label>
+        <div class="flex flex-wrap items-center gap-4">
+          <button type="submit" class="btn btn-primary px-8 text-base">Send Message</button>
+          <p class="text-sm text-ink-soft">Opens a pre-addressed email in your mail app.</p>
+        </div>
+      </form>
     </div>
   </section>
+
+  <CtaBand title="Looking for a program?">
+    <p>Current dates, audience, format, and registration status are on the Programs page.</p>
+    <a slot="actions" href="/programs/" class="btn btn-primary px-7 text-base">View Current Programs</a>
+  </CtaBand>
 </BaseLayout>
 
 <script>
   const form = document.querySelector<HTMLFormElement>('[data-contact-form]')!;
+  const inquiry = form.elements.namedItem('inquiry') as HTMLSelectElement;
+  const program = form.elements.namedItem('program') as HTMLInputElement;
+
+  // Prefill from links such as /contact/?inquiry=program&program=Mommy%20Burnout
+  const params = new URLSearchParams(location.search);
+  const preset = params.get('inquiry');
+  if (preset && [...inquiry.options].some((o) => o.value === preset)) inquiry.value = preset;
+  if (params.get('program')) program.value = params.get('program')!;
+
+  document.querySelectorAll<HTMLAnchorElement>('[data-inquiry]').forEach((a) =>
+    a.addEventListener('click', (e) => {
+      e.preventDefault();
+      inquiry.value = a.dataset.inquiry!;
+      document.getElementById('message')!.scrollIntoView();
+      (form.elements.namedItem('name') as HTMLInputElement).focus({ preventScroll: true });
+    }),
+  );
+
   form.addEventListener('submit', (e) => {
     e.preventDefault();
     const data = new FormData(form);
-    const subject = encodeURIComponent(String(data.get('subject')));
-    const body = encodeURIComponent(`${data.get('message')}\n\n— ${data.get('name')}`);
-    window.location.href = `mailto:${form.dataset.to}?subject=${subject}&body=${body}`;
+    const type = inquiry.options[inquiry.selectedIndex]!.text;
+    const subject = [type, data.get('program')].filter(Boolean).join(': ');
+    const body = `${data.get('message')}\n\n— ${data.get('name')} (${data.get('email')})`;
+    window.location.href = `mailto:${form.dataset.to}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
   });
 </script>
