@@ -21,6 +21,7 @@ instructors:
     role: House of Makers · Creative activity
 expect: An optional creative activity, then the halaqa. This month, make your own pearl bracelet and earrings with House of Makers, with snacks and favors — a special Sabeel rate of $15 (regularly $25).
 flyer: ./flyer.webp
+mapQuery: Masjid Istiqlal Houston
 ---
 
 Anchored Hearts is a monthly gathering for sisters to learn, reflect, and connect. Each gathering offers a welcoming space to nurture faith and build sisterhood.

@@ -85,6 +85,8 @@ const programs = defineCollection({
       imageAlt: z.string().min(1).optional(),
       /** The original flyer, shown lower on the page. */
       flyer: image().optional(),
+      /** Query string for embedded Google Maps view, e.g. "Masjid Istiqlal Houston". */
+      mapQuery: z.string().min(1).optional(),
       /**
        * Bespoke page path (e.g. "/hikam-foundations/"). When set, listings link
        * there and the standard template does not render this program.
