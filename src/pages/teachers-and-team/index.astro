@@ -59,9 +59,7 @@ const count = (n: number) => words[n] ?? String(n);
   <!-- Board -->
   <section id="board" class="scroll-mt-6 py-14 md:py-16" aria-labelledby="board-heading">
     <div class="container-page">
-      <SectionHeading eyebrow="Board & leadership" title="Guiding Sabeel’s work" id="board-heading">
-        <p>{count(board.length)} women serving Sabeel’s mission, programs, and community.</p>
-      </SectionHeading>
+      <SectionHeading eyebrow="Board & leadership" title="Guiding Sabeel’s work" id="board-heading" />
       <ul class="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
         {
           board.map((m) => (
@@ -77,9 +75,7 @@ const count = (n: number) => words[n] ?? String(n);
   <!-- Teaching team -->
   <section id="teachers" class="scroll-mt-6 border-t border-border bg-surface py-14 md:py-16" aria-labelledby="teachers-heading">
     <div class="container-page">
-      <SectionHeading eyebrow="Teaching team" title="Who students will learn from" id="teachers-heading">
-        <p>{count(teachers.length)} educators teaching Islamic studies, Qur’an, Seerah, and related subjects.</p>
-      </SectionHeading>
+      <SectionHeading eyebrow="Teaching team" title="Who students will learn from" id="teachers-heading" />
       <ul class="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
         {
           teachers.map((m) => (
