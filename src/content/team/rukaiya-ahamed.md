@@ -1,9 +1,9 @@
 ---
-name: Rukaiya Ahamed
+name: Rukaiya Ahmed
 honorific: Sr.
 group: board
-order: 10
-role: Executive Assistant and Board Member
+order: 20
+role: Executive Assistant
 highlights:
 - B.Sc. Nutrition, University of Houston
 - Three-year Classical Islamic Knowledge certificate · Girls’ teacher

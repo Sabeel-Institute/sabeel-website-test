@@ -1,9 +1,9 @@
 ---
 name: Amina Mian
-honorific: Ustadhah
+honorific: Ust.
 group: teachers
-order: 70
-listed: false
+order: 50
+listed: true
 ---
 
 Amina Mian started studying at Sameera Institute in 2011 and completed a 3-year Classical Islamic Knowledge certification. She graduated with her Alimiyyah degree from Dar ul Uloom online and currently teaches part-time at Sabeel Institute, offering classes to kids, youth, and adults.

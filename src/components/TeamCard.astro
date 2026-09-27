@@ -8,7 +8,7 @@ interface Props {
 }
 
 const { member } = Astro.props;
-const { name, role, highlights, photo } = member.data;
+const { name, role, sub, highlights, photo } = member.data;
 const href = teamHasPage(member) ? `/teachers-and-team/${member.id}/` : undefined;
 ---
 
@@ -29,6 +29,7 @@ const href = teamHasPage(member) ? `/teachers-and-team/${member.id}/` : undefine
     {href ? <a href={href} class="after:absolute after:inset-0 after:content-['']">{displayName(member)}</a> : displayName(member)}
   </h3>
   {role && <p class="mt-1 text-[15px] font-medium text-gold-text">{role}</p>}
+  {sub && <p class="mt-0.5 text-[14px] text-ink-soft">{sub}</p>}
   {
     highlights && (
       <ul class="mt-4 space-y-2 text-[15px] leading-snug text-ink-soft">

@@ -136,13 +136,15 @@ const team = defineCollection({
   schema: ({ image }) =>
     z.object({
       name: z.string().min(1),
-      honorific: z.enum(['Ustadhah', 'Sr.', 'Br.', 'Dr.']),
+      honorific: z.enum(['Ustadhah', 'Ust.', 'Sr.', 'Br.', 'Dr.']),
       /** Section on the Teachers & Team page. */
       group: z.enum(['founder', 'board', 'teachers', 'volunteers']),
       /** Position within the group, ascending. */
       order: z.number().int(),
       /** e.g. "Program Director and Teacher". */
       role: z.string().min(1).optional(),
+      /** Optional subtitle below the main role/title. */
+      sub: z.string().min(1).optional(),
       /** One or two short lines: credentials, subjects taught. */
       highlights: z.array(z.string().min(1)).max(3).optional(),
       /** false keeps the file but hides the person from the site. */

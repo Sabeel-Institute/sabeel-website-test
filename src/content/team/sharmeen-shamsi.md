@@ -1,8 +1,8 @@
 ---
 name: Sharmeen Shamsi
-honorific: Ustadhah
+honorific: Ust.
 group: teachers
-order: 20
+order: 10
 role: Full-time Islamic Studies Teacher
 highlights:
 - ‘Alimiyyah, Institute of Islamic Education (2007)

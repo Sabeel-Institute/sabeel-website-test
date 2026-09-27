@@ -1,9 +1,10 @@
 ---
-name: Khadija Muhammad
+name: Khadija
 honorific: Sr.
 group: board
-order: 20
-role: Treasurer and Leadership Team
+order: 30
+role: Treasurer
+sub: Arabic Teacher
 highlights:
 - Degrees in Computer Science, MIS, and Education
 - Hikam Arabic TA · Qalam Institute student
