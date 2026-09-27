@@ -188,37 +188,6 @@ const amounts = ['50', '100', '250'];
     </div>
   </section>
 
-  <!-- Rukaiya's story -->
-  <section class="py-14 md:py-16" aria-labelledby="story-heading">
-    <div class="container-page grid items-center gap-10 md:grid-cols-2 md:gap-16">
-      <Photo slot="rukaiya" alt="Sr. Rukaiya Ahamed" monogram="RA" class="aspect-[4/3] shadow-card" />
-      <div>
-        <p class="eyebrow">Rukaiya’s story</p>
-        <h2 id="story-heading" class="display-md mt-2 sm:text-[2.4rem]">From a summer garden to the board.</h2>
-        <Divider class="mt-4" />
-        <p class="mt-5 text-[17px] leading-[1.85] text-ink-soft">
-          Rukaiya first joined Sabeel in high school through our Summer Garden program. She then joined Hikam,
-          continuing her journey as a Sabeel student. Today, she serves as a member of Sabeel’s board. Her story shows
-          what becomes possible when a young woman has a pathway to learn, belong, and lead.
-        </p>
-        <ol class="mt-6 grid overflow-hidden rounded-card border border-gold/60 bg-surface text-sm sm:grid-cols-3">
-          {
-            [
-              ['High school', 'Summer Garden'],
-              ['Next chapter', 'Hikam'],
-              ['Today', 'Sabeel board member'],
-            ].map(([k, v]) => (
-              <li class="border-gold/40 p-4 not-last:border-b sm:not-last:border-r sm:not-last:border-b-0">
-                <p class="text-ink-soft">{k}</p>
-                <p class="mt-0.5 font-semibold text-ink">{v}</p>
-              </li>
-            ))
-          }
-        </ol>
-      </div>
-    </div>
-  </section>
-
   <!-- Trust -->
   <section id="trust" class="scroll-mt-6 border-t border-border bg-sage-mist py-14 md:py-16" aria-labelledby="trust-heading">
     <div class="container-page">
