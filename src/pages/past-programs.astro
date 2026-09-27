@@ -1,58 +1,141 @@
 ---
+import { Image, getImage } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import PageHero from '../components/PageHero.astro';
-import SectionHeading from '../components/SectionHeading.astro';
-import ProgramCard from '../components/ProgramCard.astro';
-import AreaCards from '../components/AreaCards.astro';
+import Lightbox from '../components/Lightbox.astro';
+import Icon from '../components/Icon.astro';
 import CtaBand from '../components/CtaBand.astro';
-import { getCompletedPrograms } from '../lib/content';
+import { getCompletedPrograms, programHref, programYear } from '../lib/content';
+import { areas } from '../site.config';
 
 const all = await getCompletedPrograms();
-const recent = all.slice(0, 6);
+
+// Group completed programs by year descending
+const yearsMap = new Map<number, typeof all>();
+for (const p of all) {
+  const y = programYear(p);
+  if (!yearsMap.has(y)) yearsMap.set(y, []);
+  yearsMap.get(y)!.push(p);
+}
+
+const sortedYears = Array.from(yearsMap.keys()).sort((a, b) => b - a);
+const defaultYear = sortedYears.includes(2026) ? 2026 : sortedYears[0];
+
+// Prepare image optimization for flyers
+const programsWithFlyer = await Promise.all(
+  all.map(async (p) => {
+    const flyer = p.data.flyer ?? p.data.image;
+    const flyerFull = flyer ? await getImage({ src: flyer, width: 1600 }) : null;
+    return {
+      program: p,
+      year: programYear(p),
+      href: programHref(p),
+      flyer,
+      flyerFullSrc: flyerFull?.src,
+      areaLabel: areas[p.data.area].label,
+    };
+  })
+);
 ---
 
 <BaseLayout
-  title="Past Programs"
-  description="A growing record of the courses, camps, and gatherings Sabeel Institute has offered to women, youth, and children."
+  title="Past Programs Archive"
+  description="Explore flyers and records of past courses, workshops, and gatherings at Sabeel Institute organized by year."
 >
   <PageHero
     eyebrow="Past programs"
-    title="A growing record of learning at Sabeel."
+    title="Program Archive"
     photo="past-programs-hero"
     photoAlt="A past Sabeel class"
     photoIcon="book-open"
   >
-    <p>
-      Explore selected previous offerings for women, youth, and children. Each completed program remains connected to
-      the area of learning it belongs to.
-    </p>
+    <p>Explore flyers from our previous offerings for women, youth, and children.</p>
   </PageHero>
 
-  <section class="py-14 md:py-16" aria-labelledby="ways-heading">
+  <section class="py-10 md:py-14" aria-label="Program archive by year">
     <div class="container-page">
-      <SectionHeading eyebrow="Explore by program area" title="Three ways into the archive." id="ways-heading">
-        <p>Each area keeps its completed programs together, grouped by year — {all.length} programs so far.</p>
-      </SectionHeading>
-      <div class="mt-10">
-        <AreaCards mode="archive" />
-      </div>
-    </div>
-  </section>
-
-  <section class="border-t border-border bg-surface py-14 md:py-16" aria-labelledby="recent-heading">
-    <div class="container-page">
-      <SectionHeading eyebrow="Completed programs" title="Begin with selected recent programs." id="recent-heading">
-        <p>The most recently completed programs across all three areas.</p>
-      </SectionHeading>
-      <ul class="mt-10 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+      <!-- Year Selection Tabs -->
+      <div class="flex flex-wrap items-center justify-center gap-2 md:gap-3" role="tablist" aria-label="Select year">
         {
-          recent.map((p) => (
-            <li>
-              <ProgramCard program={p} />
-            </li>
+          sortedYears.map((year) => (
+            <button
+              type="button"
+              role="tab"
+              data-year-tab={String(year)}
+              aria-selected={year === defaultYear ? 'true' : 'false'}
+              class:list={[
+                'px-5 py-2 rounded-full font-display font-bold text-lg transition-all duration-150 cursor-pointer border',
+                year === defaultYear
+                  ? 'bg-raspberry text-on-raspberry border-raspberry shadow-sm'
+                  : 'bg-surface text-ink-soft border-gold/40 hover:border-gold hover:text-raspberry',
+              ]}
+            >
+              {year}
+            </button>
           ))
         }
-      </ul>
+      </div>
+
+      <!-- Year Panels with Flyer Grids -->
+      <div class="mt-10">
+        {
+          sortedYears.map((year) => {
+            const yearPrograms = programsWithFlyer.filter((item) => item.year === year);
+            return (
+              <div
+                data-year-panel={String(year)}
+                role="tabpanel"
+                hidden={year !== defaultYear}
+                class="focus:outline-none"
+              >
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                  {yearPrograms.map((item) => (
+                    <article class="group relative flex flex-col rounded-card border border-gold/40 bg-surface overflow-hidden shadow-sm hover:shadow-card transition-shadow">
+                      <div class="relative aspect-[3/4] w-full overflow-hidden bg-sage-wash/30">
+                        {item.flyer ? (
+                          <a
+                            href={item.flyerFullSrc ?? item.href}
+                            data-lightbox="past-flyers"
+                            data-title={item.program.data.title}
+                            data-caption={`${item.year} · ${item.areaLabel}`}
+                            data-page={item.href}
+                            class="block size-full"
+                          >
+                            <Image
+                              src={item.flyer}
+                              alt={`Flyer for ${item.program.data.title}`}
+                              widths={[320, 640]}
+                              sizes="(min-width: 1024px) 25vw, (min-width: 768px) 33vw, (min-width: 640px) 50vw, 100vw"
+                              class="size-full object-cover object-top transition-transform duration-300 group-hover:scale-105"
+                            />
+                          </a>
+                        ) : (
+                          <div class="flex size-full items-center justify-center bg-sage-wash p-4 text-center">
+                            <span class="font-display font-bold text-raspberry text-lg">{item.program.data.title}</span>
+                          </div>
+                        )}
+                      </div>
+                      <div class="p-4 flex flex-col flex-1 justify-between gap-2 border-t border-gold/20">
+                        <div>
+                          <p class="text-xs font-bold tracking-wider text-gold-text uppercase">{item.areaLabel}</p>
+                          <h3 class="font-display font-bold text-lg text-raspberry leading-tight mt-1">
+                            <a href={item.href} class="hover:underline">
+                              {item.program.data.title}
+                            </a>
+                          </h3>
+                        </div>
+                        <a href={item.href} class="link-arrow text-xs font-medium pt-2 mt-auto">
+                          View details <Icon name="arrow-right" class="size-3.5" />
+                        </a>
+                      </div>
+                    </article>
+                  ))}
+                </div>
+              </div>
+            );
+          })
+        }
+      </div>
     </div>
   </section>
 
@@ -60,4 +143,38 @@ const recent = all.slice(0, 6);
     <p>Return to Programs to see what is open for registration now.</p>
     <a slot="actions" href="/programs/" class="btn btn-primary px-7 text-base">View Current Programs</a>
   </CtaBand>
+
+  <Lightbox />
 </BaseLayout>
+
+<script>
+  function setupYearTabs() {
+    const tabs = document.querySelectorAll<HTMLButtonElement>('[data-year-tab]');
+    const panels = document.querySelectorAll<HTMLElement>('[data-year-panel]');
+
+    tabs.forEach((tab) => {
+      tab.addEventListener('click', () => {
+        const targetYear = tab.dataset.yearTab;
+
+        tabs.forEach((t) => {
+          const active = t.dataset.yearTab === targetYear;
+          t.setAttribute('aria-selected', active ? 'true' : 'false');
+          if (active) {
+            t.classList.remove('bg-surface', 'text-ink-soft', 'border-gold/40');
+            t.classList.add('bg-raspberry', 'text-on-raspberry', 'border-raspberry', 'shadow-sm');
+          } else {
+            t.classList.remove('bg-raspberry', 'text-on-raspberry', 'border-raspberry', 'shadow-sm');
+            t.classList.add('bg-surface', 'text-ink-soft', 'border-gold/40');
+          }
+        });
+
+        panels.forEach((p) => {
+          p.hidden = p.dataset.yearPanel !== targetYear;
+        });
+      });
+    });
+  }
+
+  setupYearTabs();
+  document.addEventListener('astro:page-load', setupYearTabs);
+</script>
