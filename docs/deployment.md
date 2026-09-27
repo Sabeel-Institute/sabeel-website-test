@@ -28,7 +28,8 @@ flowchart TB
   GitHub runs it from `main` (a `workflow_run` trigger), so a pull request
   cannot change what it does. It never runs pull-request code: it downloads
   the built `dist/`, keeps only `cleanUrls`, `trailingSlash`, `redirects`,
-  and `headers` from the pull request's `firebase.json`, deploys to the
+  and `headers` from the pull request's `firebase.json` (the site name comes
+  from `main`'s copy), deploys to the
   `pr-<number>` channel (expires after 7 days), comments the link, and adds
   a `preview` check to the pull request.
 - Because deploy access depends on running from `main`, changes to either
@@ -40,7 +41,7 @@ flowchart TB
 |---|---|---|
 | Google account that owns the project | faisal.shah@oursabeel.com (Google Workspace org `oursabeel.com`, org ID 833557915874) | Google Cloud |
 | Firebase / Google Cloud project | `sabeel-website-test`, project number `176680257141` | `.firebaserc` (project ID); both workflows (project number) |
-| Hosting site | `sabeel-website-test` (the project's default site) | Firebase; reached through `.firebaserc` |
+| Hosting site | `sabeel-website-test` (the project's default site) | `firebase.json` (`hosting.site`); previews read it from `main`'s copy |
 | Live URL | https://sabeel-website-test.web.app | `astro.config.mjs` (`site`, used for canonical and link-preview URLs); GitHub repo "Website" field |
 | GitHub repository | `Sabeel-Institute/sabeel-website-test`, repo ID `1388459667`, owner ID `334027596` | Google identity pool condition and service-account binding |
 | Identity pool | `github` ("GitHub Actions") | Google Cloud |
@@ -117,7 +118,9 @@ new one and point everything at it.
 
 1. Set up the new project with [Setting up from scratch](#setting-up-from-scratch),
    steps 1–5.
-2. `.firebaserc`: change `"default"` to the new project ID.
+2. `.firebaserc`: change `"default"` to the new project ID, and
+   `firebase.json`: change `hosting.site` to the new site name (the default
+   site is named after the project ID).
 3. `.github/workflows/site.yml` and `.github/workflows/preview.yml`: change
    `workload_identity_provider` (new project number) and `service_account`
    (new service-account email). Both files, both lines.
@@ -328,8 +331,9 @@ gcloud iam service-accounts add-iam-policy-binding "$SA" --project "$PROJECT_ID"
 
 ### 6. Point the repository at the project
 
-In a pull request, update `.firebaserc`, `workload_identity_provider` and
-`service_account` in both workflows, and `site` in `astro.config.mjs`, as in
+In a pull request, update `.firebaserc`, `hosting.site` in `firebase.json`,
+`workload_identity_provider` and `service_account` in both workflows, and
+`site` in `astro.config.mjs`, as in
 [Moving to a different Firebase project](#moving-to-a-different-firebase-project-same-or-different-google-account).
 
 ### 7. Apply the GitHub settings
@@ -377,14 +381,16 @@ npx firebase-tools@15 login          # as faisal.shah@oursabeel.com
 npx firebase-tools@15 deploy --only hosting --project sabeel-website-test
 ```
 
-The Firebase command line remembers the signed-in account per folder; if it
+The deploy goes to the site named in `firebase.json`. The Firebase command
+line remembers the signed-in account per folder; if it
 picks the wrong one, run `npx firebase-tools@15 login:use faisal.shah@oursabeel.com`.
 
 ## Troubleshooting
 
 | Symptom | Cause and fix |
 |---|---|
-| Deploy fails with "Assertion failed: resolving hosting target of a site with no site name or target name" | Firebase briefly failed to report the project's default site. Re-run the failed job: Actions → the run → "Re-run failed jobs" (or `gh run rerun <run-id> --failed`). |
+| Deploy fails partway with a Firebase error that a re-run might clear (timeouts, "Assertion failed", HTTP 5xx) | Re-run the failed job: Actions → the run → "Re-run failed jobs" (or `gh run rerun <run-id> --failed`). |
+| Deploy fails with a "site not found" or "does not exist" error | `hosting.site` in `firebase.json` names a site that is not in the project `.firebaserc` points to. |
 | "The given credential is rejected by the attribute condition" | The workflow is not running from `main` (expected for branch workflows), or the repository, owner, or branch in the condition no longer match. Compare with the condition above. |
 | "Permission 'iam.serviceAccounts.getAccessToken' denied" | The service account's `workloadIdentityUser` binding is missing or names a different repo ID. |
 | Firebase returns 403 during deploy | The service account lacks a project role from the table above. |
