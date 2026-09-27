@@ -6,7 +6,7 @@ area: youth-children
 date: '2021-06-26'
 audience: Girls
 schedule: Sat June 26th-Wed June 30th, 11 AM-2 PM
-format: In person
+format: On-site
 venue: Bear Creek Islamic Center community hall (on-site)
 instructors:
 - sameera-shah

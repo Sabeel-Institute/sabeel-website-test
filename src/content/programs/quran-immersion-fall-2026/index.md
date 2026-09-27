@@ -7,7 +7,7 @@ area: womens-learning
 date: 2026-09-17
 audience: Women; youth girls welcome
 schedule: Thursdays · 10:00 AM–1:00 PM CT
-format: Hybrid
+format: Online & on-site
 venue: Masjid Istiqlal or online
 duration: 10 weeks, Sept 17 – Nov 19
 fee: $50 in person · $75 online

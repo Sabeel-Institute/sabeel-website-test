@@ -8,7 +8,7 @@ date: '2024-09-07'
 dateApprox: true
 audience: Women
 schedule: Saturdays, starting Sept 7, 11 AM-1 PM
-format: In person
+format: On-site
 venue: Maryam Islamic Center, Upstairs Boys Hall
 instructors:
 - sameera-shah

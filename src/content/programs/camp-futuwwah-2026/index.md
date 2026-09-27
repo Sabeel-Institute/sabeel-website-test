@@ -8,7 +8,7 @@ date: '2026-07-25'
 dateApprox: true
 audience: Boys
 schedule: 'Maryam Islamic Center: July 25-28 (Sat-Tues), 4:45-7:45 PM; Masjid Al-Aqsa: July 29-Aug 1 (Wed-Sat), 4:45-7:45 PM'
-format: In person
+format: On-site
 venue: Maryam Islamic Center / Masjid Al-Aqsa (Katy Islamic Center ISGH)
 instructors:
 - name: Imam Zaid Noor

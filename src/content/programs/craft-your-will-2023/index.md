@@ -7,7 +7,7 @@ area: womens-learning
 date: '2023-09-09'
 audience: Women
 schedule: Saturday, September 9, 2023, 2:15-3:45 PM
-format: In person
+format: On-site
 venue: Masjid Hamza
 instructors:
 - name: Dalya AlAbbassi

@@ -8,7 +8,7 @@ date: '2025-12-03'
 dateApprox: true
 audience: Women
 schedule: Starting Dec 3rd, Wednesdays, 12:00 PM-1:00 PM
-format: In person
+format: On-site
 venue: Masjid Istiqlal
 instructors:
 - mariam-sattar

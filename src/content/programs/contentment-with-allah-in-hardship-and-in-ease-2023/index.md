@@ -8,7 +8,7 @@ date: '2023-07-15'
 dateApprox: true
 audience: Women
 schedule: Sat, July 15, 6 PM
-format: In person
+format: On-site
 venue: Masjid Hamza (upstairs in ladies' section)
 instructors:
 - name: Mufti Hussain Kamani

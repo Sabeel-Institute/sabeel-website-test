@@ -7,7 +7,7 @@ date: '2026-02-07'
 dateApprox: true
 audience: Women
 schedule: Saturday, February 7th, 11 AM-1 PM
-format: In person
+format: On-site
 venue: Maryam Islamic Center
 instructors:
 - sameera-shah

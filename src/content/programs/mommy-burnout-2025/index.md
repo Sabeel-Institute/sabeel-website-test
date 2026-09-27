@@ -8,7 +8,7 @@ date: '2025-09-02'
 dateApprox: true
 audience: Women
 schedule: Sept 2nd - Sept 30th, Tuesdays, 12 PM-1:30 PM
-format: In person
+format: On-site
 venue: Maryam Islamic Center
 instructors:
 - name: Sr. Selina Ali

@@ -8,7 +8,7 @@ date: 2026-10-16
 starts: Friday, October 16
 audience: Women and youth girls
 schedule: Fridays, monthly · 5:30–7:45 PM CT
-format: In person
+format: On-site
 venue: Masjid Istiqlal
 duration: Monthly gathering
 fee: "Halaqa $5 · Halaqa and optional activity $15"
