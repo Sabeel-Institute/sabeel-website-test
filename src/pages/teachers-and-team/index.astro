@@ -119,12 +119,15 @@ const count = (n: number) => words[n] ?? String(n);
   <!-- Qualified / serve -->
   <section class="py-14 md:py-16">
     <div class="container-page grid gap-5 md:grid-cols-2">
-      <div class="rounded-card border border-gold/60 border-t-4 border-t-gold bg-surface p-7 sm:p-9">
-        <h2 class="font-display text-[1.8rem] font-bold text-raspberry">What “qualified” means here</h2>
-        <p class="mt-3 leading-[1.8] text-ink-soft">
+      <details class="group rounded-card border border-gold/60 border-t-4 border-t-gold bg-surface p-7 sm:p-9">
+        <summary class="flex cursor-pointer items-center justify-between font-display text-[1.8rem] font-bold text-raspberry">
+          <span>What is an ‘Alimiyyah degree?</span>
+          <Icon name="chevron-down" class="size-5 transition-transform group-open:rotate-180 text-raspberry shrink-0 ml-2" />
+        </summary>
+        <p class="mt-4 leading-[1.8] text-ink-soft">
           ‘Alimiyyah degree is a traditional four- to six-year program devoted to the in-depth study of the Islamic sciences, including the Qur’an, Hadith, Islamic law, theology, and Arabic. Through years of structured study under scholars, graduates develop a strong foundation in the Islamic tradition; one that informs their teaching and the care they bring to sharing sacred knowledge.
         </p>
-      </div>
+      </details>
       <div id="serve" class="scroll-mt-6 rounded-card border border-gold/60 border-t-4 border-t-gold bg-surface p-7 sm:p-9">
         <h2 class="font-display text-[1.8rem] font-bold text-raspberry">Sabeel’s Sacred Service Volunteer Team</h2>
         <p class="mt-3 leading-[1.8] text-ink-soft">
