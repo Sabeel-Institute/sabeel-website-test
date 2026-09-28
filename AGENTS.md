@@ -217,11 +217,15 @@ valid without it.
 
 ### Team (`src/content/team/<name>.md`)
 
-Front matter: `name`, `honorific` (`Ustadhah`, `Sr.`, `Br.`, `Dr.`), `group`
-(`founder`, `board`, `teachers`, `volunteers`), `order` (ascending within the
-group; use steps of 10), optional `role`, `highlights` (one or two short
-lines), `listed` (`false` hides the person), `photo`. The body is the bio; a
-listed person with a bio gets `/teachers-and-team/<name>/`. Refer to people in
+Front matter: `name`, `honorific` (`Ustadhah`, `Ust.`, `Sr.`, `Br.`, `Dr.`),
+`group` (`founder`, `board`, `teachers`, `volunteers`), `order` (ascending
+within the group; use steps of 10), optional `role`, `sub` (a second line
+under the role), `highlights`, `listed` (`false` hides the person), `photo`
+(shown on the bio page). `highlights` lists credentials only: the Sabeel
+certificate or studies and any other degree, one per line, as “credential,
+institution” (`‘Alimiyyah, Institute of Islamic Education`,
+`Three years of Islamic studies, Sabeel`). The body is the bio; a listed
+person with a bio gets `/teachers-and-team/<name>/`. Refer to people in
 programs by file name under `instructors`.
 
 ### Milestones (`src/content/milestones.yaml`)

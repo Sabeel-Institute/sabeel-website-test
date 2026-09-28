@@ -77,9 +77,7 @@ const count = (n: number) => words[n] ?? String(n);
   <section id="teachers" class="scroll-mt-6 border-t border-border bg-surface py-14 md:py-16" aria-labelledby="teachers-heading">
     <div class="container-page">
       <SectionHeading eyebrow="Teaching team" title="Our ‘Alimiyyah-Qualified Teachers" id="teachers-heading" />
-
-      <!-- Main 3 Teachers -->
-      <ul class="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+      <ul class="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {
           teachers.slice(0, 3).map((m) => (
             <li>
@@ -88,51 +86,98 @@ const count = (n: number) => words[n] ?? String(n);
           ))
         }
       </ul>
-
-      <!-- Additional Teachers (toggleable) -->
       {
         teachers.length > 3 && (
-          <details class="group mt-6">
-            <summary class="inline-flex cursor-pointer items-center gap-2 rounded-md border border-gold/60 bg-sage-wash px-5 py-2.5 font-medium text-raspberry transition-colors hover:bg-sage-mist group-open:hidden">
-              <span>See more teachers</span>
-              <Icon name="chevron-down" class="size-4" />
-            </summary>
-            <ul class="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          <>
+            <ul id="more-teachers" class="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3" hidden>
               {teachers.slice(3).map((m) => (
                 <li>
                   <TeamCard member={m} />
                 </li>
               ))}
             </ul>
-            <div class="mt-6">
-              <summary class="inline-flex cursor-pointer items-center gap-2 rounded-md border border-gold/60 bg-sage-wash px-5 py-2.5 font-medium text-raspberry transition-colors hover:bg-sage-mist">
-                <span>Show fewer teachers</span>
-                <Icon name="chevron-down" class="size-4 rotate-180" />
-              </summary>
+            <div class="mt-8 flex justify-center">
+              <button type="button" class="btn btn-primary px-8" aria-expanded="false" aria-controls="more-teachers" data-more-teachers>
+                See more teachers
+              </button>
             </div>
-          </details>
+          </>
         )
       }
+      <details class="group mt-8 rounded-r-card border-l-4 border-raspberry bg-sage-mist">
+        <summary class="flex min-h-14 cursor-pointer list-none items-center justify-between gap-4 px-6 py-4 [&::-webkit-details-marker]:hidden">
+          <span class="text-lg font-medium text-ink">What is ‘Alimiyyah?</span>
+          <span class="shrink-0 font-medium text-raspberry">
+            <span class="group-open:hidden">Read explanation</span>
+            <span class="hidden group-open:inline">Hide explanation</span>
+          </span>
+        </summary>
+        <p class="max-w-3xl px-6 pb-6 leading-[1.8] text-ink">
+          ‘Alimiyyah degree is a traditional four- to six-year program devoted to the in-depth study of the Islamic
+          sciences, including the Qur’an, Hadith, Islamic law, theology, and Arabic. Through years of structured study
+          under scholars, graduates develop a strong foundation in the Islamic tradition; one that informs their teaching
+          and the care they bring to sharing sacred knowledge.
+        </p>
+      </details>
     </div>
   </section>
 
-  <!-- Qualified / serve -->
-  <section class="py-14 md:py-16">
-    <div class="container-page grid gap-5 md:grid-cols-2">
-      <details class="group rounded-card border border-gold/60 border-t-4 border-t-gold bg-surface p-7 sm:p-9">
-        <summary class="flex cursor-pointer items-center justify-between font-display text-[1.8rem] font-bold text-raspberry">
-          <span>What is an ‘Alimiyyah degree?</span>
-          <Icon name="chevron-down" class="size-5 transition-transform group-open:rotate-180 text-raspberry shrink-0 ml-2" />
-        </summary>
-        <p class="mt-4 leading-[1.8] text-ink-soft">
-          ‘Alimiyyah degree is a traditional four- to six-year program devoted to the in-depth study of the Islamic sciences, including the Qur’an, Hadith, Islamic law, theology, and Arabic. Through years of structured study under scholars, graduates develop a strong foundation in the Islamic tradition; one that informs their teaching and the care they bring to sharing sacred knowledge.
+  <!-- Sacred Service Team -->
+  <section id="serve" class="scroll-mt-6 bg-sage-mist py-14 md:py-16" aria-labelledby="serve-heading">
+    <div class="container-page">
+      <div class="max-w-3xl">
+        <p class="eyebrow">Our Sacred Service Team</p>
+        <h2 id="serve-heading" class="display-md mt-1 tracking-[0.08em] uppercase sm:text-[2.35rem]">Learn. Reflect. Serve.</h2>
+        <Divider class="mt-4" />
+        <p class="mt-5 text-[17px] leading-[1.85] text-ink">
+          Deepened through suhbah, Sabeel’s learning endures as students who studied with us over a decade ago still
+          serve alongside us. Our Sacred Service Team brings together more than 30 graduates, students, and volunteers
+          who sustain Sabeel through the time, skills, and care they give.
         </p>
-      </details>
-      <div id="serve" class="scroll-mt-6 rounded-card border border-gold/60 border-t-4 border-t-gold bg-surface p-7 sm:p-9">
-        <h2 class="font-display text-[1.8rem] font-bold text-raspberry">Sabeel’s Sacred Service Volunteer Team</h2>
-        <p class="mt-3 leading-[1.8] text-ink-soft">
-          At the heart of Sabeel is a dedicated team of certification program graduates and past and current students who bring sacred service to life. From marketing and caring for our new classroom to supporting on-site and live online programs, they give their time, talents, and hearts to help our students and community thrive.
+      </div>
+
+      <div class="mt-10 border-t border-border-strong pt-10">
+        <h3 class="display-md">From Students to Teachers</h3>
+        <div class="mt-4 max-w-3xl space-y-4 text-[17px] leading-[1.85] text-ink">
+          <p>
+            Graduates of Sabeel’s three-year Classical Islamic Knowledge and two-year Hikam Foundations certification
+            programs are an important part of our teaching community. They give bayans, contribute to our sacred season
+            programs and summer youth intensives, and teach children’s courses.
+          </p>
+          <p>
+            We are grateful for the care and commitment with which they carry their learning forward, nurturing younger
+            students and sharing sacred knowledge within our community.
+          </p>
+        </div>
+      </div>
+
+      <div class="mt-10 border-t border-border-strong pt-10">
+        <h3 class="display-md">Our Sacred Service Team</h3>
+        <p class="mt-4 max-w-3xl text-[17px] leading-[1.85] text-ink">
+          Our graduates, students, and volunteers sustain Sabeel through the time, skills, and care they give.
         </p>
+        <ul class="mt-8 grid gap-6 md:grid-cols-3 md:gap-10">
+          {
+            [
+              ['Technology & Online Support', 'Supporting the technology behind our in-person and live online programs.'],
+              ['Design & Communications', 'Creating flyers and helping our community stay informed.'],
+              ['Program & Classroom Support', 'Preparing our spaces and helping classes and seasonal programs run smoothly.'],
+            ].map(([area, text]) => (
+              <li>
+                <h4 class="text-lg font-semibold text-raspberry">{area}</h4>
+                <p class="mt-2 leading-[1.7] text-ink">{text}</p>
+              </li>
+            ))
+          }
+        </ul>
+        <div class="mt-8 max-w-3xl space-y-4 text-[17px] leading-[1.85] text-ink">
+          <p>
+            Some have faithfully carried an ongoing responsibility for years; others lend a hand during a particular
+            program or season. We are deeply grateful for each contribution, including the quiet work that so often goes
+            unseen.
+          </p>
+          <p>May Allah accept their service and reward them abundantly.</p>
+        </div>
       </div>
     </div>
   </section>
@@ -142,3 +187,15 @@ const count = (n: number) => words[n] ?? String(n);
     <a slot="actions" href="/programs/" class="btn btn-primary px-7 text-base">View Programs</a>
   </CtaBand>
 </BaseLayout>
+
+<script>
+  for (const button of document.querySelectorAll<HTMLButtonElement>('[data-more-teachers]')) {
+    const list = document.getElementById(button.getAttribute('aria-controls')!)!;
+    button.addEventListener('click', () => {
+      const open = list.hidden;
+      list.hidden = !open;
+      button.setAttribute('aria-expanded', String(open));
+      button.textContent = open ? 'Show fewer teachers' : 'See more teachers';
+    });
+  }
+</script>
