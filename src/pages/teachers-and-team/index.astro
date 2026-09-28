@@ -5,10 +5,9 @@ import PageHero from '../../components/PageHero.astro';
 import SectionHeading from '../../components/SectionHeading.astro';
 import Divider from '../../components/Divider.astro';
 import Icon from '../../components/Icon.astro';
-import Photo from '../../components/Photo.astro';
 import TeamCard from '../../components/TeamCard.astro';
 import CtaBand from '../../components/CtaBand.astro';
-import { getTeamGroup, initials } from '../../lib/content';
+import { getTeamGroup } from '../../lib/content';
 
 const founder = (await getEntry('team', 'sameera-shah'))!;
 const board = await getTeamGroup('board');
@@ -24,9 +23,6 @@ const count = (n: number) => words[n] ?? String(n);
   <PageHero
     eyebrow="Teachers and program leaders"
     title="Women trained to teach, mentor, and carry learning forward."
-    photo="team-hero"
-    photoAlt="Sabeel’s teaching team"
-    photoIcon="users"
   >
     <p>
       Sabeel Institute’s Houston-based teaching team brings together women trained in traditional Islamic
@@ -37,9 +33,8 @@ const count = (n: number) => words[n] ?? String(n);
 
   <!-- Founder -->
   <section id="founder" class="scroll-mt-6 bg-sage-mist py-14 md:py-16" aria-labelledby="founder-heading">
-    <div class="container-page grid items-center gap-10 md:grid-cols-2 md:gap-16">
-      <Photo slot="founder" alt="Ust. Sameera Shah teaching" monogram={initials(founder.data.name)} class="aspect-[4/3] shadow-card" />
-      <div>
+    <div class="container-page">
+      <div class="max-w-3xl">
         <p class="eyebrow">Founder</p>
         <p class="mt-1 text-sm font-medium text-ink-soft">Executive Director and Teacher</p>
         <h2 id="founder-heading" class="display-md mt-2 sm:text-[2.4rem]">Meet Ust. Sameera Shah.</h2>
