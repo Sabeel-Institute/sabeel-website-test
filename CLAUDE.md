@@ -45,14 +45,21 @@
   out the same.
 - `engine/before.cjs` sets reduced motion, a fixed clock, and a seeded
   `Math.random` before each page loads. `engine/ready.cjs` waits for the
-  page's load event, its images, and its fonts, each for at most 10 seconds,
-  then calls `window.stop()` (Playwright's screenshot otherwise waits for a
-  font that never loads) and finishes or cancels every Web Animation. A
+  page's load event, for every image to be `complete` (`img.decode()` alone
+  can reject before an image has loaded, for example when its request is
+  replaced), and for fonts, each for at most 10 seconds. If anything is still
+  loading it logs the files and calls `window.stop()` (Playwright's
+  screenshot otherwise waits for a font that never loads). It then finishes
+  or cancels every Web Animation. A
   screenshot that still fails is replaced by BackstopJS with a small
   placeholder, which `run.mjs` detects by its width and reports as "could
   not capture". Each step of the `visual-diff` job has its own time limit
   because a step that times out fails (covered by `continue-on-error`), while
   a job that times out is cancelled, which would stop the preview.
+- Pages that differ or fail are captured a second time and the second
+  result stands, when there are at most `RECHECK_MAX` (40) of them. On
+  GitHub's four-core runners a capture occasionally shows an image not yet
+  painted; the second capture clears it.
 - The viewports and the 20-page cap are `VIEWPORTS` and `MAX_SHOWN` in
   `run.mjs`; the report's screen switch is generated from `VIEWPORTS`. Update
   the figures in `docs/deployment.md` and AGENTS.md when changing them.

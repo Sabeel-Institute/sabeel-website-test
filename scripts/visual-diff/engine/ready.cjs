@@ -13,9 +13,20 @@ module.exports = async (page) => {
       await settle(new Promise((resolve) => addEventListener('load', resolve, { once: true })));
     }
     for (const img of document.querySelectorAll('img[loading="lazy"]')) img.loading = 'eager';
+    // Wait for every image to finish loading or fail. img.decode() alone is
+    // not enough: it can reject before the image has loaded, for example when
+    // the browser replaces the image's request.
+    const loaded = () => [...document.images].every((img) => img.complete);
+    for (let waited = 0; !loaded() && waited < wait; waited += 50) {
+      await new Promise((resolve) => setTimeout(resolve, 50));
+    }
     await settle(Promise.all([...document.images].map((img) => img.decode().catch(() => {}))));
     await settle(document.fonts.ready);
-    window.stop();
+    if (!loaded() || document.fonts.status !== 'loaded') {
+      const pending = [...document.images].filter((img) => !img.complete).map((img) => img.currentSrc || img.src);
+      console.log(`Still loading after ${wait} ms, so stopped: ${pending.join(' ') || 'fonts'}`);
+      window.stop();
+    }
     // Let animations that scripts start on the next frames begin, then bring
     // them to a fixed state: finite animations jump to their end, endless ones
     // go back to the start.
