@@ -2,22 +2,22 @@
 //
 //   node scripts/visual-diff/run.mjs --before <dist> --after <dist> --out <dir>
 //
-// Both builds are served locally. BackstopJS screenshots each page whose HTML
-// differs between them on a phone and a desktop screen and compares the
-// screenshots pixel by pixel. The report folder holds index.html (the page
-// reviewers read), summary.json (counts for the pull request comment) and the
-// images it shows.
+// Both builds are served locally. BackstopJS screenshots, in both builds, each
+// page whose HTML differs between them, on a phone and a desktop screen, and
+// pixelmatch compares the screenshots pixel for pixel. A page that cannot be
+// captured is reported as such rather than stopping the run. The report
+// folder holds index.html (the page reviewers read), summary.json (counts for
+// the pull request comment) and the images it shows.
 //
-// A page whose HTML is byte-identical in both builds renders identically:
-// every stylesheet, script, font and image it loads lives under _astro/ with a
-// content hash in its name, so changing any of them changes the HTML. Files
-// outside _astro/ (copied from public/) have no hash, so if any of those
-// differ, every page is compared.
+// A page whose HTML is identical in both builds renders identically as long
+// as every file it loads is identical. Astro names the files it generates
+// under _astro/ after a hash, so a page that loads changed styles, scripts,
+// fonts or images has changed HTML. If any other file differs (a file from
+// public/, or a generated file that kept its name), every page is compared.
 //
 // The report is published on the Firebase preview, whose data transfer counts
-// against the same daily quota as the live site. It therefore shows
-// screenshots for at most MAX_SHOWN pages, and only for the screens on which
-// a page changed.
+// against the same quota as the live site. It therefore shows screenshots for
+// at most MAX_SHOWN pages, and only for the screens on which a page changed.
 
 import { createReadStream } from 'node:fs';
 import fs from 'node:fs/promises';
@@ -26,20 +26,21 @@ import { createRequire } from 'node:module';
 import os from 'node:os';
 import path from 'node:path';
 import { parseArgs } from 'node:util';
+import pixelmatch from 'pixelmatch';
 import sharp from 'sharp';
 import { renderSummary } from './summary.mjs';
-
-const backstop = createRequire(import.meta.url)('backstopjs');
 
 const VIEWPORTS = [
   { label: 'phone', width: 390, height: 844 },
   { label: 'desktop', width: 1440, height: 900 },
 ];
 const MAX_SHOWN = 20;
-// Colour BackstopJS paints changed pixels in its difference images.
-const CHANGED = { red: 255, green: 0, blue: 255 };
-// WebP cannot encode taller images; those are published as JPEG.
+// Colour of changed pixels in the difference images.
+const CHANGED = [255, 0, 255];
+// WebP cannot encode taller images; those are published as JPEG, and images
+// taller than JPEG allows are scaled down to fit.
 const WEBP_MAX = 16383;
+const JPEG_MAX = 65500;
 
 const TYPES = {
   '.avif': 'image/avif',
@@ -76,13 +77,14 @@ async function main() {
     different: count('different'),
     added: count('added'),
     removed: count('removed'),
+    failed: count('failed'),
     unchanged: count('unchanged', 'same'),
   };
   await fs.writeFile(path.join(out, 'summary.json'), `${JSON.stringify(summary, null, 2)}\n`);
   await fs.writeFile(path.join(out, 'index.html'), renderSummary({ pages, shown, summary, viewports: VIEWPORTS }));
   console.log(
     `${summary.different} different, ${summary.added} added, ${summary.removed} removed, ` +
-      `${summary.unchanged} unchanged. Report: ${path.join(out, 'index.html')}`,
+      `${summary.failed} not captured, ${summary.unchanged} unchanged. Report: ${path.join(out, 'index.html')}`,
   );
 }
 
@@ -120,21 +122,23 @@ async function readArgs() {
 
 // Every page in either build, with a status: unchanged, changed, added or
 // removed. Changed pages become different or same once their screenshots are
-// compared.
+// compared, and any page becomes failed if a screenshot of it failed.
 async function classifyPages(before, after) {
   const beforeFiles = await listFiles(before);
   const afterFiles = await listFiles(after);
   const all = [...new Set([...beforeFiles, ...afterFiles])].sort();
   const same = async (file) =>
-    beforeFiles.has(file) &&
-    afterFiles.has(file) &&
     (await fs.readFile(path.join(before, file))).equals(await fs.readFile(path.join(after, file)));
 
-  let unhashedChanged = false;
+  // A file under _astro/ that only one build has is covered by the HTML check:
+  // its name is new, so only pages whose HTML changed load it.
+  let assetChanged = false;
   for (const file of all) {
-    if (file.endsWith('.html') || file.startsWith('_astro/') || (await same(file))) continue;
+    if (file.endsWith('.html')) continue;
+    const inBoth = beforeFiles.has(file) && afterFiles.has(file);
+    if (inBoth ? await same(file) : file.startsWith('_astro/')) continue;
     console.log(`${file} differs, so every page is compared`);
-    unhashedChanged = true;
+    assetChanged = true;
     break;
   }
 
@@ -144,10 +148,10 @@ async function classifyPages(before, after) {
     let status;
     if (!beforeFiles.has(file)) status = 'added';
     else if (!inAfter) status = 'removed';
-    else if (!unhashedChanged && (await same(file))) status = 'unchanged';
+    else if (!assetChanged && (await same(file))) status = 'unchanged';
     else status = 'changed';
     const html = await fs.readFile(path.join(inAfter ? after : before, file), 'utf8');
-    pages.push({ route: routeOf(file), title: titleOf(html), status });
+    pages.push({ route: routeOf(file), title: titleOf(html), status, inAfter });
   }
   return pages;
 }
@@ -175,16 +179,17 @@ const ENTITIES = { amp: '&', lt: '<', gt: '>', quot: '"', apos: "'", nbsp: ' ' 
 
 // The page's title up to " | ", which leaves out the site name.
 function titleOf(html) {
-  const raw = html.match(/<title>([\s\S]*?)<\/title>/i)?.[1].split(' | ')[0].trim() ?? '';
+  const raw = html.match(/<title[^>]*>([\s\S]*?)<\/title>/i)?.[1].split(' | ')[0].trim() ?? '';
   return raw.replace(/&(#x[0-9a-f]+|#[0-9]+|[a-z]+);/gi, (entity, name) => {
     if (name[0] !== '#') return ENTITIES[name.toLowerCase()] ?? entity;
-    return String.fromCodePoint(name[1].toLowerCase() === 'x' ? parseInt(name.slice(2), 16) : Number(name.slice(1)));
+    const code = name[1].toLowerCase() === 'x' ? parseInt(name.slice(2), 16) : Number(name.slice(1));
+    return code <= 0x10ffff ? String.fromCodePoint(code) : entity;
   });
 }
 
 // Screenshots the pages that are not unchanged, settles whether each changed
-// page looks different, and publishes images for the MAX_SHOWN pages with the
-// largest changes. Returns those pages.
+// page looks different, and publishes images for the pages chosen by pick().
+// Returns those pages.
 async function compareAndPublish(pages, { before, after, work, out }) {
   const compared = pages.filter((page) => page.status !== 'unchanged');
   console.log(`${pages.length} pages, ${compared.length} to compare`);
@@ -192,98 +197,101 @@ async function compareAndPublish(pages, { before, after, work, out }) {
     const shots = await capture(compared, before, after, work);
     for (const page of compared) {
       page.shots = shots.get(page.route);
-      if (page.status === 'changed') {
-        page.status = Object.values(page.shots).some((shot) => shot.differs) ? 'different' : 'same';
+      page.failures = Object.entries(page.shots).flatMap(([label, shot]) => shot.failed.map((side) => `${side} on a ${label}`));
+      if (page.failures.length) page.status = 'failed';
+      if (page.status !== 'changed') continue;
+      for (const [label, shot] of Object.entries(page.shots)) {
+        Object.assign(shot, await compare(shot, path.join(work, `diff-${shot.index}-${label}.png`)));
       }
+      page.status = Object.values(page.shots).some((shot) => shot.differs) ? 'different' : 'same';
     }
   }
-  const shown = pages
-    .filter((page) => ['different', 'added', 'removed'].includes(page.status))
-    .sort((a, b) => score(b) - score(a))
-    .slice(0, MAX_SHOWN);
+  const shown = pick(pages);
   await fs.mkdir(path.join(out, 'images'), { recursive: true });
   for (const [index, page] of shown.entries()) page.images = await publishImages(page, index, out);
   return shown;
 }
 
-// Pages with the largest visible change come first; new and removed pages
-// are all change.
+// The pages the report shows screenshots of: new and removed pages, then the
+// pages that changed most, keeping at least half of the MAX_SHOWN places for
+// changed pages when there are enough of them.
+function pick(pages) {
+  const newOrGone = pages.filter((page) => page.status === 'added' || page.status === 'removed');
+  const different = pages
+    .filter((page) => page.status === 'different')
+    .sort((a, b) => score(b) - score(a));
+  const first = newOrGone.slice(0, Math.max(MAX_SHOWN / 2, MAX_SHOWN - different.length));
+  return [...first, ...different.slice(0, MAX_SHOWN - first.length)];
+}
+
+// The share of the page, in percent, that changed on the screen where it
+// changed most.
 function score(page) {
-  if (page.status !== 'different') return Infinity;
   return Math.max(...Object.values(page.shots).map((shot) => shot.mismatch));
 }
 
-// Screenshots the given pages in both builds. Returns, for each route and
-// viewport, the screenshot files and whether they differ.
+// Screenshots the given pages in both builds with BackstopJS. Returns, for
+// each route and viewport, the two screenshot files.
 async function capture(pages, before, after, work) {
   const servers = await Promise.all([serve(before), serve(after)]);
-  const [beforeUrl, afterUrl] = servers.map((server) => `http://127.0.0.1:${server.address().port}`);
+  const urls = servers.map((server) => `http://127.0.0.1:${server.address().port}`);
+  const shotsDir = path.join(work, 'shots');
+  // BackstopJS writes its own temporary files to the system temp folder when
+  // it loads; send them to the work folder, which is removed afterwards.
+  process.env.TMPDIR = work;
+  const backstop = createRequire(import.meta.url)('backstopjs');
   const concurrency = Math.min(os.availableParallelism(), 8);
-  const config = () => ({
-    id: 'site',
-    viewports: VIEWPORTS.map((viewport) => ({ ...viewport })),
-    scenarios: pages.map((page) => ({
-      label: page.route,
-      referenceUrl: beforeUrl + page.route,
-      url: afterUrl + page.route,
+  const scenarios = ['before', 'after'].flatMap((side, s) =>
+    pages.map((page) => ({
+      label: `${side} ${page.route}`,
+      url: urls[s] + encodeRoute(page.route),
+      // ready.cjs waits for the rest of the page, with a time limit.
+      engineOptions: { gotoParameters: { waitUntil: 'domcontentloaded' } },
     })),
-    onReadyScript: 'ready.cjs',
-    paths: {
-      engine_scripts: path.join(import.meta.dirname, 'engine'),
-      bitmaps_reference: path.join(work, 'before'),
-      bitmaps_test: path.join(work, 'after'),
-      html_report: path.join(work, 'report'),
-      json_report: path.join(work, 'report'),
-    },
-    fileNameTemplate: '{scenarioIndex}_{viewportLabel}',
-    report: ['json'],
-    openReport: false,
-    engine: 'playwright',
-    engineOptions: { browser: 'chromium' },
-    asyncCaptureLimit: concurrency,
-    asyncCompareLimit: concurrency,
-    misMatchThreshold: 0,
-    resembleOutputOptions: { usePreciseMatching: true, errorType: 'flat', errorColor: CHANGED, transparency: 0.3 },
-  });
-
+  );
+  // BackstopJS rejects after all screenshots are taken if any of them failed;
+  // the files show which, below.
+  let failure;
   try {
-    await backstop('reference', { config: config() }).catch((error) => {
-      throw new Error(`Screenshots of the before build failed: ${describe(error)}`);
+    await backstop('reference', {
+      config: {
+        id: 'site',
+        viewports: VIEWPORTS.map((viewport) => ({ ...viewport })),
+        scenarios,
+        onBeforeScript: 'before.cjs',
+        onReadyScript: 'ready.cjs',
+        paths: {
+          engine_scripts: path.join(import.meta.dirname, 'engine'),
+          bitmaps_reference: shotsDir,
+        },
+        fileNameTemplate: '{scenarioIndex}_{viewportLabel}',
+        engine: 'playwright',
+        engineOptions: { browser: 'chromium' },
+        asyncCaptureLimit: concurrency,
+      },
     });
-    // BackstopJS rejects when any screenshot differs; the JSON report read
-    // below holds the outcome.
-    await backstop('test', { config: config() }).catch(() => {});
+  } catch (error) {
+    failure = describe(error);
+    console.warn(`Some screenshots failed, for example ${failure}`);
   } finally {
     for (const server of servers) server.close();
   }
 
-  const reportDir = path.join(work, 'report');
-  const reportFile = path.join(reportDir, 'jsonReport.json');
-  const report = JSON.parse(
-    await fs.readFile(reportFile, 'utf8').catch(() => {
-      throw new Error(`BackstopJS did not write ${reportFile}; see its log above`);
-    }),
-  );
-  const expected = pages.length * VIEWPORTS.length;
-  if (report.tests.length !== expected) {
-    throw new Error(`BackstopJS reported ${report.tests.length} screenshots, expected ${expected}`);
-  }
-
   const results = new Map();
-  for (const { pair, status } of report.tests) {
-    if (pair.engineErrorMsg) {
-      throw new Error(`Screenshot of ${pair.label} (${pair.viewportLabel}) failed: ${pair.engineErrorMsg}`);
+  for (const [index, page] of pages.entries()) {
+    const shots = {};
+    for (const viewport of VIEWPORTS) {
+      const [before, after] = [index, pages.length + index].map((n) => path.join(shotsDir, `${n}_${viewport.label}.png`));
+      const failed = [];
+      for (const [side, file] of [['before', before], ['after', after]]) {
+        const metadata = await sharp(file).metadata().catch(() => null);
+        if (!metadata) throw new Error(`Screenshots failed: ${failure ?? `${file} is missing`}`);
+        // BackstopJS puts a small placeholder image in place of a failed one.
+        if (metadata.width < viewport.width) failed.push(side);
+      }
+      shots[viewport.label] = { index, before, after, failed };
     }
-    if (!results.has(pair.label)) results.set(pair.label, {});
-    const { rawMisMatchPercentage = 0, dimensionDifference } = pair.diff;
-    results.get(pair.label)[pair.viewportLabel] = {
-      before: path.resolve(reportDir, pair.reference),
-      after: path.resolve(reportDir, pair.test),
-      diff: pair.diffImage && path.resolve(reportDir, pair.diffImage),
-      differs: status !== 'pass',
-      // Percentage of changed pixels, plus 100 when the page height changed.
-      mismatch: rawMisMatchPercentage + (dimensionDifference.height ? 100 : 0),
-    };
+    results.set(page.route, shots);
   }
   return results;
 }
@@ -292,6 +300,58 @@ function describe(error) {
   if (error instanceof Error) return error.message;
   if (error?.engineErrorMsg) return `${error.label} (${error.viewportLabel}): ${error.engineErrorMsg}`;
   return String(error);
+}
+
+const encodeRoute = (route) => route.split('/').map(encodeURIComponent).join('/');
+
+// Compares two screenshots exactly. Screenshots of different sizes are
+// compared on the larger size, where pixels only one of them has count as
+// changed. Writes the difference image to diffFile when they differ.
+async function compare(shot, diffFile) {
+  const [a, b] = await Promise.all([fs.readFile(shot.before), fs.readFile(shot.after)]);
+  if (a.equals(b)) return { differs: false, mismatch: 0 };
+  const [one, two] = await Promise.all(
+    [a, b].map((png) => sharp(png).ensureAlpha().raw().toBuffer({ resolveWithObject: true })),
+  );
+  const width = Math.max(one.info.width, two.info.width);
+  const height = Math.max(one.info.height, two.info.height);
+  const pad = ({ data, info }) => {
+    if (info.width === width && info.height === height) return data;
+    const padded = Buffer.alloc(width * height * 4);
+    for (let y = 0; y < info.height; y++) data.copy(padded, y * width * 4, y * info.width * 4, (y + 1) * info.width * 4);
+    return padded;
+  };
+  const diff = Buffer.alloc(width * height * 4);
+  pixelmatch(pad(one), pad(two), diff, width, height, { threshold: 0, includeAA: true, alpha: 0.3, diffColor: CHANGED });
+
+  const commonWidth = Math.min(one.info.width, two.info.width);
+  const commonHeight = Math.min(one.info.height, two.info.height);
+  const pixels = new Uint32Array(diff.buffer, diff.byteOffset, width * height);
+  const changed = new Uint32Array(new Uint8Array([...CHANGED, 255]).buffer)[0];
+  const bands = [];
+  let count = 0;
+  for (let y = 0; y < height; y++) {
+    let rowChanged = false;
+    for (let x = 0; x < width; x++) {
+      const i = y * width + x;
+      if (x >= commonWidth || y >= commonHeight) pixels[i] = changed;
+      if (pixels[i] === changed) {
+        count++;
+        rowChanged = true;
+      }
+    }
+    if (!rowChanged) continue;
+    // Changed rows closer than 60 pixels form one band.
+    const last = bands.at(-1);
+    if (last && y - last[1] <= 60) last[1] = y;
+    else bands.push([y, y]);
+  }
+  // The files can differ while the pixels are the same.
+  if (!count) return { differs: false, mismatch: 0 };
+  await sharp(diff, { raw: { width, height, channels: 4 } })
+    .png({ compressionLevel: 1 })
+    .toFile(diffFile);
+  return { differs: true, diff: diffFile, bands, mismatch: (100 * count) / (width * height) };
 }
 
 // Writes the images the summary shows for a page into out/images: the new
@@ -309,45 +369,23 @@ async function publishImages(page, index, out) {
         before: await publish(shot.before, name('before')),
         after: await publish(shot.after, name('after')),
         diff: await publish(shot.diff, name('diff')),
-        changes: await changedBands(shot),
+        changes: shot.bands,
       };
     }
   }
   return images;
 }
 
+// Returns the screenshot's own size, which the summary lays images out by,
+// even when the published image is scaled down.
 async function publish(source, target) {
   const { width, height } = await sharp(source).metadata();
   const webp = width <= WEBP_MAX && height <= WEBP_MAX;
   const file = `${target}.${webp ? 'webp' : 'jpg'}`;
-  const image = sharp(source).flatten({ background: '#ffffff' });
+  let image = sharp(source).flatten({ background: '#ffffff' });
+  if (height > JPEG_MAX) image = image.resize({ height: JPEG_MAX });
   await (webp ? image.webp({ quality: 80 }) : image.jpeg({ quality: 80, mozjpeg: true })).toFile(file);
   return { src: `images/${path.basename(file)}`, width, height };
-}
-
-// Vertical ranges, in screenshot pixels, that contain changed pixels. Ranges
-// closer than 60 pixels are merged. Content added below the end of the
-// shorter screenshot counts as one range.
-async function changedBands(shot) {
-  const { data, info } = await sharp(shot.diff).ensureAlpha().raw().toBuffer({ resolveWithObject: true });
-  const bands = [];
-  const extend = (start, end) => {
-    const last = bands.at(-1);
-    if (last && start - last[1] <= 60) last[1] = end;
-    else bands.push([start, end]);
-  };
-  const rowBytes = info.width * 4;
-  for (let y = 0; y < info.height; y++) {
-    for (let i = y * rowBytes; i < (y + 1) * rowBytes; i += 4) {
-      if (data[i] === CHANGED.red && data[i + 1] === CHANGED.green && data[i + 2] === CHANGED.blue && data[i + 3] === 255) {
-        extend(y, y);
-        break;
-      }
-    }
-  }
-  const [a, b] = await Promise.all([sharp(shot.before).metadata(), sharp(shot.after).metadata()]);
-  if (a.height !== b.height) extend(Math.min(a.height, b.height), Math.max(a.height, b.height));
-  return bands;
 }
 
 // Serves a built site the way Firebase Hosting does for these requests:
@@ -363,8 +401,15 @@ async function serve(root) {
     }
     if ((await fs.stat(file).catch(() => null))?.isDirectory()) file = path.join(file, 'index.html');
     const found = file.startsWith(root + path.sep) && (await isFile(file));
-    if (!found) file = path.join(root, '404.html');
-    response.writeHead(found ? 200 : 404, { 'content-type': TYPES[path.extname(file)] ?? 'application/octet-stream' });
+    if (!found) {
+      file = path.join(root, '404.html');
+      if (!(await isFile(file))) {
+        response.writeHead(404, { 'content-type': TYPES['.txt'] }).end('Not found');
+        return;
+      }
+    }
+    const type = TYPES[path.extname(file).toLowerCase()] ?? 'application/octet-stream';
+    response.writeHead(found ? 200 : 404, { 'content-type': type });
     createReadStream(file)
       .on('error', () => response.destroy())
       .pipe(response);

@@ -14,10 +14,6 @@ on:
 permissions:
   contents: read
 
-concurrency:
-  group: preview-${{ github.event.workflow_run.head_branch }}
-  cancel-in-progress: true
-
 defaults:
   run:
     shell: bash
@@ -32,6 +28,10 @@ jobs:
       github.event.workflow_run.conclusion == 'success' &&
       github.event.workflow_run.head_repository.full_name == github.repository
     runs-on: ubuntu-latest
+    # On the job, so that runs which skip it do not cancel a deploy in progress.
+    concurrency:
+      group: preview-${{ github.event.workflow_run.head_branch }}
+      cancel-in-progress: true
     permissions:
       contents: read
       actions: read
@@ -82,17 +82,22 @@ jobs:
           run-id: ${{ github.event.workflow_run.id }}
           github-token: ${{ github.token }}
 
-      # The counts come from pull request code, so only whole numbers pass.
+      # The report comes from pull request code: it must be small, and its
+      # summary must be a single object of five whole-number counts.
       - name: Read visual comparison counts
         id: counts
         if: steps.visual.outcome == 'success'
         run: |
-          summary=artifact/dist/_visual-diff/summary.json
-          if jq -e '(keys == ["added", "different", "removed", "unchanged"]) and all(.[]; type == "number" and . >= 0 and . < 100000 and . == floor)' "$summary" > /dev/null; then
-            jq -r 'to_entries[] | "\(.key)=\(.value)"' "$summary" >> "$GITHUB_OUTPUT"
+          report=artifact/dist/_visual-diff
+          size=$(du -sb "$report" | cut -f1)
+          if (( size > 50000000 )); then
+            echo "::warning::Leaving out the visual comparison: it is $size bytes, over the 50 MB limit"
+            rm -rf "$report"
+          elif jq -e -s 'length == 1 and (.[0] | type == "object" and keys == ["added", "different", "failed", "removed", "unchanged"] and all(.[]; type == "number" and . >= 0 and . < 100000 and . == floor))' "$report/summary.json" > /dev/null; then
+            jq -r 'to_entries[] | "\(.key)=\(.value)"' "$report/summary.json" >> "$GITHUB_OUTPUT"
           else
-            echo "::warning::Leaving out the visual comparison: $summary is missing or invalid"
-            rm -rf artifact/dist/_visual-diff
+            echo "::warning::Leaving out the visual comparison: $report/summary.json is missing or invalid"
+            rm -rf "$report"
           fi
 
       # Keep only static hosting settings from the pull request's firebase.json,
@@ -131,6 +136,7 @@ jobs:
           DIFFERENT: ${{ steps.counts.outputs.different }}
           ADDED: ${{ steps.counts.outputs.added }}
           REMOVED: ${{ steps.counts.outputs.removed }}
+          FAILED: ${{ steps.counts.outputs.failed }}
         with:
           script: |
             const marker = '<!-- firebase-preview -->';
@@ -144,10 +150,12 @@ jobs:
               const different = Number(process.env.DIFFERENT);
               const added = Number(process.env.ADDED);
               const removed = Number(process.env.REMOVED);
+              const failed = Number(process.env.FAILED);
               changes = [
                 different && count(different, 'page looks different', 'pages look different'),
                 added && count(added, 'new page', 'new pages'),
                 removed && count(removed, 'page removed', 'pages removed'),
+                failed && count(failed, 'page could not be captured', 'pages could not be captured'),
               ].filter(Boolean).join(', ') || 'no page looks different';
             }
             const visual = changes
@@ -155,7 +163,7 @@ jobs:
               : `comparison unavailable ([Site run](${process.env.RUN_URL}))`;
             const body = `${marker}\n**Preview:** ${process.env.URL}\n**Visual changes:** ${visual}\n\nBuilt from ${sha.slice(0, 7)}. Expires ${process.env.EXPIRES}.`;
             const comments = await github.paginate(github.rest.issues.listComments, { owner, repo, issue_number });
-            const existing = comments.find((c) => c.body?.includes(marker));
+            const existing = comments.find((c) => c.user?.login === 'github-actions[bot]' && c.body?.includes(marker));
             if (existing) {
               await github.rest.issues.updateComment({ owner, repo, comment_id: existing.id, body });
             } else {
@@ -168,12 +176,12 @@ jobs:
               description: 'Preview deployed',
               target_url: process.env.URL,
             });
-            if (changes) {
-              await github.rest.repos.createCommitStatus({
-                owner, repo, sha,
-                state: 'success',
-                context: 'visual-diff',
-                description: changes[0].toUpperCase() + changes.slice(1),
-                target_url: report,
-              });
-            }
+            // Replaces any earlier result for the same commit, so the check
+            // never links to a report this preview does not have.
+            await github.rest.repos.createCommitStatus({
+              owner, repo, sha,
+              state: changes ? 'success' : 'error',
+              context: 'visual changes',
+              description: changes ? changes[0].toUpperCase() + changes.slice(1) : 'Comparison unavailable',
+              target_url: changes ? report : process.env.RUN_URL,
+            });
