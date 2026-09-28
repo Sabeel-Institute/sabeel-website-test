@@ -239,9 +239,9 @@ appear on the Hikam Foundations page.
 Pages have named photo slots. Drop a file named after the slot (`.jpg`,
 `.png`, or `.webp`) to fill it; until then the slot shows a geometric panel.
 Find slot names by searching `src/pages` and `src/components` for `slot="` and
-`photo="`. Use only real, approved Sabeel photos. `home-hero` and
-`hikam-hero` hold illustrative images, not photos of Sabeel classes; replace
-them with approved photos when available.
+`photo="`. Use only real, approved Sabeel photos. `home-hero`,
+`hikam-hero`, `about-hero`, and `about-story` hold illustrations, not photos
+of Sabeel classes; replace them with approved photos when available.
 
 ### Site settings (`src/site.config.ts`)
 
