@@ -1,9 +1,10 @@
 name: Preview
 
-# Publishes a pull request's built site to a preview channel and comments the
-# link on the pull request. GitHub always runs this file from main, so pull
-# request branches cannot change what it does. It never executes code from the
-# pull request: it only publishes the static files that site.yml built.
+# Publishes a pull request's built site to a preview channel, with the visual
+# comparison site.yml made at /_visual-diff/, and comments the links on the
+# pull request. GitHub always runs this file from main, so pull request
+# branches cannot change what it does. It never executes code from the pull
+# request: it only publishes the static files that site.yml built.
 
 on:
   workflow_run:
@@ -69,6 +70,31 @@ jobs:
           run-id: ${{ github.event.workflow_run.id }}
           github-token: ${{ github.token }}
 
+      # The preview goes out without the visual comparison if site.yml could
+      # not make it.
+      - name: Add visual comparison
+        id: visual
+        continue-on-error: true
+        uses: actions/download-artifact@v8
+        with:
+          name: visual-diff
+          path: artifact/dist/_visual-diff
+          run-id: ${{ github.event.workflow_run.id }}
+          github-token: ${{ github.token }}
+
+      # The counts come from pull request code, so only whole numbers pass.
+      - name: Read visual comparison counts
+        id: counts
+        if: steps.visual.outcome == 'success'
+        run: |
+          summary=artifact/dist/_visual-diff/summary.json
+          if jq -e '(keys == ["added", "different", "removed", "unchanged"]) and all(.[]; type == "number" and . >= 0 and . < 100000 and . == floor)' "$summary" > /dev/null; then
+            jq -r 'to_entries[] | "\(.key)=\(.value)"' "$summary" >> "$GITHUB_OUTPUT"
+          else
+            echo "::warning::Leaving out the visual comparison: $summary is missing or invalid"
+            rm -rf artifact/dist/_visual-diff
+          fi
+
       # Keep only static hosting settings from the pull request's firebase.json,
       # so a pull request cannot add deploy hooks or change the deploy target.
       # The site name comes from main's firebase.json.
@@ -101,13 +127,33 @@ jobs:
           EXPIRES: ${{ steps.preview.outputs.expires }}
           PR_NUMBER: ${{ steps.pr.outputs.number }}
           HEAD_SHA: ${{ github.event.workflow_run.head_sha }}
+          RUN_URL: ${{ github.event.workflow_run.html_url }}
+          DIFFERENT: ${{ steps.counts.outputs.different }}
+          ADDED: ${{ steps.counts.outputs.added }}
+          REMOVED: ${{ steps.counts.outputs.removed }}
         with:
           script: |
             const marker = '<!-- firebase-preview -->';
             const { owner, repo } = context.repo;
             const issue_number = Number(process.env.PR_NUMBER);
             const sha = process.env.HEAD_SHA;
-            const body = `${marker}\n**Preview:** ${process.env.URL}\n\nBuilt from ${sha.slice(0, 7)}. Expires ${process.env.EXPIRES}.`;
+            const report = `${process.env.URL}/_visual-diff/`;
+            let changes = null;
+            if (process.env.DIFFERENT) {
+              const count = (n, one, many) => `${n} ${n === 1 ? one : many}`;
+              const different = Number(process.env.DIFFERENT);
+              const added = Number(process.env.ADDED);
+              const removed = Number(process.env.REMOVED);
+              changes = [
+                different && count(different, 'page looks different', 'pages look different'),
+                added && count(added, 'new page', 'new pages'),
+                removed && count(removed, 'page removed', 'pages removed'),
+              ].filter(Boolean).join(', ') || 'no page looks different';
+            }
+            const visual = changes
+              ? `[${changes}](${report})`
+              : `comparison unavailable ([Site run](${process.env.RUN_URL}))`;
+            const body = `${marker}\n**Preview:** ${process.env.URL}\n**Visual changes:** ${visual}\n\nBuilt from ${sha.slice(0, 7)}. Expires ${process.env.EXPIRES}.`;
             const comments = await github.paginate(github.rest.issues.listComments, { owner, repo, issue_number });
             const existing = comments.find((c) => c.body?.includes(marker));
             if (existing) {
@@ -122,3 +168,12 @@ jobs:
               description: 'Preview deployed',
               target_url: process.env.URL,
             });
+            if (changes) {
+              await github.rest.repos.createCommitStatus({
+                owner, repo, sha,
+                state: 'success',
+                context: 'visual-diff',
+                description: changes[0].toUpperCase() + changes.slice(1),
+                target_url: report,
+              });
+            }

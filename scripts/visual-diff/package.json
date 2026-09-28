@@ -1,0 +1,16 @@
+{
+  "name": "sabeel-visual-diff",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "backstopjs": "^6.3.25",
+    "playwright": "^1.63.0",
+    "sharp": "^0.35.5"
+  },
+  "allowScripts": {
+    "puppeteer": false
+  },
+  "overrides": {
+    "puppeteer": "^25.12.0"
+  }
+}
