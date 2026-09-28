@@ -1,4 +1,7 @@
-@import 'tailwindcss';
+/* Class names are read from the site's code in src/ only, so content, docs,
+   and tooling cannot change the generated CSS. */
+@import 'tailwindcss' source('..');
+@source not '../content';
 @import '@fontsource/cormorant-garamond/500.css';
 @import '@fontsource/cormorant-garamond/600.css';
 @import '@fontsource/cormorant-garamond/700.css';
