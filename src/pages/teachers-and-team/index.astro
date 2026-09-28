@@ -12,8 +12,6 @@ import { displayName, getTeamGroup } from '../../lib/content';
 const founder = (await getEntry('team', 'sameera-shah'))!;
 const board = await getTeamGroup('board');
 const teachers = await getTeamGroup('teachers');
-const words = ['No', 'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine', 'Ten'];
-const count = (n: number) => words[n] ?? String(n);
 ---
 
 <BaseLayout
