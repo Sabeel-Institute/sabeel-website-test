@@ -298,6 +298,9 @@ belongs in a menu.
   `text-ink-soft`, `text-raspberry`, `text-gold-text`, `text-on-raspberry`;
   borders `border-border`, `border-gold`. No hex colours in pages or
   components.
+- **Classes live in code.** Tailwind generates CSS only for class names it
+  finds in `src/` outside `src/content/`. Write classes in components and
+  pages, as whole names (not assembled from pieces), never in content files.
 - **Contrast.** Body text is `text-ink` or `text-ink-soft`; on sage
   backgrounds use `text-ink`. Gold (`text-gold`) and taupe (`text-muted`) are
   decoration only; readable gold text is `text-gold-text`. Raspberry is for
