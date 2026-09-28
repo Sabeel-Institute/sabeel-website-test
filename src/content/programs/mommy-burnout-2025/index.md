@@ -2,7 +2,7 @@
 status: completed
 title: Mommy Burnout
 subtitle: Reset. Reflect. Renew.
-summary: A course for mothers on resetting, reflecting, and renewing amid burnout, taught by a licensed counselor and Ust. Sameera Shah.
+summary: A course for mothers on resetting, reflecting, and renewing amid burnout, taught by a licensed counselor and Ustadhah Sameera Shah.
 area: womens-learning
 date: '2025-09-02'
 dateApprox: true

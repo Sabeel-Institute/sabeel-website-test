@@ -15,6 +15,6 @@ instructors:
 - name: Imam Ameer Hamza
 - faisal-shah
 - sameera-shah
-- khadija-muhammad
+- khadija
 flyer: ./flyer.webp
 ---

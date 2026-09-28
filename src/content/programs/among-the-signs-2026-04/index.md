@@ -2,7 +2,7 @@
 status: completed
 title: Among the Signs
 subtitle: A moment to pause in the middle of a full week.
-summary: A ladies-only outdoor gathering featuring a reflection with Ust. Sameera, a contemplative nature walk, and a sharing circle over chai.
+summary: A ladies-only outdoor gathering featuring a reflection with Ustadhah Sameera Shah, a contemplative nature walk, and a sharing circle over chai.
 area: womens-learning
 date: '2026-04-26'
 dateApprox: true

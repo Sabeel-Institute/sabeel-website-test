@@ -2,7 +2,7 @@
 status: completed
 title: Hikam Foundations
 subtitle: 2024 cohort
-summary: A part-time, in-person program giving women a foundational knowledge base in Arabic grammar, tafsir, hadith, and fiqh, taught by female Alimiyyah graduates.
+summary: A part-time, in-person program giving women a foundational knowledge base in Arabic grammar, tafsir, hadith, and fiqh, taught by female ‘Alimiyyah graduates.
 area: hikam-foundations
 date: 2024-09-04
 audience: Girls and women

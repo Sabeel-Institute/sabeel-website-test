@@ -1,7 +1,7 @@
 ---
 status: completed
 title: Girls Summer Garden at BCIC
-summary: An in-person summer program for girls 11+ covering stories, Seerah, and the history of Al-Aqsa, with crafts, speakers, and sessions led by Ustadha Sameera Shah.
+summary: An in-person summer program for girls 11+ covering stories, Seerah, and the history of Al-Aqsa, with crafts, speakers, and sessions led by Ustadhah Sameera Shah.
 area: youth-children
 date: '2021-06-26'
 audience: Girls

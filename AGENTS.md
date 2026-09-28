@@ -342,7 +342,10 @@ belongs in a menu.
   between dates (`Sept 14 – Oct 26`), unspaced between times. Spaced em dash
   ( — ) inside sentences.
 - Curly apostrophes and quotes (’ “ ”) in visible text.
-- Honorifics as the organisation uses them: Ustadhah, Sr., Br.; write
+- A person's name and honorific come from their team file, and every page
+  names them the same way, including program summaries and bios: Ustadhah
+  for Sameera Shah, Ust. for the other teachers, Sr. and Br. as their files
+  say. Bios begin with the plain name (“Mariam Sattar received…”). Write
   “‘Alimiyyah” with the opening mark.
 - Program names, fees, and dates exactly as on the flyer or as the
   organisation gives them.

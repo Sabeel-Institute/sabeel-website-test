@@ -2,7 +2,7 @@
 status: completed
 title: Mommy Burnout
 subtitle: A Course on Mental and Spiritual Health
-summary: Free course on mental and spiritual health for mothers, taught by LPC-Associate Selina Ali and Ustaadah Sameera Shah.
+summary: Free course on mental and spiritual health for mothers, taught by LPC-Associate Selina Ali and Ustadhah Sameera Shah.
 area: womens-learning
 date: '2022-09-28'
 dateApprox: true
