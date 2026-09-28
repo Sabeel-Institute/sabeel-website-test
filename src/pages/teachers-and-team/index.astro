@@ -7,7 +7,7 @@ import Divider from '../../components/Divider.astro';
 import Icon from '../../components/Icon.astro';
 import TeamCard from '../../components/TeamCard.astro';
 import CtaBand from '../../components/CtaBand.astro';
-import { getTeamGroup } from '../../lib/content';
+import { displayName, getTeamGroup } from '../../lib/content';
 
 const founder = (await getEntry('team', 'sameera-shah'))!;
 const board = await getTeamGroup('board');
@@ -35,9 +35,9 @@ const count = (n: number) => words[n] ?? String(n);
   <section id="founder" class="scroll-mt-6 bg-sage-mist py-14 md:py-16" aria-labelledby="founder-heading">
     <div class="container-page">
       <div class="max-w-3xl">
-        <p class="eyebrow">Founder</p>
-        <p class="mt-1 text-sm font-medium text-ink-soft">Executive Director and Teacher</p>
-        <h2 id="founder-heading" class="display-md mt-2 sm:text-[2.4rem]">Meet Ust. Sameera Shah.</h2>
+        <p class="eyebrow">{founder.data.role}</p>
+        {founder.data.sub && <p class="mt-1 text-sm font-medium text-ink-soft">{founder.data.sub}</p>}
+        <h2 id="founder-heading" class="display-md mt-2 sm:text-[2.4rem]">Meet {displayName(founder)}.</h2>
         <Divider class="mt-4" />
         <p class="mt-5 text-[17px] leading-[1.85] text-ink">
           Founder Sameera Shah leads Sabeel’s educational vision. She earned a B.Sc. (Honors) in
@@ -108,10 +108,10 @@ const count = (n: number) => words[n] ?? String(n);
           </span>
         </summary>
         <p class="max-w-3xl px-6 pb-6 leading-[1.8] text-ink">
-          ‘Alimiyyah degree is a traditional four- to six-year program devoted to the in-depth study of the Islamic
+          An ‘Alimiyyah degree is a traditional four- to six-year program devoted to the in-depth study of the Islamic
           sciences, including the Qur’an, Hadith, Islamic law, theology, and Arabic. Through years of structured study
-          under scholars, graduates develop a strong foundation in the Islamic tradition; one that informs their teaching
-          and the care they bring to sharing sacred knowledge.
+          under scholars, graduates develop a strong foundation in the Islamic tradition — one that informs their
+          teaching and the care they bring to sharing sacred knowledge.
         </p>
       </details>
     </div>
@@ -186,11 +186,23 @@ const count = (n: number) => words[n] ?? String(n);
 <script>
   for (const button of document.querySelectorAll<HTMLButtonElement>('[data-more-teachers]')) {
     const list = document.getElementById(button.getAttribute('aria-controls')!)!;
-    button.addEventListener('click', () => {
-      const open = list.hidden;
+    const show = (open: boolean) => {
       list.hidden = !open;
       button.setAttribute('aria-expanded', String(open));
       button.textContent = open ? 'Show fewer teachers' : 'See more teachers';
-    });
+    };
+    const isOpen = () => button.getAttribute('aria-expanded') === 'true';
+    button.addEventListener('click', () => show(!isOpen()));
+    // A link to a teacher's card, such as a bio's "Back to Teachers & Team",
+    // opens the list when the card is in it.
+    const reveal = () => {
+      const target = location.hash && document.getElementById(decodeURIComponent(location.hash.slice(1)));
+      if (target && list.contains(target) && !isOpen()) {
+        show(true);
+        target.scrollIntoView();
+      }
+    };
+    reveal();
+    addEventListener('hashchange', reveal);
   }
 </script>

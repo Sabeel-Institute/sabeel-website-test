@@ -2,7 +2,7 @@
 status: completed
 title: Autumn Reflections
 subtitle: Understanding Tafsir & Why Islam Is True
-summary: A ladies-only autumn course by Ust. Sameera Shah covering Quranic tafsir and reasons why Islam is true.
+summary: A ladies-only autumn course by Ustadhah Sameera Shah covering Quranic tafsir and reasons why Islam is true.
 area: womens-learning
 date: '2024-09-07'
 dateApprox: true

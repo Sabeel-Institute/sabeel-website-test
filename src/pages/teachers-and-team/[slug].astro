@@ -60,7 +60,7 @@ const name = displayName(member);
           <div class="prose-sabeel mt-8 max-w-[44rem] text-[17px] leading-[1.85] text-ink-soft">
             <Content />
           </div>
-          <a href={`/teachers-and-team/#${group.anchor}`} class="link-arrow mt-10">
+          <a href={`/teachers-and-team/#${member.data.group === 'founder' ? group.anchor : member.id}`} class="link-arrow mt-10">
             <Icon name="arrow-left" class="size-5" /> Back to Teachers &amp; Team
           </a>
         </div>

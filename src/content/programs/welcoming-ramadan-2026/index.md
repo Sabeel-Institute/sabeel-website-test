@@ -1,7 +1,7 @@
 ---
 status: completed
 title: Welcoming Ramadan
-summary: A free ladies-only gathering with Ust. Sameera Shah to welcome Ramadan, including an optional mood board activity.
+summary: A free ladies-only gathering with Ustadhah Sameera Shah to welcome Ramadan, including an optional mood board activity.
 area: womens-learning
 date: '2026-02-07'
 dateApprox: true

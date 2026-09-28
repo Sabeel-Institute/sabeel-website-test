@@ -51,6 +51,21 @@
         "type": 301
       },
       {
+        "source": "/teachers-and-team/afsha-muhammad{,/}",
+        "destination": "/teachers-and-team/afsha-mohammad/",
+        "type": 301
+      },
+      {
+        "source": "/teachers-and-team/rukaiya-ahamed{,/}",
+        "destination": "/teachers-and-team/rukaiya-ahmed/",
+        "type": 301
+      },
+      {
+        "source": "/teachers-and-team/khadija-muhammad{,/}",
+        "destination": "/teachers-and-team/khadija/",
+        "type": 301
+      },
+      {
         "source": "/directors-and-teachers{,/**}",
         "destination": "/teachers-and-team/",
         "type": 301

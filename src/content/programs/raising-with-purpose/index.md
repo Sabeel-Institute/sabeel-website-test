@@ -28,7 +28,7 @@ Each gathering is thoughtfully curated to give us time to connect with one anoth
 
 ## Our debut session — Sunday, September 27
 
-- **Nourish** — Halaqah with Ustadhah Maryam Sattar, Sabeel Institute
+- **Nourish** — Halaqah with Ust. Mariam Sattar, Sabeel Institute
 - **Connect** — In conversation with Pelin Unal and Najia Salim
 - **Create** — “Unwind and Untangle,” a mindful reflection activity
 

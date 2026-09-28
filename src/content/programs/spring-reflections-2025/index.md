@@ -2,7 +2,7 @@
 status: completed
 title: Spring Reflections
 subtitle: Understanding Tafsir & Why Islam Is True
-summary: A ladies-only spring course by Ust. Sameera Shah covering Quranic tafsir and reasons why Islam is true.
+summary: A ladies-only spring course by Ustadhah Sameera Shah covering Quranic tafsir and reasons why Islam is true.
 area: womens-learning
 date: '2025-04-26'
 dateApprox: true

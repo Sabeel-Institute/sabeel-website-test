@@ -6,4 +6,4 @@ order: 60
 listed: true
 ---
 
-Ustadhah Zona Bukhari has completed her 'Alimiyyah degree and serves as part of Sabeel's teaching team.
+Zona Bukhari has completed her ‘Alimiyyah degree and serves as part of Sabeel’s teaching team.

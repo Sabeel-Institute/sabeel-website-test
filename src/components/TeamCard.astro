@@ -10,7 +10,7 @@ const { role, sub, highlights } = member.data;
 const href = teamHasPage(member) ? `/teachers-and-team/${member.id}/` : undefined;
 ---
 
-<article class="relative flex h-full flex-col rounded-card border border-border bg-surface p-5 transition-shadow hover:shadow-card">
+<article id={member.id} class="relative flex h-full scroll-mt-6 flex-col rounded-card border border-border bg-surface p-5 transition-shadow hover:shadow-card">
   <h3 class="font-display text-[1.45rem] leading-tight font-bold text-raspberry">
     {href ? <a href={href} class="after:absolute after:inset-0 after:content-['']">{displayName(member)}</a> : displayName(member)}
   </h3>

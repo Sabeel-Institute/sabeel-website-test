@@ -2,7 +2,7 @@
 status: completed
 title: Among the Signs
 subtitle: The Secret of the Seed
-summary: A ladies-only reflective walk and talk with Ust. Sameera Shah on balance from Surah Rahman and gratitude from Surah Quraish.
+summary: A ladies-only reflective walk and talk with Ustadhah Sameera Shah on balance from Surah Rahman and gratitude from Surah Quraish.
 area: womens-learning
 date: '2026-08-09'
 dateApprox: true
