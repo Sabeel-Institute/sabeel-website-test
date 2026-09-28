@@ -2,7 +2,7 @@
 name: Subohi Aftab
 honorific: Ust.
 group: teachers
-order: 30
+order: 40
 listed: true
 ---
 

@@ -2,7 +2,7 @@
 name: Afsha Mohammad
 honorific: Ust.
 group: teachers
-order: 40
+order: 30
 role: Seerah and Islamic Studies Teacher
 highlights:
 - Three years of Islamic studies at Sabeel
