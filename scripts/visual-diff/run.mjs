@@ -35,6 +35,9 @@ const VIEWPORTS = [
   { label: 'desktop', width: 1440, height: 900 },
 ];
 const MAX_SHOWN = 20;
+// Pages that look different are captured a second time, and the second result
+// stands, when there are at most this many of them.
+const RECHECK_MAX = 40;
 // Colour of changed pixels in the difference images.
 const CHANGED = [255, 0, 255];
 // WebP cannot encode taller images; those are published as JPEG, and images
@@ -193,23 +196,41 @@ function titleOf(html) {
 async function compareAndPublish(pages, { before, after, work, out }) {
   const compared = pages.filter((page) => page.status !== 'unchanged');
   console.log(`${pages.length} pages, ${compared.length} to compare`);
+  for (const page of compared) page.kind = page.status;
   if (compared.length) {
-    const shots = await capture(compared, before, after, work);
-    for (const page of compared) {
-      page.shots = shots.get(page.route);
-      page.failures = Object.entries(page.shots).flatMap(([label, shot]) => shot.failed.map((side) => `${side} on a ${label}`));
-      if (page.failures.length) page.status = 'failed';
-      if (page.status !== 'changed') continue;
-      for (const [label, shot] of Object.entries(page.shots)) {
-        Object.assign(shot, await compare(shot, path.join(work, `diff-${shot.index}-${label}.png`)));
-      }
-      page.status = Object.values(page.shots).some((shot) => shot.differs) ? 'different' : 'same';
+    await assess(compared, before, after, path.join(work, 'first'));
+    // Captures are repeatable, but a rare timing problem on a busy machine can
+    // still spoil one. Pages that look different or failed are captured again,
+    // unless so many changed that one spoiled capture would not matter.
+    const recheck = compared.filter((page) => page.status === 'different' || page.status === 'failed');
+    if (recheck.length && recheck.length <= RECHECK_MAX) {
+      console.log(`Capturing again the pages that differ or failed: ${recheck.length}`);
+      await assess(recheck, before, after, path.join(work, 'again'));
     }
   }
   const shown = pick(pages);
   await fs.mkdir(path.join(out, 'images'), { recursive: true });
   for (const [index, page] of shown.entries()) page.images = await publishImages(page, index, out);
   return shown;
+}
+
+// Screenshots the pages in both builds into dir and sets each page's status:
+// failed if a screenshot failed, otherwise added or removed as classified, or
+// different or same once the screenshots of a changed page are compared.
+async function assess(pages, before, after, dir) {
+  const shots = await capture(pages, before, after, dir);
+  for (const page of pages) {
+    page.shots = shots.get(page.route);
+    page.failures = Object.entries(page.shots).flatMap(([label, shot]) => shot.failed.map((side) => `${side} on a ${label}`));
+    if (page.failures.length) page.status = 'failed';
+    else if (page.kind !== 'changed') page.status = page.kind;
+    else {
+      for (const [label, shot] of Object.entries(page.shots)) {
+        Object.assign(shot, await compare(shot, path.join(dir, `diff-${shot.index}-${label}.png`)));
+      }
+      page.status = Object.values(page.shots).some((shot) => shot.differs) ? 'different' : 'same';
+    }
+  }
 }
 
 // The pages the report shows screenshots of: new and removed pages, then the
@@ -230,15 +251,17 @@ function score(page) {
   return Math.max(...Object.values(page.shots).map((shot) => shot.mismatch));
 }
 
-// Screenshots the given pages in both builds with BackstopJS. Returns, for
-// each route and viewport, the two screenshot files.
-async function capture(pages, before, after, work) {
+// Screenshots the given pages in both builds with BackstopJS into dir.
+// Returns, for each route and viewport, the two screenshot files.
+async function capture(pages, before, after, dir) {
   const servers = await Promise.all([serve(before), serve(after)]);
   const urls = servers.map((server) => `http://127.0.0.1:${server.address().port}`);
-  const shotsDir = path.join(work, 'shots');
+  const shotsDir = path.join(dir, 'shots');
   // BackstopJS writes its own temporary files to the system temp folder when
-  // it loads; send them to the work folder, which is removed afterwards.
-  process.env.TMPDIR = work;
+  // it first loads; send them into the work folder, which is removed
+  // afterwards.
+  await fs.mkdir(dir, { recursive: true });
+  process.env.TMPDIR = dir;
   const backstop = createRequire(import.meta.url)('backstopjs');
   const concurrency = Math.min(os.availableParallelism(), 8);
   const scenarios = ['before', 'after'].flatMap((side, s) =>

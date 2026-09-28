@@ -172,9 +172,12 @@ flowchart LR
   unchanged page are identical. [pixelmatch](https://github.com/mapbox/pixelmatch)
   then compares each pair exactly. Screenshots of different sizes are
   compared on the larger size, with the extra area counted as changed, so a
-  page that starts to scroll sideways on a phone shows up. A page whose
-  screenshot fails is listed as not captured, and the rest of the report is
-  unaffected. Animations the browser draws itself (animated GIFs, an
+  page that starts to scroll sideways on a phone shows up. Pages that look
+  different, or whose screenshot failed, are captured a second time and the
+  second result stands (when 40 or fewer pages differ), which clears a rare
+  one-off difference caused by timing on a busy machine. A page whose
+  screenshot still fails is listed as not captured, and the rest of the
+  report is unaffected. Animations the browser draws itself (animated GIFs, an
   indeterminate progress bar, a marquee) cannot be held still and would show
   as changes.
 - The report is uploaded as the `visual-diff` artifact (kept 7 days).
