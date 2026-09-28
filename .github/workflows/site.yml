@@ -1,8 +1,10 @@
 name: Site
 
 # Builds every pull request and every push to main. Only pushes to main deploy
-# the live site. Pull request previews are published by preview.yml, which
-# runs from main after this workflow succeeds.
+# the live site. For pull requests, it also compares screenshots of the pages
+# the pull request changes with main. Pull request previews, including that
+# comparison, are published by preview.yml, which runs from main after this
+# workflow succeeds.
 
 on:
   pull_request:
@@ -44,6 +46,58 @@ jobs:
           path: |
             dist
             firebase.json
+          if-no-files-found: error
+          retention-days: 7
+
+  # Screenshots the pages this pull request changes, before and after, and
+  # uploads the report preview.yml publishes at <preview>/_visual-diff/. It
+  # never holds up the preview: if it fails, the preview goes out without it.
+  visual-diff:
+    if: github.event_name == 'pull_request'
+    needs: build
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 2
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: |
+            package-lock.json
+            scripts/visual-diff/package-lock.json
+
+      # The pull request is checked out merged into main, so the first parent
+      # of HEAD is main.
+      - name: Build main
+        run: |
+          git worktree add --detach "$RUNNER_TEMP/main" HEAD^1
+          cd "$RUNNER_TEMP/main"
+          npm ci
+          npx astro build
+
+      - uses: actions/download-artifact@v8
+        with:
+          name: site
+          path: ${{ runner.temp }}/pr
+
+      - name: Install comparison tools
+        working-directory: scripts/visual-diff
+        run: |
+          npm ci
+          npx playwright install chromium-headless-shell
+
+      - name: Compare screenshots
+        run: node scripts/visual-diff/run.mjs --before "$RUNNER_TEMP/main/dist" --after "$RUNNER_TEMP/pr/dist" --out "$RUNNER_TEMP/visual-diff"
+
+      - uses: actions/upload-artifact@v7
+        with:
+          name: visual-diff
+          path: ${{ runner.temp }}/visual-diff
           if-no-files-found: error
           retention-days: 7
 

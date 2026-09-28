@@ -73,6 +73,7 @@ flowchart LR
 | `public/` | Files served as-is (favicons) |
 | `firebase.json` | Hosting settings and redirects for moved pages |
 | `.github/workflows/` | Build and deploy (see docs/deployment.md) |
+| `scripts/visual-diff/` | Screenshot comparison of each pull request with `main` (see docs/deployment.md) |
 
 ## Programs
 
@@ -353,14 +354,14 @@ Keep every change easy to review and merge:
    `node_modules/`, or `.astro/`. Put screenshots in the pull-request
    description instead.
 5. **Leave deployment alone** (`.github/workflows/`, `firebase.json` hosting
-   settings, `.firebaserc`) unless the task is about deploying; see
-   docs/deployment.md. Adding a redirect for a moved page to `firebase.json`
+   settings, `.firebaserc`, `scripts/visual-diff/`) unless the task is about
+   deploying; see docs/deployment.md. Adding a redirect for a moved page to `firebase.json`
    is fine.
 6. **Update docs with the change.** If you add a field, component, page, or
    convention, update this file in the same pull request.
 7. **Verify** (below), then open a pull request that says what changed and
-   why. Every pull request gets a preview link in a comment a few minutes
-   after its build passes.
+   why. A few minutes after its build passes, every pull request gets a
+   comment with a preview link and a **Visual changes** link.
 8. **Only the repository admin merges into `main`.** Merging deploys the live
    site.
 
@@ -375,3 +376,15 @@ and resolve the conflicts, keeping other people’s changes.
 3. Links you added work (internal links end in `/`).
 4. Every date, fee, name, and link you added comes from a real source.
 5. This file is updated if you changed a convention.
+
+## After you open a pull request
+
+1. Open **Visual changes** from the preview comment. It lists every page
+   that looks different from `main`, with before and after screenshots on a
+   phone and a desktop screen. Check that the pages you meant to change look
+   right, and that every other listed page follows from your change (editing
+   a person's role, for example, also changes each program page that shows
+   them).
+2. If a page changed that should not have, find the cause (usually a shared
+   component or style) and fix it in the same pull request.
+3. Open the preview link and click through the pages you changed.

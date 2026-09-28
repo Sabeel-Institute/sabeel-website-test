@@ -13,8 +13,9 @@ and Google only gives deploy access to workflows running from `main`.
 ```mermaid
 flowchart TB
   PR["Pull request opened or updated"] --> SB["Site workflow: build<br/>(no deploy access)"]
-  SB -- "build succeeds" --> PV["Preview workflow<br/>(runs from main)"]
-  PV --> CH["Preview channel pr-&lt;number&gt;<br/>link commented on the PR"]
+  SB --> SV["Site workflow: visual-diff<br/>(no deploy access)"]
+  SV -- "workflow finishes" --> PV["Preview workflow<br/>(runs from main)"]
+  PV --> CH["Preview channel pr-&lt;number&gt;<br/>site + /_visual-diff/<br/>links commented on the PR"]
   M["Pull request merged to main"] --> SM["Site workflow: build"]
   SM --> DL["Site workflow: deploy-live<br/>(runs from main)"]
   DL --> LIVE["Live site<br/>sabeel-website-test.web.app"]
@@ -23,14 +24,17 @@ flowchart TB
 ```
 
 - `.github/workflows/site.yml` builds every pull request and every push to
-  `main`. Only pushes to `main` run its `deploy-live` job.
-- `.github/workflows/preview.yml` runs after a pull request's build succeeds.
-  GitHub runs it from `main` (a `workflow_run` trigger), so a pull request
-  cannot change what it does. It never runs pull-request code: it downloads
-  the built `dist/`, keeps only `cleanUrls`, `trailingSlash`, `redirects`,
-  and `headers` from the pull request's `firebase.json` (the site name comes
-  from `main`'s copy), deploys to the `pr-<number>` channel (expires after
-  7 days), comments the link, and adds a `preview` check to the pull request.
+  `main`. Only pushes to `main` run its `deploy-live` job. For pull requests,
+  its `visual-diff` job compares screenshots of the changed pages with `main`
+  (see [Visual comparison](#visual-comparison)).
+- `.github/workflows/preview.yml` runs after a pull request's Site workflow
+  succeeds. GitHub runs it from `main` (a `workflow_run` trigger), so a pull
+  request cannot change what it does. It never runs pull-request code: it
+  downloads the built `dist/` and the visual comparison, keeps only
+  `cleanUrls`, `trailingSlash`, `redirects`, and `headers` from the pull
+  request's `firebase.json` (the site name comes from `main`'s copy), deploys
+  to the `pr-<number>` channel (expires after 7 days), comments the links,
+  and adds `preview` and `visual-diff` checks to the pull request.
 - Because deploy access depends on running from `main`, changes to either
   workflow take effect only after they are merged.
 
@@ -57,6 +61,16 @@ The repository's hosting configuration:
   `redirects` (other addresses for pages, so existing links keep working),
   and long-lived cache headers for `/_astro/**` (fingerprinted build assets).
   There are no rewrites; unknown paths get the built `404.html`.
+
+The project is on Firebase's no-cost Spark plan (no billing account). Hosting
+on Spark allows 10 GB of storage and 10 GB of data transfer a month (about
+360 MB a day), counted across the live site and every preview channel
+together. Past the transfer limit, Firebase disables the sites until the next
+month; past the storage limit, deploys fail. Before the site serves the
+organization's real traffic, switch the project to the Blaze plan
+(Firebase console → the project → Usage and billing → Details and settings →
+Modify plan), which keeps the same no-cost amounts and bills usage beyond
+them.
 
 The provider maps these claims from GitHub's token:
 `google.subject=assertion.sub`, `attribute.repository=assertion.repository`,
@@ -113,6 +127,69 @@ Settings; repository settings under the repository → Settings.
 With these, only you can change `main`, and only by merging a pull request;
 members can open pull requests; nobody outside the organization can open pull
 requests or issues on the public repository.
+
+## Visual comparison
+
+Each pull request's preview includes a report at `<preview URL>/_visual-diff/`,
+linked from the preview comment (**Visual changes**) and from the
+`visual-diff` check. It lists the pages that look different from `main`, new
+pages, and removed pages, with screenshots on a phone (390 × 844) and a
+desktop (1440 × 900) screen that reviewers can compare with a slider, side by
+side, or with the changed pixels marked in pink.
+
+```mermaid
+flowchart LR
+  B["build job"] -- "site artifact" --> V["visual-diff job<br/>builds main, compares"]
+  V -- "visual-diff artifact" --> P["Preview workflow"]
+  B -- "site artifact" --> P
+  P --> C["pr-&lt;number&gt; channel<br/>/ = site, /_visual-diff/ = report"]
+  B -. "push to main: site artifact only" .-> L["deploy-live"]
+```
+
+- The `visual-diff` job in `site.yml` runs for pull requests, after `build`.
+  GitHub checks the pull request out merged into `main`; the job builds that
+  merge's first parent (`main`) and downloads the pull request's `site`
+  artifact, so it compares exactly the files the preview serves.
+- `scripts/visual-diff/run.mjs` serves both builds on local ports and skips
+  every page whose HTML is identical in both: Astro names each stylesheet,
+  script, font, and image under `_astro/` by a hash of its contents, so
+  identical HTML renders identically. If any file outside `_astro/` (from
+  `public/`) differs, it compares every page.
+- It screenshots the remaining pages from both builds with
+  [BackstopJS](https://github.com/garris/BackstopJS) and Playwright's
+  Chromium (the version pinned in `scripts/visual-diff/package-lock.json`):
+  whole pages, with reduced motion, lazy images loaded, and fonts ready. It
+  then compares them pixel by pixel.
+- The report is uploaded as the `visual-diff` artifact (kept 7 days).
+  `preview.yml` adds it to the preview under `/_visual-diff/`, accepts
+  `summary.json` only if it holds four whole-number counts, and writes those
+  counts in the comment and the check. The live deploy uses only the `site`
+  artifact, so the report never reaches the live site.
+- The job never holds up the preview: it is marked `continue-on-error`, and
+  when its artifact is missing the comment says the comparison is
+  unavailable, with a link to the run.
+
+The report is served from the same Hosting quota as the live site (see
+[Where everything lives](#where-everything-lives)), so it stays small: it
+shows screenshots for at most 20 pages (new and removed pages first, then
+the largest changes; other changed pages are listed with links), only for
+the screens on which a page changed, as WebP images (JPEG for pages taller
+than 16,383 pixels) that load as the reviewer scrolls. A report for a change
+to every page is about 15 MB.
+
+To run it locally (it needs Node 24):
+
+```bash
+(cd scripts/visual-diff && npm ci && npx playwright install chromium-headless-shell)
+git worktree add /tmp/sabeel-main main
+(cd /tmp/sabeel-main && npm ci && npx astro build)
+npm run build
+node scripts/visual-diff/run.mjs --before /tmp/sabeel-main/dist --after dist --out /tmp/visual-diff
+```
+
+Open `/tmp/visual-diff/index.html` in a browser. `--out` must be a folder
+that is empty or does not exist yet. Remove the worktree afterwards with
+`git worktree remove /tmp/sabeel-main`.
 
 ## When something changes
 
@@ -367,8 +444,8 @@ Work through the table in
 1. Merge the pull request from step 6. Actions → **Site** shows `build` then
    `deploy-live`; the live URL serves the site.
 2. Open a small test pull request. After **Site** finishes, **Preview** runs,
-   and a comment with the preview link appears on the pull request. Close it
-   afterwards.
+   and a comment with the preview link and a **Visual changes** line appears
+   on the pull request. Close it afterwards.
 3. Optional: confirm a branch cannot deploy by pushing a branch whose workflow
    runs `google-github-actions/auth` with `token_format: access_token`; it must
    fail with "rejected by the attribute condition". Delete the branch after.
@@ -417,4 +494,6 @@ run `npx firebase-tools@15 login:use faisal.shah@oursabeel.com`.
 | Firebase returns 403 during deploy | The service account lacks a project role from the table above. |
 | A pull request has no preview comment | The pull request's Site build failed; the Preview run failed (Actions → Preview); the pull request comes from a fork; or a change to `preview.yml` is not yet on `main`. |
 | A preview ignores a `firebase.json` change | Previews use only `cleanUrls`, `trailingSlash`, `redirects`, and `headers` from the pull request; other settings apply after merging. |
+| The comment says "Visual changes: comparison unavailable" | The `visual-diff` job failed (Actions → the Site run → visual-diff shows why), or its `summary.json` was invalid (the Preview run shows a warning). The preview itself is unaffected. To try again, re-run the Site workflow (Actions → the run → Re-run jobs). |
+| The visual comparison shows a difference nobody made | Screenshots differ only if the rendering differs, so look for a shared change (a stylesheet, the header or footer, a component used on many pages). If pages differ when comparing a build with itself, the screenshots are not repeatable; see the visual comparison notes in `CLAUDE.md`. |
 | Previews stop after renaming the build workflow | `preview.yml`'s `workflows: [Site]` does not match `site.yml`'s `name:`. |
