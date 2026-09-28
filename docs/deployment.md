@@ -14,7 +14,7 @@ and Google only gives deploy access to workflows running from `main`.
 flowchart TB
   PR["Pull request opened or updated"] --> SB["Site workflow: build<br/>(no deploy access)"]
   SB --> SV["Site workflow: visual-diff<br/>(no deploy access)"]
-  SV -- "workflow finishes" --> PV["Preview workflow<br/>(runs from main)"]
+  SV -- "workflow succeeds<br/>(visual-diff may fail)" --> PV["Preview workflow<br/>(runs from main)"]
   PV --> CH["Preview channel pr-&lt;number&gt;<br/>site + /_visual-diff/<br/>links commented on the PR"]
   M["Pull request merged to main"] --> SM["Site workflow: build"]
   SM --> DL["Site workflow: deploy-live<br/>(runs from main)"]
@@ -34,9 +34,14 @@ flowchart TB
   `cleanUrls`, `trailingSlash`, `redirects`, and `headers` from the pull
   request's `firebase.json` (the site name comes from `main`'s copy), deploys
   to the `pr-<number>` channel (expires after 7 days), comments the links,
-  and adds `preview` and `visual-diff` checks to the pull request.
-- Because deploy access depends on running from `main`, changes to either
-  workflow take effect only after they are merged.
+  and adds a `preview` status and a `visual changes` status to the pull
+  request.
+- `preview.yml` and the `deploy-live` job run from `main`, so changes to them
+  take effect once merged. The `build` and `visual-diff` jobs run from the
+  pull request's merge commit, so a pull request's own changes to them (or to
+  `scripts/visual-diff/`) apply to its own runs, and other open pull requests
+  pick up merged changes only when GitHub next merges them with `main` (see
+  [Changing the workflows](#changing-the-workflows)).
 
 ## Where everything lives
 
@@ -68,8 +73,8 @@ on Spark allows 10 GB of storage and 10 GB of data transfer a month (about
 together. Past the transfer limit, Firebase disables the sites until the next
 month; past the storage limit, deploys fail. Before the site serves the
 organization's real traffic, switch the project to the Blaze plan
-(Firebase console → the project → Usage and billing → Details and settings →
-Modify plan), which keeps the same no-cost amounts and bills usage beyond
+(in the Firebase console, ⚙ → Usage and billing → Details & settings → modify
+the plan), which keeps the same no-cost amounts and bills usage beyond
 them.
 
 The provider maps these claims from GitHub's token:
@@ -131,11 +136,12 @@ requests or issues on the public repository.
 ## Visual comparison
 
 Each pull request's preview includes a report at `<preview URL>/_visual-diff/`,
-linked from the preview comment (**Visual changes**) and from the
-`visual-diff` check. It lists the pages that look different from `main`, new
-pages, and removed pages, with screenshots on a phone (390 × 844) and a
-desktop (1440 × 900) screen that reviewers can compare with a slider, side by
-side, or with the changed pixels marked in pink.
+linked from the **Visual changes** line of the preview comment and from the
+`visual changes` status. It lists the pages that look different from `main`,
+new pages, removed pages, and pages that could not be captured, with
+screenshots on a phone (390 × 844) and a desktop (1440 × 900) screen that
+reviewers can compare with a slider, side by side, or with the changed pixels
+marked in pink.
 
 ```mermaid
 flowchart LR
@@ -147,48 +153,67 @@ flowchart LR
 ```
 
 - The `visual-diff` job in `site.yml` runs for pull requests, after `build`.
-  GitHub checks the pull request out merged into `main`; the job builds that
-  merge's first parent (`main`) and downloads the pull request's `site`
-  artifact, so it compares exactly the files the preview serves.
+  GitHub checks out the merge of the pull request into `main` that it made
+  for the run; the job builds that merge's first parent (`main` as of that
+  merge) and downloads the pull request's `site` artifact, so it compares
+  exactly the files the preview serves.
 - `scripts/visual-diff/run.mjs` serves both builds on local ports and skips
-  every page whose HTML is identical in both: Astro names each stylesheet,
-  script, font, and image under `_astro/` by a hash of its contents, so
-  identical HTML renders identically. If any file outside `_astro/` (from
-  `public/`) differs, it compares every page.
-- It screenshots the remaining pages from both builds with
-  [BackstopJS](https://github.com/garris/BackstopJS) and Playwright's
-  Chromium (the version pinned in `scripts/visual-diff/package-lock.json`):
-  whole pages, with reduced motion, lazy images loaded, and fonts ready. It
-  then compares them pixel by pixel.
+  every page whose HTML is identical in both. Astro names the files it
+  generates under `_astro/` after a hash, so a page that loads a changed
+  stylesheet, script, font, or image has changed HTML. If any other file
+  differs (a file from `public/`, or a generated file that kept its name),
+  it compares every page.
+- [BackstopJS](https://github.com/garris/BackstopJS) screenshots the
+  remaining pages in both builds with Playwright's Chromium (the version
+  pinned in `scripts/visual-diff/package-lock.json`): whole pages, after the
+  page, its images, and its fonts have loaded (each wait gives up after 10
+  seconds), with reduced motion, a fixed clock, a repeatable `Math.random`,
+  and every animation brought to a fixed state, so that two captures of an
+  unchanged page are identical. [pixelmatch](https://github.com/mapbox/pixelmatch)
+  then compares each pair exactly. Screenshots of different sizes are
+  compared on the larger size, with the extra area counted as changed, so a
+  page that starts to scroll sideways on a phone shows up. A page whose
+  screenshot fails is listed as not captured, and the rest of the report is
+  unaffected. Animations the browser draws itself (animated GIFs, an
+  indeterminate progress bar, a marquee) cannot be held still and would show
+  as changes.
 - The report is uploaded as the `visual-diff` artifact (kept 7 days).
-  `preview.yml` adds it to the preview under `/_visual-diff/`, accepts
-  `summary.json` only if it holds four whole-number counts, and writes those
-  counts in the comment and the check. The live deploy uses only the `site`
-  artifact, so the report never reaches the live site.
-- The job never holds up the preview: it is marked `continue-on-error`, and
-  when its artifact is missing the comment says the comparison is
-  unavailable, with a link to the run.
+  `preview.yml` adds it to the preview under `/_visual-diff/` if it is under
+  50 MB and its `summary.json` is a single object of five whole-number
+  counts, and writes those counts in the comment and the `visual changes`
+  status. The live deploy uses only the `site` artifact, so the report never
+  reaches the live site.
+- The preview waits for the job (one to four minutes, depending on how many
+  pages changed) but does not depend on it. The job is marked
+  `continue-on-error` and each of its steps has a time limit; when its report
+  is missing or rejected, the comment says the comparison is unavailable,
+  with a link to the run, and the `visual changes` status shows an error.
 
 The report is served from the same Hosting quota as the live site (see
-[Where everything lives](#where-everything-lives)), so it stays small: it
-shows screenshots for at most 20 pages (new and removed pages first, then
-the largest changes; other changed pages are listed with links), only for
-the screens on which a page changed, as WebP images (JPEG for pages taller
+[Where everything lives](#where-everything-lives)), so it stays small. It
+shows screenshots for at most 20 pages: new and removed pages first (no more
+than 10 of them when more changed pages are waiting), then the pages that
+changed most; other changed pages are listed with links. Only the screens on
+which a page changed get screenshots, as WebP images (JPEG for pages taller
 than 16,383 pixels) that load as the reviewer scrolls. A report for a change
-to every page is about 15 MB.
+to one page is under 1 MB; one for a change to every page is about 20 MB.
 
-To run it locally (it needs Node 24):
+To run it locally (Node 22.12 or later; CI uses Node 24), from the branch to
+compare:
 
 ```bash
+npm ci
 (cd scripts/visual-diff && npm ci && npx playwright install chromium-headless-shell)
-git worktree add /tmp/sabeel-main main
+git fetch origin
+git worktree add --detach /tmp/sabeel-main "$(git merge-base HEAD origin/main)"
 (cd /tmp/sabeel-main && npm ci && npx astro build)
 npm run build
 node scripts/visual-diff/run.mjs --before /tmp/sabeel-main/dist --after dist --out /tmp/visual-diff
 ```
 
-Open `/tmp/visual-diff/index.html` in a browser. `--out` must be a folder
-that is empty or does not exist yet. Remove the worktree afterwards with
+Open `/tmp/visual-diff/index.html` in a browser; its links to the pages
+themselves work only on the preview. `--out` must be a folder that is empty
+or does not exist yet. Remove the worktree afterwards with
 `git worktree remove /tmp/sabeel-main`.
 
 ## When something changes
@@ -250,6 +275,30 @@ whatever its name.
 
 `site.yml`'s `name: Site` and `preview.yml`'s `workflows: [Site]` must match,
 or previews stop.
+
+### Changing the workflows
+
+A merged change to `preview.yml` applies to every pull request's next
+preview. A merged change to `site.yml` or `scripts/visual-diff/` reaches an
+open pull request only when GitHub merges that pull request with the new
+`main`, which happens when the branch gets a new commit. Re-running a
+workflow never helps: it reuses the merge the run started with.
+
+To bring an open pull request up to date without pushing to its branch:
+
+```bash
+n=<number>
+repo=Sabeel-Institute/sabeel-website-test
+git fetch -q origin && main=$(git rev-parse origin/main)
+gh pr close $n && gh pr reopen $n
+until [ "$(gh api "repos/$repo/commits/$(gh api "repos/$repo/pulls/$n" -q .merge_commit_sha)" -q '.parents[0].sha')" = "$main" ]; do sleep 10; done
+gh pr close $n && gh pr reopen $n
+```
+
+The first reopen makes GitHub redo the merge, but its run still uses the old
+merge. The loop waits until the new merge, based on the new `main`, exists,
+and the second reopen runs with it. Closing and reopening notifies people
+watching the pull request.
 
 ### Connecting a custom domain
 
@@ -494,6 +543,7 @@ run `npx firebase-tools@15 login:use faisal.shah@oursabeel.com`.
 | Firebase returns 403 during deploy | The service account lacks a project role from the table above. |
 | A pull request has no preview comment | The pull request's Site build failed; the Preview run failed (Actions → Preview); the pull request comes from a fork; or a change to `preview.yml` is not yet on `main`. |
 | A preview ignores a `firebase.json` change | Previews use only `cleanUrls`, `trailingSlash`, `redirects`, and `headers` from the pull request; other settings apply after merging. |
-| The comment says "Visual changes: comparison unavailable" | The `visual-diff` job failed (Actions → the Site run → visual-diff shows why), or its `summary.json` was invalid (the Preview run shows a warning). The preview itself is unaffected. To try again, re-run the Site workflow (Actions → the run → Re-run jobs). |
+| The comment says "Visual changes: comparison unavailable" | Either the `visual-diff` job failed (Actions → the Site run → visual-diff shows why; re-run the Site workflow to try again), or its report was too large or invalid (the Preview run shows a warning), or the Site run had no `visual-diff` job because GitHub merged the pull request with a `main` from before the job existed (push to the branch, or see [Changing the workflows](#changing-the-workflows)). The preview itself is unaffected. |
+| The comment says pages "could not be captured" | Their screenshots failed, usually because the page never finished loading, kept its browser busy for more than 30 seconds, or navigated away. The visual-diff job's log in the Site run names the error. Open the page on the preview to see what it does. |
 | The visual comparison shows a difference nobody made | Screenshots differ only if the rendering differs, so look for a shared change (a stylesheet, the header or footer, a component used on many pages). If pages differ when comparing a build with itself, the screenshots are not repeatable; see the visual comparison notes in `CLAUDE.md`. |
 | Previews stop after renaming the build workflow | `preview.yml`'s `workflows: [Site]` does not match `site.yml`'s `name:`. |

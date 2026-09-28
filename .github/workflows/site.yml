@@ -50,14 +50,17 @@ jobs:
           retention-days: 7
 
   # Screenshots the pages this pull request changes, before and after, and
-  # uploads the report preview.yml publishes at <preview>/_visual-diff/. It
-  # never holds up the preview: if it fails, the preview goes out without it.
+  # uploads the report preview.yml publishes at <preview>/_visual-diff/. The
+  # preview waits for it but does not depend on it: if it fails, the preview
+  # goes out without the report. Its steps have their own time limits because
+  # a step that times out fails, which continue-on-error covers, while a job
+  # that times out is cancelled, which would stop the preview.
   visual-diff:
     if: github.event_name == 'pull_request'
     needs: build
     runs-on: ubuntu-latest
     continue-on-error: true
-    timeout-minutes: 20
+    timeout-minutes: 40
     steps:
       - uses: actions/checkout@v7
         with:
@@ -71,9 +74,11 @@ jobs:
             package-lock.json
             scripts/visual-diff/package-lock.json
 
-      # The pull request is checked out merged into main, so the first parent
-      # of HEAD is main.
+      # The pull request is checked out merged into its target branch, so the
+      # first parent of HEAD is that branch (main) as of the merge GitHub
+      # made for this run.
       - name: Build main
+        timeout-minutes: 10
         run: |
           git worktree add --detach "$RUNNER_TEMP/main" HEAD^1
           cd "$RUNNER_TEMP/main"
@@ -86,12 +91,14 @@ jobs:
           path: ${{ runner.temp }}/pr
 
       - name: Install comparison tools
+        timeout-minutes: 5
         working-directory: scripts/visual-diff
         run: |
           npm ci
           npx playwright install chromium-headless-shell
 
       - name: Compare screenshots
+        timeout-minutes: 15
         run: node scripts/visual-diff/run.mjs --before "$RUNNER_TEMP/main/dist" --after "$RUNNER_TEMP/pr/dist" --out "$RUNNER_TEMP/visual-diff"
 
       - uses: actions/upload-artifact@v7

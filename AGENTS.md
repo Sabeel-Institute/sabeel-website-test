@@ -355,13 +355,13 @@ Keep every change easy to review and merge:
    description instead.
 5. **Leave deployment alone** (`.github/workflows/`, `firebase.json` hosting
    settings, `.firebaserc`, `scripts/visual-diff/`) unless the task is about
-   deploying; see docs/deployment.md. Adding a redirect for a moved page to `firebase.json`
-   is fine.
+   deploying; see docs/deployment.md. Adding a redirect for a moved page to
+   `firebase.json` is fine.
 6. **Update docs with the change.** If you add a field, component, page, or
    convention, update this file in the same pull request.
 7. **Verify** (below), then open a pull request that says what changed and
    why. A few minutes after its build passes, every pull request gets a
-   comment with a preview link and a **Visual changes** link.
+   comment with a preview link and a **Visual changes** line.
 8. **Only the repository admin merges into `main`.** Merging deploys the live
    site.
 
@@ -379,12 +379,15 @@ and resolve the conflicts, keeping other people’s changes.
 
 ## After you open a pull request
 
-1. Open **Visual changes** from the preview comment. It lists every page
-   that looks different from `main`, with before and after screenshots on a
-   phone and a desktop screen. Check that the pages you meant to change look
-   right, and that every other listed page follows from your change (editing
-   a person's role, for example, also changes each program page that shows
-   them).
+1. Open the link after **Visual changes:** in the preview comment. The
+   report lists every page that looks different from `main`, new pages, and
+   removed pages, with before and after screenshots of up to 20 of them on
+   each screen (phone or desktop) where they changed. Check that the pages
+   you meant to change look right, and that every other listed page follows
+   from your change (editing a person's role, for example, also changes each
+   program page that shows them). If the comment says “comparison
+   unavailable” or that pages could not be captured, see Troubleshooting in
+   docs/deployment.md.
 2. If a page changed that should not have, find the cause (usually a shared
    component or style) and fix it in the same pull request.
 3. Open the preview link and click through the pages you changed.
