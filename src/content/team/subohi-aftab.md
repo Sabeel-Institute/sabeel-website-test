@@ -1,5 +1,5 @@
 ---
-name: Subohi
+name: Subohi Aftab
 honorific: Ust.
 group: teachers
 order: 30
