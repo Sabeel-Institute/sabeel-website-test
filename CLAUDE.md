@@ -12,6 +12,11 @@
 - `Photo.astro` resolves named slots from `src/assets/photos/` with
   `import.meta.glob`; a missing file renders the geometric fallback, so slots
   never break the build.
+- `about-hero.jpg` and `about-story.jpg` are the WordPress theme's demo
+  images from the Design Rector site (uploaded there in December 2023, not
+  Sabeel's own), used at the organisation's request; their license is
+  unconfirmed. They are cropped to their frames (4:3 and 5:4) and upscaled
+  2x from small originals, so replace them first when Sabeel has its own.
 - The giving form cannot pass an amount to the GiveWP form on oursabeel.com
   (no URL parameter support), so it opens the form and shows the donor their
   selection to re-enter. Point `site.giving` at a processor that accepts
