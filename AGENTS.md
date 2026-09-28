@@ -220,8 +220,8 @@ valid without it.
 Front matter: `name`, `honorific` (`Ustadhah`, `Ust.`, `Sr.`, `Br.`, `Dr.`),
 `group` (`founder`, `board`, `teachers`, `volunteers`), `order` (ascending
 within the group; use steps of 10), optional `role`, `sub` (a second line
-under the role), `highlights`, `listed` (`false` hides the person), `photo`
-(shown on the bio page). `highlights` lists credentials only: the Sabeel
+under the role), `highlights`, and `listed` (`false` hides the person).
+`highlights` lists credentials only: the Sabeel
 certificate or studies and any other degree, one per line, as “credential,
 institution” (`‘Alimiyyah, Institute of Islamic Education`,
 `Three years of Islamic studies, Sabeel`). The body is the bio; a listed
@@ -242,10 +242,14 @@ appear on the Hikam Foundations page.
 
 Pages have named photo slots. Drop a file named after the slot (`.jpg`,
 `.png`, or `.webp`) to fill it; until then the slot shows a geometric panel.
-Find slot names by searching `src/pages` and `src/components` for `slot="` and
-`photo="`. Use only real, approved Sabeel photos. `home-hero` and
+Find slot names by searching `src/pages` and `src/components` for `slot="`
+and `photo="`. Use only real, approved Sabeel photos. `home-hero` and
 `hikam-hero` hold illustrative images, not photos of Sabeel classes; replace
 them with approved photos when available.
+
+The site shows no photos of team members: team cards, bio pages, the founder
+section, and stories about people are text only. Do not add a photo slot, an
+initials badge, or any other stand-in picture for a person.
 
 ### Site settings (`src/site.config.ts`)
 
@@ -266,7 +270,7 @@ Routes: `/`, `/about/`, `/programs/`, `/programs/<slug>/`,
 | Component | Use for |
 |---|---|
 | `BaseLayout` | Every page. Props: `title`, `description`, `shareImage` |
-| `PageHero` | Page opening: `eyebrow`, `title`, lead text (default slot), `actions` slot, and a photo slot or `media` slot |
+| `PageHero` | Page opening: `eyebrow`, `title`, lead text (default slot), `actions` slot, and optionally a photo slot or `media` slot beside the text |
 | `SectionHeading` | Section opening: `eyebrow`, `title`, gold divider; the default slot is aside text on the right |
 | `CtaBand` | Closing band: `title`, optional `eyebrow`, `tone` (`sage` or `mist`), text and an `actions` slot |
 | `FactsBar` | Labelled facts row (`facts=[{ label, value }]`) |
@@ -275,7 +279,7 @@ Routes: `/`, `/about/`, `/programs/`, `/programs/<slug>/`,
 | `AreaCards` | The three program-area cards (`mode="programs"` or `"archive"`) |
 | `AreaPage` | A whole program-area page |
 | `TeamCard` | A person |
-| `Photo` | A photo slot (`slot=`) or a specific image (`image=`), with the pattern fallback |
+| `Photo` | A photo slot (`slot=`) or a specific image (`image=`), with the pattern fallback (never for people; see Photos) |
 | `Collage` | Three photo slots with captions |
 | `MailingListForm`, `InterestDialog` | Newsletter and interest-list sign-up. Any link with `data-interest` opens the dialog |
 | `Lightbox` | Enlarging flyers: links with `data-lightbox="<group>"` |
@@ -285,7 +289,7 @@ Routes: `/`, `/about/`, `/programs/`, `/programs/<slug>/`,
 Queries and helpers in `src/lib/content.ts`: `getCurrentPrograms(area?)`,
 `getUpcomingPrograms(area?)`, `getCompletedPrograms(area?)`, `programHref`,
 `STATUS_LABEL`, `startLabel`, `programYear`, `resolveInstructors`,
-`getTeamGroup`, `displayName`, `teamHasPage`, `initials`, `excerpt`.
+`getTeamGroup`, `displayName`, `teamHasPage`, `excerpt`.
 
 **A new page** is a file in `src/pages/` wrapped in `BaseLayout`, opening with
 `PageHero`, with sections that open with `SectionHeading`, and ending with a

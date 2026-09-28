@@ -4,7 +4,6 @@ import PageHero from '../components/PageHero.astro';
 import SectionHeading from '../components/SectionHeading.astro';
 import Divider from '../components/Divider.astro';
 import Icon from '../components/Icon.astro';
-import Photo from '../components/Photo.astro';
 import { site } from '../site.config';
 
 const possible = [
@@ -190,9 +189,8 @@ const amounts = ['50', '100', '250'];
 
   <!-- Rukaiya's story -->
   <section class="py-14 md:py-16" aria-labelledby="story-heading">
-    <div class="container-page grid items-center gap-10 md:grid-cols-2 md:gap-16">
-      <Photo slot="rukaiya" alt="Sr. Rukaiya Ahamed" monogram="RA" class="aspect-[4/3] shadow-card" />
-      <div>
+    <div class="container-page">
+      <div class="max-w-3xl">
         <p class="eyebrow">Rukaiya’s story</p>
         <h2 id="story-heading" class="display-md mt-2 sm:text-[2.4rem]">From a summer garden to the board.</h2>
         <Divider class="mt-4" />

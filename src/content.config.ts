@@ -133,24 +133,22 @@ const programs = defineCollection({
 
 const team = defineCollection({
   loader: glob({ pattern: '*.md', base: './src/content/team' }),
-  schema: ({ image }) =>
-    z.object({
-      name: z.string().min(1),
-      honorific: z.enum(['Ustadhah', 'Ust.', 'Sr.', 'Br.', 'Dr.']),
-      /** Section on the Teachers & Team page. */
-      group: z.enum(['founder', 'board', 'teachers', 'volunteers']),
-      /** Position within the group, ascending. */
-      order: z.number().int(),
-      /** e.g. "Program Director and Teacher". */
-      role: z.string().min(1).optional(),
-      /** Optional subtitle below the main role/title. */
-      sub: z.string().min(1).optional(),
-      /** Credentials only: the Sabeel certificate or studies and any other degree, one per line ("‘Alimiyyah, Institute of Islamic Education"). */
-      highlights: z.array(z.string().min(1)).max(3).optional(),
-      /** false keeps the file but hides the person from the site. */
-      listed: z.boolean().default(true),
-      photo: image().optional(),
-    }),
+  schema: z.object({
+    name: z.string().min(1),
+    honorific: z.enum(['Ustadhah', 'Ust.', 'Sr.', 'Br.', 'Dr.']),
+    /** Section on the Teachers & Team page. */
+    group: z.enum(['founder', 'board', 'teachers', 'volunteers']),
+    /** Position within the group, ascending. */
+    order: z.number().int(),
+    /** e.g. "Program Director and Teacher". */
+    role: z.string().min(1).optional(),
+    /** Optional subtitle below the main role/title. */
+    sub: z.string().min(1).optional(),
+    /** Credentials only: the Sabeel certificate or studies and any other degree, one per line ("‘Alimiyyah, Institute of Islamic Education"). */
+    highlights: z.array(z.string().min(1)).max(3).optional(),
+    /** false keeps the file but hides the person from the site. */
+    listed: z.boolean().default(true),
+  }),
 });
 
 const testimonials = defineCollection({

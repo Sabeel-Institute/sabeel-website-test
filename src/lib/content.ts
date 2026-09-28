@@ -110,15 +110,6 @@ export function displayName(member: TeamMember): string {
   return `${member.data.honorific} ${member.data.name}`;
 }
 
-export function initials(name: string): string {
-  return name
-    .split(/\s+/)
-    .filter(Boolean)
-    .slice(0, 2)
-    .map((w) => w[0]!.toUpperCase())
-    .join('');
-}
-
 /** First `words` words of a Markdown body as plain text. */
 export function excerpt(markdown: string | undefined, words = 22): string {
   const text = (markdown ?? '')
