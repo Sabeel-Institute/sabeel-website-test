@@ -247,9 +247,11 @@ and `photo="`. Use only real, approved Sabeel photos. `home-hero`,
 `hikam-hero`, `about-hero`, and `about-story` hold illustrations, not photos
 of Sabeel classes; replace them with approved photos when available.
 
-The site shows no photos of team members: team cards, bio pages, the founder
-section, and stories about people are text only. Do not add a photo slot, an
-initials badge, or any other stand-in picture for a person.
+Team cards, bio pages, and stories about people are text only: do not add a
+photo slot, an initials badge, or any other stand-in picture for a person. The
+Teachers & Team page has two photo slots for pictures the organisation will
+supply, `team-hero` beside the page title and `founder` beside the founder's
+introduction; they show the geometric panel until then.
 
 ### Site settings (`src/site.config.ts`)
 
