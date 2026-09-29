@@ -254,10 +254,18 @@ initials badge, or any other stand-in picture for a person.
 ### Site settings (`src/site.config.ts`)
 
 Contact email, location, social links, financial-aid form, giving links per
-designation, Zelle address, tax ID, `mailingListAction` (Mailchimp form URL;
-while `null`, sign-ups open a pre-filled email), `hikamOverviewPdf`, program
-areas, and the header (`mainNav`) and footer (`footerNav`) menus. Change a
-value here, never by typing it into a page.
+designation, Zelle address, tax ID, `mailingListAction`, `hikamOverviewPdf`,
+program areas, and the header (`mainNav`) and footer (`footerNav`) menus.
+Change a value here, never by typing it into a page.
+
+`mailingListAction` is the `action` URL from the Mailchimp embedded form's
+code (`https://<account>.<dc>.list-manage.com/subscribe/post?u=…&id=…&f_id=…`);
+the rest of Mailchimp's embed code, its CSS and scripts, is not used. The
+newsletter form (`MailingListForm`) keeps the site's own styling, submits to
+that URL in the background, and shows Mailchimp's reply under the button. The
+Mailchimp form must require only the email address, and reCAPTCHA must be off
+for it. While `mailingListAction` is `null`, and always for the interest-list
+form, signing up opens a pre-filled email to the organisation.
 
 ## Pages and components
 

@@ -29,9 +29,10 @@ export const site = {
     general: 'https://oursabeel.com/donate/',
   },
   /**
-   * Mailchimp embedded-form action URL
-   * (https://<dc>.list-manage.com/subscribe/post?u=...&id=...).
-   * While null, the newsletter and interest-list forms open a pre-filled email.
+   * The action URL of the Mailchimp embedded form for the newsletter
+   * (https://<account>.<dc>.list-manage.com/subscribe/post?u=...&id=...&f_id=...),
+   * copied from the form's embed code. The newsletter form submits to it; while
+   * null, it opens a pre-filled email. The interest-list form always opens one.
    */
   mailingListAction: null as string | null,
   /** Hikam Foundations program overview PDF; the download button hides while null. */
