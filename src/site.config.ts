@@ -24,8 +24,8 @@ export const site = {
   /**
    * Online giving through Zeffy. The Support page's Donate button opens the
    * campaign's form (`embed`) in a dialog, or its page on Zeffy's site
-   * (`page`) without JavaScript. Donors choose the amount, how often to give,
-   * and the fund in Zeffy's form.
+   * (`page`) without JavaScript. Donors choose the amount and how often to give
+   * in Zeffy's form.
    */
   donation: {
     page: `https://www.zeffy.com/en-US/donation-form/${zeffyCampaign}`,
