@@ -4,6 +4,9 @@
  */
 import type { PROGRAM_AREAS } from './content.config';
 
+/** The Zeffy donation campaign: the name at the end of its links. */
+const zeffyCampaign = 'website-donation-form-8';
+
 export const site = {
   name: 'Sabeel Institute',
   tagline: 'Structured, in-person Islamic learning for women in Houston.',
@@ -19,14 +22,14 @@ export const site = {
   },
   financialAidFormUrl: 'https://forms.gle/nNkof3zDuKPUzNkh7',
   /**
-   * Online giving. Each designation opens its own form; point them at separate
-   * campaign forms when they exist. The chosen amount cannot be passed to the
-   * current GiveWP form, so the page shows it for the donor to re-enter.
+   * Online giving through Zeffy. The Support page's Donate button opens the
+   * campaign's form (`embed`) in a dialog, or its page on Zeffy's site
+   * (`page`) without JavaScript. Donors choose the amount, how often to give,
+   * and the fund in Zeffy's form.
    */
-  giving: {
-    home: 'https://oursabeel.com/donate/',
-    programs: 'https://oursabeel.com/donate/',
-    general: 'https://oursabeel.com/donate/',
+  donation: {
+    page: `https://www.zeffy.com/en-US/donation-form/${zeffyCampaign}`,
+    embed: `https://www.zeffy.com/embed/donation-form/${zeffyCampaign}`,
   },
   /**
    * The action URL of the Mailchimp embedded form for the newsletter

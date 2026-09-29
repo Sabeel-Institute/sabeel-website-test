@@ -316,8 +316,6 @@ watching the pull request.
 4. `firebase.json` redirects the paths used by the WordPress site at
    `oursabeel.com` (`/our-mission/`, `/my-courses/`, `/donate/`, and more) to
    their pages here, so existing links keep working.
-5. The giving links in `src/site.config.ts` (`giving`) point at the donation
-   form on that WordPress site. Replace them before the domain moves.
 
 ## Setting up from scratch
 

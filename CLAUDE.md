@@ -22,10 +22,14 @@
   Sabeel's own), used at the organisation's request; their license is
   unconfirmed. They are cropped to their frames (4:3 and 5:4) and upscaled
   2x from small originals, so replace them first when Sabeel has its own.
-- The giving form cannot pass an amount to the GiveWP form on oursabeel.com
-  (no URL parameter support), so it opens the form and shows the donor their
-  selection to re-enter. Point `site.giving` at a processor that accepts
-  amounts to remove that step.
+- `DonationDialog` shows Zeffy's plain embed (`/embed/donation-form/<name>`)
+  in the site's own `<dialog>` and loads it on first open. Zeffy's pop-up
+  script (`embed-form-script.min.js`) is not used: it loads the form in a
+  hidden frame on every page view, and its pop-up has no dialog role or
+  focus handling. The plain embed scrolls inside a fixed-height frame. Its
+  `?modal=true` variant adds a close button on narrow screens, which this
+  dialog provides itself. Zeffy takes no amount or fund from a link, so
+  donors choose both in its form.
 - `dateApprox: true` marks programs whose year is inferred rather than
   printed on the flyer; pages show only the year for them.
 - `firebase.json` redirects other addresses for these pages (`/courses/`,
