@@ -34,7 +34,7 @@ const upcoming = await getUpcomingPrograms();
   </PageHero>
 
   <!-- Now enrolling -->
-  <section class="bg-sage-wash py-14 md:py-16" aria-labelledby="enrolling-heading">
+  <section class="py-14 md:py-16" aria-labelledby="enrolling-heading">
     <div class="container-page">
       <SectionHeading eyebrow="Now enrolling" title="Open for registration" id="enrolling-heading">
         <p>Grouped by where they meet: online, on site in Houston, or both. Registration links, dates, and fees are on each program’s page.</p>
@@ -74,7 +74,7 @@ const upcoming = await getUpcomingPrograms();
   </section>
 
   <!-- Program areas -->
-  <section class="py-14 md:py-16" aria-labelledby="areas-heading">
+  <section class="border-t border-border py-14 md:py-16" aria-labelledby="areas-heading">
     <div class="container-page">
       <SectionHeading eyebrow="How our programs are organized" title="Explore our program areas." id="areas-heading" />
       <div class="mt-10">
@@ -84,7 +84,7 @@ const upcoming = await getUpcomingPrograms();
   </section>
 
   <!-- Interest list -->
-  <section class="border-t border-border bg-surface py-12">
+  <section class="border-t border-border py-12">
     <div class="container-page grid items-center gap-6 md:grid-cols-[1.1fr_1fr] md:gap-12">
       <div>
         <h2 class="font-display text-[2rem] leading-tight font-bold text-raspberry">Not seeing the right program?</h2>
@@ -97,7 +97,7 @@ const upcoming = await getUpcomingPrograms();
     </div>
   </section>
 
-  <CtaBand title="Explore Sabeel’s past programs." eyebrow="Program archive" tone="mist">
+  <CtaBand title="Explore Sabeel’s past programs." eyebrow="Program archive">
     <p>Browse previous programs by area and year to see what Sabeel has offered.</p>
     <a slot="actions" href="/past-programs/" class="btn btn-primary px-7 text-base">Browse the Program Archive</a>
   </CtaBand>
