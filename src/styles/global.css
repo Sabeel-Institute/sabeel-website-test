@@ -121,6 +121,20 @@
     @apply inline-flex items-center gap-2 font-medium text-raspberry transition-[gap] duration-200 hover:gap-3;
   }
 
+  /* Program cards, up to three to a row, with a short last row centred. */
+  .card-grid {
+    @apply flex flex-wrap justify-center gap-5;
+    & > * {
+      width: 100%;
+      @variant md {
+        width: calc((100% - var(--spacing) * 5) / 2);
+      }
+      @variant lg {
+        width: calc((100% - var(--spacing) * 10) / 3);
+      }
+    }
+  }
+
   /* Long-form text from Markdown (course details, bios, posts). */
   .prose-sabeel {
     @apply text-ink;

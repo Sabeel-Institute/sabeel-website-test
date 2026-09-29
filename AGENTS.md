@@ -337,6 +337,8 @@ belongs in a menu.
 - **Layout.** Wrap content in `container-page`. Sections use
   `py-14 md:py-16`. Cards use `rounded-card` with gold borders
   (`border border-gold/60`, often `border-t-4 border-t-gold`) on `bg-surface`.
+  Lists of program cards use `card-grid`: up to three to a row, with a short
+  last row centred.
 - **Buttons and links.** `btn btn-primary` for the main action,
   `btn btn-outline` for a secondary one, `link-arrow` with an `arrow-right`
   icon for text links. External registration links open in a new tab with

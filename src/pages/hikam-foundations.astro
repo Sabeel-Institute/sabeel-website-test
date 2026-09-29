@@ -327,7 +327,7 @@ const faqs = [
       <section id="past" class="scroll-mt-6 border-t border-border bg-surface py-14 md:py-16" aria-labelledby="past-heading">
         <div class="container-page">
           <SectionHeading eyebrow="Program archive" title="Past cohorts" id="past-heading" />
-          <ul class="mt-10 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+          <ul class="card-grid mt-10">
             {pastCohorts.map((p) => (
               <li>
                 <ProgramCard program={p} />

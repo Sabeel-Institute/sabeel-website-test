@@ -44,9 +44,9 @@ const featured = (await getCurrentPrograms()).slice(0, 3);
       </SectionHeading>
       {
         featured.length > 0 ? (
-          <ul class="mt-10 flex flex-wrap justify-center gap-5">
+          <ul class="card-grid mt-10">
             {featured.map((p) => (
-              <li class="w-full md:w-[calc((100%-1.25rem)/2)] lg:w-[calc((100%-2.5rem)/3)]">
+              <li>
                 <ProgramCard program={p} />
               </li>
             ))}
