@@ -9,6 +9,11 @@
 - `assertBespokePages` (`src/lib/content.ts`) runs while program pages are
   generated and fails the build when a `page:` value has no matching file in
   `src/pages/`.
+- `src/assets/images/logo.png` is the designer's transparent logo, cropped
+  to the artwork and scaled to 1600 px wide. `public/icon-*.png` show its
+  calligraphy without the wordmark, centred on an ivory tile: rounded for
+  the 32 and 192 px icons, square for the 180 px Apple touch icon, which
+  iOS rounds itself. The tile keeps the icon visible in dark browser tabs.
 - `Photo.astro` resolves named slots from `src/assets/photos/` with
   `import.meta.glob`; a missing file renders the geometric fallback, so slots
   never break the build.
