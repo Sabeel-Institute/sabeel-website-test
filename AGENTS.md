@@ -16,6 +16,9 @@ The design uses Cormorant Garamond for headings, Inter for body text, and DM
 Sans for small labels; gold diamond dividers; ivory and sage sections; and
 raspberry for headings, links, and buttons. The colours are the Sabeel brand
 palette, defined as tokens in `src/styles/global.css` (see Design rules).
+The palette, the logo files, and design guidance for every Sabeel surface live
+in [Sabeel-Institute/brand](https://github.com/Sabeel-Institute/brand); this
+site's colour tokens, logo, and favicons follow it.
 
 Facts on the site (dates, fees, names, links, bios) come from the
 organisation. Never invent them: if a fact is unknown, leave the field out and
