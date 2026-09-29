@@ -45,11 +45,10 @@ export type AreaId = (typeof PROGRAM_AREAS)[number];
 /** Program areas: names, descriptions, and where each area lives. */
 export const areas: Record<
   AreaId,
-  { label: string; short: string; description: string; archiveText: string; href: string; icon: 'graduation-cap' | 'book-open' | 'leaf' }
+  { label: string; description: string; archiveText: string; href: string; icon: 'graduation-cap' | 'book-open' | 'leaf' }
 > = {
   'hikam-foundations': {
     label: 'Hikam Foundations',
-    short: 'Hikam',
     description: 'A structured two-year grounding in the Islamic sciences for adult women.',
     archiveText: 'Completed cohorts and selected milestones from Sabeel’s structured two-year program.',
     href: '/hikam-foundations/',
@@ -57,7 +56,6 @@ export const areas: Record<
   },
   'womens-learning': {
     label: 'Women’s Learning',
-    short: 'women’s',
     description: 'Short courses, Qur’an gatherings, sacred seasons, and learning for everyday life.',
     archiveText: 'Previous short courses, Qur’an gatherings, sacred-season programs, and sustained learning.',
     href: '/programs/womens-learning/',
@@ -65,7 +63,6 @@ export const areas: Record<
   },
   'youth-children': {
     label: 'Youth & Children',
-    short: 'youth & children’s',
     description: 'Age-appropriate Islamic learning, mentorship, honest conversation, and purposeful activities.',
     archiveText: 'Previous learning, mentorship, seasonal, and age-appropriate next-generation programs.',
     href: '/programs/youth-children/',

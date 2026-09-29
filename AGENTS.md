@@ -288,7 +288,8 @@ Routes: `/`, `/about/`, `/programs/`, `/programs/<slug>/`,
 | `FactsBar` | Labelled facts row (`facts=[{ label, value }]`) |
 | `ProgramCard` | A program teaser (current or completed) |
 | `CurrentPrograms` | Current programs grouped by format |
-| `AreaCards` | The three program-area cards (`mode="programs"` or `"archive"`) |
+| `AreaCards` | The three program-area cards on Programs |
+| `FlyerArchive` | Completed programs' flyers, one tab per year; the page also includes `Lightbox` |
 | `AreaPage` | A whole program-area page |
 | `TeamCard` | A person |
 | `Photo` | A photo slot (`slot=`) or a specific image (`image=`), with the pattern fallback (never for people; see Photos) |
