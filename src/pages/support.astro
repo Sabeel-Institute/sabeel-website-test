@@ -15,9 +15,10 @@ const possible = [
   { icon: 'heart', title: 'Belong beyond class', text: 'Extend the care already lived by students and team members so the whole student body can feel connected.' },
 ] as const;
 
-const designations = [
-  { title: 'Permanent Home', text: 'Direct your gift to the approved space campaign.' },
-  { title: 'Programs & Access', text: 'Support teachers, curriculum, youth programming, and scholarships.' },
+// What gifts support. Gifts are not earmarked: one gift supports both.
+const priorities = [
+  { title: 'Permanent Home', text: 'The approved space campaign, for a home of Sabeel’s own.' },
+  { title: 'Programs & Access', text: 'Teachers, curriculum, youth programming, and scholarships today.' },
 ] as const;
 ---
 
@@ -54,8 +55,8 @@ const designations = [
       }
     </dl>
     <Fragment slot="actions">
-      <a href="#give" class="btn btn-primary px-6 text-base">Support the Home Effort</a>
-      <a href="#give" class="btn btn-outline px-6 text-base">Support Sabeel’s Programs</a>
+      <a href={site.donation.page} target="_blank" rel="noopener" data-donate class="btn btn-primary px-6 text-base">Donate</a>
+      <a href="#give" class="btn btn-outline px-6 text-base">Ways to give</a>
     </Fragment>
   </PageHero>
 
@@ -85,14 +86,14 @@ const designations = [
     </div>
   </section>
 
-  <!-- Choose where to help -->
+  <!-- Giving -->
   <section id="give" class="scroll-mt-6 border-y border-border bg-sage-mist py-14 md:py-16" aria-labelledby="give-heading">
     <div class="container-page grid gap-10 lg:grid-cols-[1fr_minmax(0,32rem)] lg:gap-14">
       <div>
-        <SectionHeading eyebrow="Choose where to help" title="Support the home — or the work happening now." id="give-heading" />
+        <SectionHeading eyebrow="Where your gift goes" title="A permanent home, and the work happening now." id="give-heading" />
         <ul class="mt-8 grid gap-4 sm:grid-cols-2">
           {
-            designations.map((d) => (
+            priorities.map((d) => (
               <li class="rounded-card border border-gold/60 bg-surface p-6">
                 <h3 class="text-xl font-semibold text-ink">{d.title}</h3>
                 <p class="mt-2 text-[15px] leading-relaxed text-ink-soft">{d.text}</p>
@@ -100,10 +101,12 @@ const designations = [
             ))
           }
         </ul>
-        <p class="mt-6 text-[15px] leading-relaxed text-ink-soft">
-          Prefer Zelle? Send to{' '}
-          <a href={`mailto:${site.zelle}`} class="font-medium text-raspberry underline decoration-gold underline-offset-4">{site.zelle}</a>
-          {' '}and note where you’d like your gift to go.
+        <p class="mt-6 text-[15px] leading-relaxed text-ink">
+          Every gift supports both priorities, so there is no fund to choose.
+        </p>
+        <p class="mt-3 text-[15px] leading-relaxed text-ink-soft">
+          Prefer Zelle? Send your gift to{' '}
+          <a href={`mailto:${site.zelle}`} class="font-medium text-raspberry underline decoration-gold underline-offset-4">{site.zelle}</a>.
         </p>
       </div>
 
