@@ -9,4 +9,4 @@ highlights:
 - B.Sc. Nutrition, University of Houston
 ---
 
-Rukaiya Ahmed received her B.Sc. in Nutrition from the University of Houston and holds a three-year Classical Islamic Knowledge certification from Sameera Institute. She is a Certified Surgical Technologist and serves as the executive assistant/board member at Sabeel Institute, while also teaching young girls about Islam.
+Rukaiya Ahmed received her B.Sc. in Nutrition from the University of Houston and holds a three-year Classical Islamic Knowledge certification from Sabeel. She is a Certified Surgical Technologist and serves as the executive assistant/board member at Sabeel Institute, while also teaching young girls about Islam.
