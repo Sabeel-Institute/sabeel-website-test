@@ -258,8 +258,8 @@ on Support.
 
 ### Site settings (`src/site.config.ts`)
 
-Contact email, location, social links, financial-aid form, giving links per
-designation, Zelle address, tax ID, `mailingListAction`, `hikamOverviewPdf`,
+Contact email, location, social links, financial-aid form, the Zeffy donation
+campaign, Zelle address, tax ID, `mailingListAction`, `hikamOverviewPdf`,
 program areas, and the header (`mainNav`) and footer (`footerNav`) menus.
 Change a value here, never by typing it into a page.
 
@@ -273,6 +273,12 @@ for it: the site's form cannot show Mailchimp's reCAPTCHA. Choosing double
 opt-in in the audience settings switches reCAPTCHA on, so switch it off again
 after. While `mailingListAction` is `null`, and always for the interest-list
 form, signing up opens a pre-filled email to the organisation.
+
+`zeffyCampaign`, at the top of the file, is the name at the end of the Zeffy
+donation campaign's links (`https://www.zeffy.com/en-US/donation-form/<name>`).
+The Support page's Donate button opens that campaign's form in a dialog, where
+donors choose the amount, how often to give, and the fund. The funds set up in
+Zeffy must match `designations` in `src/pages/support.astro`.
 
 ## Pages and components
 
@@ -298,6 +304,7 @@ Routes: `/`, `/about/`, `/programs/`, `/programs/<slug>/`,
 | `Photo` | A photo slot (`slot=`) or a specific image (`image=`), with the pattern fallback (never for people; see Photos) |
 | `Collage` | Three photo slots with captions |
 | `MailingListForm`, `InterestDialog` | Newsletter and interest-list sign-up. Any link with `data-interest` opens the dialog |
+| `DonationDialog` | The Zeffy donation form, on the Support page. Any link with `data-donate` opens it |
 | `Lightbox` | Enlarging flyers: links with `data-lightbox="<group>"` |
 | `SabeelDifference` | The three-column band on Home and About |
 | `Divider`, `Icon` | Gold diamond divider; inline icons (add new ones to `Icon.astro` using Lucide paths) |

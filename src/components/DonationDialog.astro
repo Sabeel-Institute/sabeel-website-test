@@ -1,0 +1,43 @@
+---
+/**
+ * The Zeffy donation form in a dialog. Any link with `data-donate` opens it;
+ * without JavaScript, or with a modified click, the link opens the form on
+ * Zeffy's site. The form loads when the dialog first opens.
+ */
+import Icon from './Icon.astro';
+import { site } from '../site.config';
+---
+
+<dialog
+  id="donate-dialog"
+  aria-labelledby="donate-title"
+  class="m-auto h-[min(52rem,calc(100dvh-2rem))] w-[calc(100%-2rem)] max-w-xl flex-col overflow-hidden rounded-card bg-surface p-0 shadow-card backdrop:bg-ink/60 backdrop:backdrop-blur-sm open:flex max-sm:h-dvh max-sm:max-h-none max-sm:w-full max-sm:max-w-none max-sm:rounded-none"
+>
+  <div class="flex shrink-0 items-center justify-between gap-4 border-b border-border py-2 pr-2 pl-6">
+    <h2 id="donate-title" class="text-lg font-semibold text-ink">Donate to {site.name}</h2>
+    <button
+      type="button"
+      data-donate-close
+      class="flex size-11 shrink-0 items-center justify-center rounded-full text-ink hover:bg-inset"
+    >
+      <Icon name="x" class="size-5" label="Close" />
+    </button>
+  </div>
+  <iframe title="Donation form" data-src={site.donation.embed} allow="payment" class="min-h-0 w-full grow"></iframe>
+</dialog>
+
+<script>
+  const dialog = document.getElementById('donate-dialog') as HTMLDialogElement;
+  const form = dialog.querySelector('iframe')!;
+  document.addEventListener('click', (e) => {
+    const trigger = (e.target as Element).closest('a[data-donate]');
+    if (!trigger || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+    e.preventDefault();
+    form.src ||= form.dataset.src!;
+    dialog.showModal();
+  });
+  dialog.querySelector('[data-donate-close]')!.addEventListener('click', () => dialog.close());
+  dialog.addEventListener('click', (e) => {
+    if (e.target === dialog) dialog.close();
+  });
+</script>
