@@ -72,10 +72,19 @@ export const areas: Record<
 };
 
 /** `match` lists extra path prefixes that mark the item as the current section. */
-export type NavItem = { label: string; href: string; match?: string[] };
+export type NavItem = { label: string; href: string; match?: string[]; children?: NavItem[] };
 
 export const mainNav: NavItem[] = [
-  { label: 'Programs', href: '/programs/', match: ['/past-programs/', '/hikam-foundations/'] },
+  {
+    label: 'Programs',
+    href: '/programs/',
+    match: ['/past-programs/', '/hikam-foundations/'],
+    children: [
+      { label: 'Current Courses', href: '/programs/' },
+      { label: 'Past Courses', href: '/past-programs/' },
+      { label: 'Seminary Option', href: '/hikam-foundations/' },
+    ],
+  },
   { label: 'About', href: '/about/', match: ['/through-the-years/'] },
   { label: 'Teachers & Team', href: '/teachers-and-team/' },
 ];

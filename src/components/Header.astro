@@ -27,13 +27,20 @@ const isActive = (item: (typeof nav)[number]) =>
       <ul class="flex items-center gap-2 xl:gap-4">
         {
           nav.map((item) => (
-            <li>
+            <li class="relative group">
               <a
                 href={item.href}
                 aria-current={isActive(item) ? 'page' : undefined}
-                class="relative rounded px-2 py-1.5 text-base text-ink transition-colors hover:text-raspberry aria-[current=page]:text-raspberry xl:px-3 xl:text-[17px]"
+                aria-haspopup={item.children ? 'true' : undefined}
+                class="relative inline-flex items-center gap-1.5 rounded px-2 py-1.5 text-base text-ink transition-colors hover:text-raspberry aria-[current=page]:text-raspberry xl:px-3 xl:text-[17px]"
               >
                 {item.label}
+                {item.children && (
+                  <Icon
+                    name="chevron-down"
+                    class="size-4 text-ink-soft transition-transform group-hover:rotate-180 group-focus-within:rotate-180"
+                  />
+                )}
                 <span
                   aria-hidden="true"
                   class:list={[
@@ -42,6 +49,23 @@ const isActive = (item: (typeof nav)[number]) =>
                   ]}
                 />
               </a>
+              {item.children && (
+                <ul
+                  class="absolute left-0 top-full hidden w-52 pt-2 group-hover:block group-focus-within:block z-50"
+                >
+                  <li class="rounded-card border border-border bg-surface p-1.5 shadow-card">
+                    {item.children.map((child) => (
+                      <a
+                        href={child.href}
+                        aria-current={path === child.href ? 'page' : undefined}
+                        class="block rounded-md px-3 py-2 text-15px text-ink transition-colors hover:bg-canvas hover:text-raspberry aria-[current=page]:font-semibold aria-[current=page]:text-raspberry"
+                      >
+                        {child.label}
+                      </a>
+                    ))}
+                  </li>
+                </ul>
+              )}
             </li>
           ))
         }
@@ -75,13 +99,38 @@ const isActive = (item: (typeof nav)[number]) =>
       {
         nav.map((item) => (
           <li>
-            <a
-              href={item.href}
-              aria-current={isActive(item) ? 'page' : undefined}
-              class="flex min-h-12 items-center border-b border-border/70 text-lg text-ink aria-[current=page]:font-semibold aria-[current=page]:text-raspberry"
-            >
-              {item.label}
-            </a>
+            {item.children ? (
+              <div class="border-b border-border/70 py-2.5">
+                <a
+                  href={item.href}
+                  aria-current={isActive(item) ? 'page' : undefined}
+                  class="flex min-h-9 items-center text-lg text-ink aria-[current=page]:font-semibold aria-[current=page]:text-raspberry"
+                >
+                  {item.label}
+                </a>
+                <ul class="ml-2 mt-1.5 space-y-1 border-l-2 border-gold/40 pl-3">
+                  {item.children.map((child) => (
+                    <li>
+                      <a
+                        href={child.href}
+                        aria-current={path === child.href ? 'page' : undefined}
+                        class="flex min-h-9 items-center text-base text-ink-soft hover:text-raspberry aria-[current=page]:font-semibold aria-[current=page]:text-raspberry"
+                      >
+                        {child.label}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ) : (
+              <a
+                href={item.href}
+                aria-current={isActive(item) ? 'page' : undefined}
+                class="flex min-h-12 items-center border-b border-border/70 text-lg text-ink aria-[current=page]:font-semibold aria-[current=page]:text-raspberry"
+              >
+                {item.label}
+              </a>
+            )}
           </li>
         ))
       }
