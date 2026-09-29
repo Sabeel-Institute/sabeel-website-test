@@ -1,14 +1,16 @@
 ---
-/** Closing call-to-action band: heading and text on the left, buttons on the right. */
+/**
+ * Closing call-to-action band: heading and text on the left, buttons on the
+ * right. The only section in the stronger sage (see Design rules in AGENTS.md).
+ */
 interface Props {
   title: string;
   eyebrow?: string;
-  tone?: 'sage' | 'mist';
 }
-const { title, eyebrow, tone = 'sage' } = Astro.props;
+const { title, eyebrow } = Astro.props;
 ---
 
-<section class:list={['border-t border-border py-12 md:py-14', tone === 'sage' ? 'bg-sage-wash' : 'bg-sage-mist']}>
+<section class="border-t border-border bg-sage-wash py-12 md:py-14">
   <div class="container-page grid items-center gap-6 md:grid-cols-[1.1fr_1fr] md:gap-12">
     <div>
       {eyebrow && <p class="text-[15px] font-bold tracking-[0.04em] text-raspberry uppercase">{eyebrow}</p>}

@@ -287,7 +287,7 @@ Routes: `/`, `/about/`, `/programs/`, `/programs/<slug>/`,
 | `BaseLayout` | Every page. Props: `title`, `description`, `shareImage` |
 | `PageHero` | Page opening: `eyebrow`, `title`, lead text (default slot), `actions` slot, and optionally a photo slot or `media` slot beside the text |
 | `SectionHeading` | Section opening: `eyebrow`, `title`, gold divider; the default slot is aside text on the right |
-| `CtaBand` | Closing band: `title`, optional `eyebrow`, `tone` (`sage` or `mist`), text and an `actions` slot |
+| `CtaBand` | Closing band: `title`, optional `eyebrow`, text and an `actions` slot |
 | `FactsBar` | Labelled facts row (`facts=[{ label, value }]`) |
 | `ProgramCard` | A program teaser (current or completed) |
 | `CurrentPrograms` | Current programs grouped by format |
@@ -339,6 +339,12 @@ belongs in a menu.
   (`border border-gold/60`, often `border-t-4 border-t-gold`) on `bg-surface`.
   Lists of program cards use `card-grid`: up to three to a row, with a short
   last row centred.
+- **Section backgrounds.** Sections sit on ivory, the page background, with no
+  background class; where two ivory sections meet, the lower one has
+  `border-t border-border`. Light sage (`bg-sage-mist`) marks an occasional
+  highlight band: never a page's main content, and never next to another sage
+  band. The stronger sage (`bg-sage-wash`) is only the closing `CtaBand`.
+  `bg-surface` is for cards and panels, never a whole section.
 - **Buttons and links.** `btn btn-primary` for the main action,
   `btn btn-outline` for a secondary one, `link-arrow` with an `arrow-right`
   icon for text links. External registration links open in a new tab with
