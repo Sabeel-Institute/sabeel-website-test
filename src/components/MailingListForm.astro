@@ -1,7 +1,13 @@
 ---
 /**
- * Newsletter / interest-list signup. Posts to the Mailchimp form in
- * site.config.ts; without one, it opens a pre-filled email instead.
+ * Newsletter / interest-list signup, styled as part of the site.
+ *
+ * The newsletter form submits to the Mailchimp embedded form in
+ * site.config.ts in the background and shows Mailchimp's reply under the
+ * button; without JavaScript it posts to Mailchimp in a new tab. The
+ * interest-list form (withInterests), and the newsletter form while no
+ * Mailchimp form is set, open a pre-filled email instead: the Mailchimp form
+ * has no field for program areas.
  */
 import { site, areas } from '../site.config';
 
@@ -13,7 +19,11 @@ interface Props {
   tone?: 'light' | 'dark';
 }
 const { id, withInterests = false, submitLabel = 'Sign Up', tone = 'light' } = Astro.props;
-const action = site.mailingListAction;
+const action = withInterests ? null : site.mailingListAction;
+// Mailchimp's anti-spam field, named after the account and audience ids in
+// the form's URL. People never see it; bots that fill it in are ignored.
+const params = action ? new URL(action).searchParams : undefined;
+const honeypot = params && `b_${params.get('u')}_${params.get('id')}`;
 ---
 
 <form
@@ -22,6 +32,7 @@ const action = site.mailingListAction;
   action={action ?? `mailto:${site.email}`}
   target={action ? '_blank' : undefined}
   data-mailing-list
+  data-mailchimp={action ? '' : undefined}
   data-fallback-email={action ? undefined : site.email}
 >
   {
@@ -56,7 +67,7 @@ const action = site.mailingListAction;
     <button
       type="submit"
       class:list={[
-        'min-h-[52px] shrink-0 rounded-r-[10px] px-5 text-[15px] font-medium transition-colors',
+        'min-h-[52px] shrink-0 rounded-r-[10px] px-5 text-[15px] font-medium transition-colors disabled:cursor-wait disabled:opacity-80',
         tone === 'dark'
           ? 'border border-gold bg-transparent text-on-raspberry hover:bg-on-raspberry hover:text-raspberry'
           : 'bg-raspberry text-on-raspberry hover:bg-raspberry-deep',
@@ -65,6 +76,23 @@ const action = site.mailingListAction;
       {submitLabel}
     </button>
   </div>
+  {
+    honeypot && (
+      <div aria-hidden="true" class="absolute -left-[5000px]">
+        <input type="text" name={honeypot} tabindex="-1" value="" autocomplete="off" />
+      </div>
+    )
+  }
+  {
+    action && (
+      <p
+        role="status"
+        data-reply
+        hidden
+        class:list={['text-[15px] leading-relaxed', tone === 'dark' ? 'text-on-raspberry' : 'text-ink']}
+      />
+    )
+  }
 </form>
 
 <script>
@@ -78,6 +106,70 @@ const action = site.mailingListAction;
       if (interests.length) lines.push(`Interested in: ${interests.join(', ')}.`);
       const subject = encodeURIComponent(interests.length ? 'Program interest list' : 'Newsletter subscription');
       window.location.href = `mailto:${form.dataset.fallbackEmail}?subject=${subject}&body=${encodeURIComponent(lines.join('\n'))}`;
+    });
+  }
+
+  // Mailchimp's JSONP endpoint (post-json) answers with a script, which lets a
+  // static site show the reply without leaving the page.
+  type Reply = { result: 'success' | 'error'; msg: string };
+  const callbacks = window as unknown as Record<string, ((reply: Reply) => void) | undefined>;
+
+  function subscribe(form: HTMLFormElement): Promise<Reply> {
+    return new Promise((resolve, reject) => {
+      const callback = `mailchimpReply${Date.now()}`;
+      const url = new URL(form.action.replace('/subscribe/post?', '/subscribe/post-json?'));
+      for (const [key, value] of new FormData(form)) url.searchParams.append(key, String(value));
+      url.searchParams.set('c', callback);
+      const script = document.createElement('script');
+      const cleanup = () => {
+        clearTimeout(timer);
+        delete callbacks[callback];
+        script.remove();
+      };
+      const timer = setTimeout(() => {
+        cleanup();
+        reject(new Error('timeout'));
+      }, 15000);
+      callbacks[callback] = (reply) => {
+        cleanup();
+        resolve(reply);
+      };
+      script.onerror = () => {
+        cleanup();
+        reject(new Error('network'));
+      };
+      script.src = url.href;
+      document.head.append(script);
+    });
+  }
+
+  // Mailchimp's messages can carry HTML and a field number ("0 - ...").
+  function wording(reply: Reply): string {
+    const text = reply.msg.replace(/<[^>]*>/g, '').replace(/^\d+ - /, '').trim();
+    if (reply.result === 'success') return text;
+    if (/already subscribed/i.test(text)) return 'You’re already subscribed. Thank you!';
+    if (/too many/i.test(text)) return 'Too many sign-up attempts for this address. Please try again in a few minutes.';
+    return text;
+  }
+
+  for (const form of document.querySelectorAll<HTMLFormElement>('form[data-mailchimp]')) {
+    const button = form.querySelector<HTMLButtonElement>('button[type="submit"]')!;
+    const reply = form.querySelector<HTMLElement>('[data-reply]')!;
+    const label = button.textContent;
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      button.disabled = true;
+      button.textContent = 'Sending…';
+      try {
+        const answer = await subscribe(form);
+        reply.textContent = wording(answer);
+        if (answer.result === 'success') form.reset();
+      } catch {
+        reply.textContent = 'Sorry, that didn’t go through. Please try again in a moment.';
+      }
+      reply.hidden = false;
+      button.disabled = false;
+      button.textContent = label;
     });
   }
 </script>
