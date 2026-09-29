@@ -4,6 +4,8 @@ honorific: Ust.
 group: teachers
 order: 20
 listed: true
+highlights:
+- ‘Alimiyyah, New York
 ---
 
-Zainab Fatima has completed her ‘Alimiyyah degree and serves on Sabeel’s teaching team.
+Zainab Fatima completed her ‘Alimiyyah degree in New York and serves on Sabeel’s teaching team.

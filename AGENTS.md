@@ -224,7 +224,7 @@ under the role), `highlights`, and `listed` (`false` hides the person).
 `highlights` lists credentials only: the Sabeel
 certificate or studies and any other degree, one per line, as “credential,
 institution” (`‘Alimiyyah, Institute of Islamic Education`,
-`Three years of Islamic studies, Sabeel`). The body is the bio; a listed
+`Classical Islamic Knowledge certificate, Sabeel`). The body is the bio; a listed
 person with a bio gets `/teachers-and-team/<name>/`. Refer to people in
 programs by file name under `instructors`.
 
