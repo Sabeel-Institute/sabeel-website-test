@@ -264,7 +264,9 @@ the rest of Mailchimp's embed code, its CSS and scripts, is not used. The
 newsletter form (`MailingListForm`) keeps the site's own styling, submits to
 that URL in the background, and shows Mailchimp's reply under the button. The
 Mailchimp form must require only the email address, and reCAPTCHA must be off
-for it. While `mailingListAction` is `null`, and always for the interest-list
+for it: the site's form cannot show Mailchimp's reCAPTCHA. Choosing double
+opt-in in the audience settings switches reCAPTCHA on, so switch it off again
+after. While `mailingListAction` is `null`, and always for the interest-list
 form, signing up opens a pre-filled email to the organisation.
 
 ## Pages and components

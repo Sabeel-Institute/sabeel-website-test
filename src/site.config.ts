@@ -34,7 +34,8 @@ export const site = {
    * copied from the form's embed code. The newsletter form submits to it; while
    * null, it opens a pre-filled email. The interest-list form always opens one.
    */
-  mailingListAction: null as string | null,
+  mailingListAction:
+    'https://sameerainstitute.us5.list-manage.com/subscribe/post?u=6a6627c0893dce014d27d385b&id=6e808d03f1&f_id=00cd47edf0' as string | null,
   /** Hikam Foundations program overview PDF; the download button hides while null. */
   hikamOverviewPdf: null as string | null,
 } as const;
