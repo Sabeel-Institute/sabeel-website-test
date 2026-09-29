@@ -47,7 +47,7 @@ const past = await getCompletedPrograms(id);
         upcoming.length > 0 && (
           <div class="mt-12">
             <h3 class="border-b border-gold/60 pb-3 font-display text-[1.75rem] font-bold text-raspberry">Coming soon</h3>
-            <ul class="mt-6 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+            <ul class="card-grid mt-6">
               {upcoming.map((p) => (
                 <li>
                   <ProgramCard program={p} headingLevel="h4" />

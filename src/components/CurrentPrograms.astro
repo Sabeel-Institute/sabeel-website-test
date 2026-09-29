@@ -42,9 +42,9 @@ const groups = PROGRAM_FORMATS.map((format) => ({
             {g.text} · {g.items.length} {g.items.length === 1 ? 'program' : 'programs'}
           </p>
         </div>
-        <ul class="mt-6 flex flex-wrap justify-center gap-5">
+        <ul class="card-grid mt-6">
           {g.items.map((p) => (
-            <li class="w-full md:w-[calc((100%-1.25rem)/2)] lg:w-[calc((100%-2.5rem)/3)]">
+            <li>
               <ProgramCard program={p} headingLevel={cardLevel} />
             </li>
           ))}
