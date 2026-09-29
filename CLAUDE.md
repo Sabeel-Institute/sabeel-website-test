@@ -28,8 +28,8 @@
   hidden frame on every page view, and its pop-up has no dialog role or
   focus handling. The plain embed scrolls inside a fixed-height frame. Its
   `?modal=true` variant adds a close button on narrow screens, which this
-  dialog provides itself. Zeffy takes no amount or fund from a link, so
-  donors choose both in its form.
+  dialog provides itself. Zeffy takes no amount from a link, so donors
+  choose it in its form.
 - `dateApprox: true` marks programs whose year is inferred rather than
   printed on the flyer; pages show only the year for them.
 - `firebase.json` redirects other addresses for these pages (`/courses/`,

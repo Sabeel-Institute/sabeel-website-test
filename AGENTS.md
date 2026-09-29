@@ -277,8 +277,7 @@ form, signing up opens a pre-filled email to the organisation.
 `zeffyCampaign`, at the top of the file, is the name at the end of the Zeffy
 donation campaign's links (`https://www.zeffy.com/en-US/donation-form/<name>`).
 The Support page's Donate button opens that campaign's form in a dialog, where
-donors choose the amount, how often to give, and the fund. The funds set up in
-Zeffy must match `designations` in `src/pages/support.astro`.
+donors choose the amount and how often to give.
 
 ## Pages and components
 
