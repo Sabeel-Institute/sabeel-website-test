@@ -1,0 +1,128 @@
+---
+/**
+ * Completed programs as flyers, one tab per year, newest year first. A flyer
+ * opens in the shared Lightbox (the page includes it) and steps through the
+ * flyers of its year; each title links to the program's page. A program
+ * without a flyer shows the geometric panel in its place.
+ */
+import { Image, getImage } from 'astro:assets';
+import Photo from './Photo.astro';
+import { areas } from '../site.config';
+import { programHref, programYear, type Program } from '../lib/content';
+
+interface Props {
+  /** Completed programs, in the order to show them within a year. */
+  programs: Program[];
+  /** Prefix for element ids and lightbox groups; unique on the page. */
+  id: string;
+  /** Name each program's area above its title, for archives across areas. */
+  showArea?: boolean;
+}
+
+const { programs, id, showArea = false } = Astro.props;
+const years = [...new Set(programs.map(programYear))].sort((a, b) => b - a);
+const items = await Promise.all(
+  programs.map(async (program) => ({
+    program,
+    year: programYear(program),
+    href: programHref(program),
+    // The same size program pages open in the Lightbox, so the file is shared.
+    full: program.data.flyer ? await getImage({ src: program.data.flyer, width: 1600 }) : undefined,
+  })),
+);
+---
+
+<div data-year-tabs>
+  <div role="tablist" aria-label="Year" class="flex flex-wrap justify-center gap-2 md:gap-3">
+    {
+      years.map((year, i) => (
+        <button
+          type="button"
+          role="tab"
+          id={`${id}-tab-${year}`}
+          aria-controls={`${id}-${year}`}
+          aria-selected={i === 0 ? 'true' : 'false'}
+          tabindex={i === 0 ? 0 : -1}
+          class="min-h-11 rounded-full border border-gold/60 bg-surface px-5 font-display text-lg font-bold text-ink-soft transition-colors hover:border-gold hover:text-raspberry aria-selected:border-raspberry aria-selected:bg-raspberry aria-selected:text-on-raspberry"
+        >
+          {year}
+        </button>
+      ))
+    }
+  </div>
+  {
+    years.map((year, i) => (
+      <div id={`${id}-${year}`} role="tabpanel" aria-labelledby={`${id}-tab-${year}`} hidden={i !== 0} class="mt-10">
+        <ul class="grid gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+          {items
+            .filter((item) => item.year === year)
+            .map(({ program, href, full }) => {
+              const { title, flyer, area } = program.data;
+              return (
+                <li class="flex flex-col overflow-hidden rounded-card border border-gold/60 bg-surface shadow-card">
+                  {flyer && full ? (
+                    <a
+                      href={full.src}
+                      data-lightbox={`${id}-${year}`}
+                      data-title={title}
+                      data-caption={`${year} · ${areas[area].label}`}
+                      data-page={href}
+                      data-alt={`Flyer for ${title}`}
+                      class="block aspect-[3/4] bg-canvas p-3"
+                    >
+                      <Image
+                        src={flyer}
+                        alt={`Flyer for ${title}`}
+                        widths={[320, 640]}
+                        sizes="(min-width: 1024px) 25vw, (min-width: 768px) 33vw, (min-width: 640px) 50vw, 100vw"
+                        class="size-full object-contain"
+                      />
+                    </a>
+                  ) : (
+                    <div class="aspect-[3/4] bg-canvas p-3">
+                      <Photo alt="" class="size-full" />
+                    </div>
+                  )}
+                  <div class="flex-1 border-t border-gold/40 p-4">
+                    {showArea && <p class="eyebrow text-xs">{areas[area].label}</p>}
+                    <h3 class:list={['font-display text-xl leading-tight font-bold text-raspberry', showArea && 'mt-1']}>
+                      <a href={href} class="hover:underline">
+                        {title}
+                      </a>
+                    </h3>
+                  </div>
+                </li>
+              );
+            })}
+        </ul>
+      </div>
+    ))
+  }
+</div>
+
+<script>
+  // Tabs as the ARIA tabs pattern describes: click or Enter picks a year;
+  // the arrow keys, Home, and End move between years.
+  for (const root of document.querySelectorAll<HTMLElement>('[data-year-tabs]')) {
+    const tabs = [...root.querySelectorAll<HTMLButtonElement>('[role="tab"]')];
+    const select = (tab: HTMLButtonElement) => {
+      for (const t of tabs) {
+        const on = t === tab;
+        t.setAttribute('aria-selected', String(on));
+        t.tabIndex = on ? 0 : -1;
+        document.getElementById(t.getAttribute('aria-controls')!)!.hidden = !on;
+      }
+    };
+    root.querySelector('[role="tablist"]')!.addEventListener('keydown', (e) => {
+      const key = (e as KeyboardEvent).key;
+      const at = tabs.indexOf(document.activeElement as HTMLButtonElement);
+      const to = { ArrowRight: at + 1, ArrowLeft: at - 1, Home: 0, End: tabs.length - 1 }[key];
+      if (at < 0 || to === undefined) return;
+      e.preventDefault();
+      const tab = tabs[(to + tabs.length) % tabs.length]!;
+      tab.focus();
+      select(tab);
+    });
+    for (const tab of tabs) tab.addEventListener('click', () => select(tab));
+  }
+</script>
