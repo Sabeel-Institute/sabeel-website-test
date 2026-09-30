@@ -11,9 +11,8 @@ import SectionHeading from '../components/SectionHeading.astro';
 import Divider from '../components/Divider.astro';
 import Icon from '../components/Icon.astro';
 import FactsBar from '../components/FactsBar.astro';
-import ProgramCard from '../components/ProgramCard.astro';
 import { site } from '../site.config';
-import { STATUS_LABEL, getCompletedPrograms, getCurrentPrograms, programHref, startLabel } from '../lib/content';
+import { STATUS_LABEL, getCurrentPrograms, programHref, startLabel } from '../lib/content';
 
 const intake = (await getEntry('programs', 'hikam-foundations-2026'))!;
 const d = intake.data;
@@ -21,7 +20,6 @@ const start = startLabel(intake);
 const formatLabel = d.format;
 const applyUrl = d.status === 'open' || d.status === 'ongoing' ? d.registerUrl : undefined;
 const testimonials = (await getCollection('testimonials')).filter((t) => t.data.program === 'Certification Program');
-const pastCohorts = await getCompletedPrograms('hikam-foundations');
 const prep = (await getCurrentPrograms()).find((p) => p.data.title.startsWith('Quran Immersion'));
 const askHref = `/contact/?inquiry=program&program=${encodeURIComponent('Hikam Foundations')}`;
 
@@ -318,24 +316,9 @@ const faqs = [
           ))
         }
       </div>
+      <a href="/past-programs/" class="link-arrow mt-8">
+        See past cohorts in Past Programs <Icon name="arrow-right" class="size-5" />
+      </a>
     </div>
   </section>
-
-  <!-- Past cohorts -->
-  {
-    pastCohorts.length > 0 && (
-      <section id="past" class="scroll-mt-6 border-t border-border py-14 md:py-16" aria-labelledby="past-heading">
-        <div class="container-page">
-          <SectionHeading eyebrow="Program archive" title="Past cohorts" id="past-heading" />
-          <ul class="card-grid mt-10">
-            {pastCohorts.map((p) => (
-              <li>
-                <ProgramCard program={p} />
-              </li>
-            ))}
-          </ul>
-        </div>
-      </section>
-    )
-  }
 </BaseLayout>
