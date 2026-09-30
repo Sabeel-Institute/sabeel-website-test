@@ -232,14 +232,22 @@ program image is not 16:9. Until a program has its own, its image can be a
 guidance is the `sabeel-flyers` skill in
 [Sabeel-Institute/brand](https://github.com/Sabeel-Institute/brand).
 
+Both are stored as WebP (`flyer.webp`, `image.webp`). To convert a JPG or PNG,
+run this from the repository root:
+
+```bash
+node -e "require('sharp')(process.argv[1]).webp({ quality: 90 }).toFile(process.argv[2])" flyer.png src/content/programs/<name>/flyer.webp
+```
+
 ### Recipes
 
 **Add a program.**
 1. Copy the most similar current program folder and rename it (see the
    naming rule under Programs).
-2. In `index.md`, set every field the status needs (see Fields), copying
-   names, dates, fees, and the registration link exactly as the organisation
-   gives them.
+2. In `index.md`, set `status` (`upcoming` until registration opens, then
+   `open`) and every field that status needs (see Fields), copying names,
+   dates, fees, and the registration link exactly as the organisation gives
+   them.
 3. Replace `flyer.webp` with the new flyer and `image.webp` with the new
    program image (see Program images), and rewrite `imageAlt`. Without a
    program image, delete the file and both fields: the card then has no
@@ -254,7 +262,8 @@ guidance is the `sabeel-flyers` skill in
 **Recurring gathering** (for example Anchored Hearts): edit the same folder
 each cycle: `date`, `starts`, `registerUrl`, instructors, and the “This
 month” text. Replace `flyer.webp` with the new flyer under the same name, and
-`image.webp` too if the artwork changed.
+`image.webp` too if the artwork changed. The folder always describes the next
+session; earlier sessions are not kept.
 
 **Archive-only record** (a past program that only has a flyer): a folder with
 `status: completed`, `title`, `area`, `date` (plus `dateApprox: true` if only
@@ -275,8 +284,8 @@ Front matter: `name`, `honorific` (`Ustadhah`, `Ust.`, `Sr.`, `Br.`, `Dr.`),
 `group` (`founder`, `board`, `teachers`, `volunteers`), `order` (ascending
 within the group; use steps of 10), optional `role`, `sub` (a second line
 under the role), `highlights`, and `listed` (`false` hides the person).
-`highlights` lists credentials only (certificates, degrees, studies, never
-roles or jobs), one per line, as “credential, institution”
+`highlights` lists up to three credentials (certificates, degrees, studies,
+never roles or jobs), one per line, as “credential, institution”
 (`‘Alimiyyah, Institute of Islamic Education`,
 `Classical Islamic Knowledge certificate, Sabeel`). The body is the bio; a listed
 person with a bio gets `/teachers-and-team/<name>/`. Refer to people in
@@ -364,11 +373,11 @@ form, signing up opens a pre-filled email to the organisation.
 donation campaign's links (`https://www.zeffy.com/en-US/donation-form/<name>`).
 The Support page's Donate buttons open that campaign's form in a dialog, where
 donors choose the amount and how often to give. The suggested amounts,
-frequencies, and the form's colour are set in the campaign editor on
-zeffy.com and need no change here; change `zeffyCampaign` only to switch to
-another campaign. `zelle` and `taxId` appear on the Support page. Donors do
-not choose a fund: every gift supports both priorities the Support page
-describes, so do not add a choice of fund.
+frequencies, and the form's colour are set in the campaign editor on zeffy.com
+(the organisation's Zeffy account) and need no change here; change
+`zeffyCampaign` only to switch to another campaign. `zelle` and `taxId` appear
+on the Support page. Donors do not choose a fund: every gift supports both
+priorities the Support page describes, so do not add a choice of fund.
 
 ## Pages and components
 
