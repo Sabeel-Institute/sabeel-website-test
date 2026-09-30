@@ -17,7 +17,7 @@ outcomes:
   - How these qualities help us grow in faith and character
   - What ihsān means for our relationship with Allah and the way we live
 image: ./image.webp
-imageAlt: Journey to Excellence course banner
+imageAlt: "Title artwork: Journey to Excellence"
 flyer: ./flyer.webp
 ---
 

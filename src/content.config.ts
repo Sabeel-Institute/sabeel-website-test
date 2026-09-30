@@ -80,10 +80,13 @@ const programs = defineCollection({
       expect: z.string().min(1).optional(),
       /** Attendance, refunds, recording, accessibility, safeguarding. */
       policies: z.string().min(1).optional(),
-      /** A photograph for the top of the page (not the flyer). */
+      /**
+       * The program image: a 16:9 photograph or artwork (1920 × 1080 px), shown
+       * on its card, at the top of its page, and in link previews.
+       */
       image: image().optional(),
       imageAlt: z.string().min(1).optional(),
-      /** The original flyer, shown lower on the page. */
+      /** The original flyer, US Letter portrait (2550 × 3300 px), shown lower on the page. */
       flyer: image().optional(),
       /**
        * Bespoke page path (e.g. "/hikam-foundations/"). When set, listings link

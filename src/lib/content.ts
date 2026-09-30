@@ -95,6 +95,19 @@ export function assertBespokePages(programs: Program[]): void {
   }
 }
 
+/** Program images are 16:9 (see Program images in AGENTS.md). */
+export function assertProgramImages(programs: Program[]): void {
+  for (const p of programs) {
+    const img = p.data.image;
+    if (img && Math.abs(img.width / img.height - 16 / 9) > 0.02) {
+      throw new Error(
+        `Program "${p.id}" has an image of ${img.width} × ${img.height} px, which is not 16:9. ` +
+          'Use a 16:9 image, for example 1920 × 1080 px (see Program images in AGENTS.md).',
+      );
+    }
+  }
+}
+
 /* ---------- Team ---------- */
 
 export async function getTeamGroup(group: TeamMember['data']['group']): Promise<TeamMember[]> {
