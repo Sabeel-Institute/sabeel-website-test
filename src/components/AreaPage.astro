@@ -1,5 +1,5 @@
 ---
-/** Program-area page: what is open now in the area and what is coming soon. */
+/** Program-area page: what is open now in the area, what is coming soon, and what is running with registration closed. */
 import BaseLayout from '../layouts/BaseLayout.astro';
 import PageHero from './PageHero.astro';
 import SectionHeading from './SectionHeading.astro';
@@ -7,7 +7,7 @@ import ProgramCard from './ProgramCard.astro';
 import CtaBand from './CtaBand.astro';
 import CurrentPrograms from './CurrentPrograms.astro';
 import { areas, type AreaId } from '../site.config';
-import { getCurrentPrograms, getUpcomingPrograms } from '../lib/content';
+import { STATUS_LABEL, getClosedPrograms, getCurrentPrograms, getUpcomingPrograms } from '../lib/content';
 
 interface Props {
   area: AreaId;
@@ -16,7 +16,10 @@ interface Props {
 const { area: id, intro } = Astro.props;
 const area = areas[id];
 const current = await getCurrentPrograms(id);
-const upcoming = await getUpcomingPrograms(id);
+const notJoinable = [
+  { title: STATUS_LABEL.upcoming, programs: await getUpcomingPrograms(id) },
+  { title: STATUS_LABEL.closed, programs: await getClosedPrograms(id) },
+].filter((l) => l.programs.length > 0);
 ---
 
 <BaseLayout title={area.label} description={area.description}>
@@ -41,18 +44,18 @@ const upcoming = await getUpcomingPrograms(id);
         )
       }
       {
-        upcoming.length > 0 && (
+        notJoinable.map((l) => (
           <div class="mt-12">
-            <h3 class="border-b border-gold/60 pb-3 font-display text-[1.75rem] font-bold text-raspberry">Coming soon</h3>
+            <h3 class="border-b border-gold/60 pb-3 font-display text-[1.75rem] font-bold text-raspberry">{l.title}</h3>
             <ul class="card-grid mt-6">
-              {upcoming.map((p) => (
+              {l.programs.map((p) => (
                 <li>
                   <ProgramCard program={p} headingLevel="h4" />
                 </li>
               ))}
             </ul>
           </div>
-        )
+        ))
       }
     </div>
   </section>

@@ -8,10 +8,26 @@ import Collage from '../../components/Collage.astro';
 import CtaBand from '../../components/CtaBand.astro';
 import Icon from '../../components/Icon.astro';
 import { areas } from '../../site.config';
-import { getCurrentPrograms, getUpcomingPrograms, programHref, startLabel } from '../../lib/content';
+import {
+  STATUS_LABEL,
+  getClosedPrograms,
+  getCurrentPrograms,
+  getUpcomingPrograms,
+  programHref,
+  startLabel,
+  type Program,
+} from '../../lib/content';
 
 const current = await getCurrentPrograms();
-const upcoming = await getUpcomingPrograms();
+/** Programs people cannot join now, each listed with what to know about it. */
+const notJoinable = [
+  {
+    label: STATUS_LABEL.upcoming,
+    programs: await getUpcomingPrograms(),
+    detail: (p: Program) => `${p.data.duration ? `${p.data.duration} · ` : ''}Starts ${startLabel(p)}`,
+  },
+  { label: STATUS_LABEL.closed, programs: await getClosedPrograms(), detail: (p: Program) => p.data.duration },
+].filter((l) => l.programs.length > 0);
 ---
 
 <BaseLayout
@@ -49,16 +65,16 @@ const upcoming = await getUpcomingPrograms();
         )
       }
       {
-        upcoming.length > 0 && (
+        notJoinable.map((l) => (
           <div class="mt-8 rounded-card border border-gold/60 bg-surface p-6">
-            <p class="text-[13px] font-bold tracking-[0.06em] text-gold-text uppercase">Coming soon</p>
+            <p class="text-[13px] font-bold tracking-[0.06em] text-gold-text uppercase">{l.label}</p>
             <ul class="mt-3 divide-y divide-border">
-              {upcoming.map((p) => (
+              {l.programs.map((p) => (
                 <li class="flex flex-wrap items-center justify-between gap-3 py-3">
                   <span>
                     <span class="font-display text-xl font-bold text-raspberry">{p.data.title}</span>
                     <span class="text-ink-soft">
-                      {areas[p.data.area].label !== p.data.title && ` · ${areas[p.data.area].label}`} · {p.data.duration && `${p.data.duration} · `}Starts {startLabel(p)}
+                      {areas[p.data.area].label !== p.data.title && ` · ${areas[p.data.area].label}`} · {l.detail(p)}
                     </span>
                   </span>
                   <a href={programHref(p)} class="link-arrow text-[15px]">
@@ -68,7 +84,7 @@ const upcoming = await getUpcomingPrograms();
               ))}
             </ul>
           </div>
-        )
+        ))
       }
     </div>
   </section>

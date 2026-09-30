@@ -102,6 +102,8 @@ const programs = defineCollection({
     const open = z.object({ ...fields, status: z.literal('open') });
     /** A running series people can still join. */
     const ongoing = z.object({ ...fields, status: z.literal('ongoing') });
+    /** Registration has closed; the program is still running. */
+    const closed = z.object({ ...fields, status: z.literal('closed'), registerUrl: fields.registerUrl.optional() });
     /** Announced; registration not open yet. */
     const upcoming = z.object({
       ...fields,
@@ -126,7 +128,7 @@ const programs = defineCollection({
       fee: fields.fee.optional(),
       registerUrl: fields.registerUrl.optional(),
     });
-    return z.discriminatedUnion('status', [open, ongoing, upcoming, completed]).superRefine((d, ctx) => {
+    return z.discriminatedUnion('status', [open, ongoing, closed, upcoming, completed]).superRefine((d, ctx) => {
       if (d.image && !d.imageAlt) {
         ctx.addIssue({ code: 'custom', path: ['imageAlt'], message: 'imageAlt is required when image is set' });
       }

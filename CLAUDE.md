@@ -3,8 +3,9 @@
 ## Maintainer notes
 
 - Program entries use a discriminated union on `status`
-  (`src/content.config.ts`); open and ongoing programs fail the build if a
-  listing field is missing. Folder names are validated in `generateId`, and
+  (`src/content.config.ts`); open, ongoing, and closed programs fail the
+  build if a listing field is missing (`registerUrl` is optional once
+  closed). Folder names are validated in `generateId`, and
   `womens-learning` / `youth-children` are reserved for the area pages.
 - `assertBespokePages` (`src/lib/content.ts`) runs while program pages are
   generated and fails the build when a `page:` value has no matching file in

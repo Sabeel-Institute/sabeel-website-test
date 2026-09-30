@@ -41,7 +41,7 @@ field.
 
 | Task | What to do |
 |---|---|
-| Announce, open, or end a program | Set its `status` (see Status). Listings update themselves |
+| Announce, open, close, or end a program | Set its `status` (see Status). Listings update themselves |
 | Add a program | Programs → Recipes → Add a program |
 | New session of a monthly gathering | Programs → Recipes → Recurring gathering |
 | Images from the program's designers | Programs → Program images |
@@ -125,8 +125,11 @@ stateDiagram-v2
   upcoming --> open: registration opens
   [*] --> open
   open --> ongoing: series underway, still joinable
+  open --> closed: registration closes, program continues
+  ongoing --> closed
   open --> completed
   ongoing --> completed
+  closed --> completed
   upcoming --> completed
   completed --> [*]
 ```
@@ -135,13 +138,15 @@ stateDiagram-v2
 |---|---|---|---|---|
 | `open` | Registration is open | Registration open | Home, Programs, its area page | Register buttons (`registerUrl`) |
 | `ongoing` | A series has begun and people can still join | Ongoing series | Same places, after open programs | Register buttons |
+| `closed` | Registration has closed; the program is still running | Registration closed | “Registration closed” on Programs and its area page | Join the Interest List |
 | `upcoming` | Announced; registration is not open yet | Coming soon | “Coming soon” on Programs and its area page | Join the Interest List |
 | `completed` | The program has ended | Program completed | Past Programs | Join the Interest List; kept as a record |
 
-Current programs are listed open before ongoing, latest start date first;
-the home page shows the first three. When a program ends,
-change only `status` to `completed` and keep every other field: its page stays
-up, its registration buttons go, and shared links keep working.
+Current programs (open and ongoing) are listed open before ongoing, latest
+start date first; the home page shows the first three. When registration
+closes before a program ends, change only `status` to `closed`; when a program
+ends, change only `status` to `completed`. Keep every other field: the page
+stays up, its registration buttons go, and shared links keep working.
 
 ### Format
 
@@ -180,6 +185,7 @@ not copy it as a pattern or take conventions from it.
 
 Required for `open` and `ongoing`: `title`, `summary`, `area`, `date`,
 `audience`, `schedule`, `format`, `venue`, `duration`, `fee`, `registerUrl`.
+`closed` needs the same except `registerUrl`.
 `upcoming` needs `title`, `summary`, `area`, `date`, `audience`.
 `completed` needs `title`, `area`, `date`. Everything else is optional.
 
@@ -256,6 +262,9 @@ node -e "require('sharp')(process.argv[1]).webp({ quality: 90 }).toFile(process.
    fields.
 5. Run `npm run build`, then check the program page, Programs, its area page,
    and (for an open program) the home page in `npm run dev`.
+
+**Close registration early.** When registration closes while the program is
+still running, change only `status` to `closed`.
 
 **Retire a program.** Change only `status` to `completed`.
 
@@ -410,9 +419,10 @@ Routes: `/`, `/about/`, `/programs/`, `/programs/<slug>/`,
 | `Divider`, `Icon` | Gold diamond divider; inline icons (add new ones to `Icon.astro` using Lucide paths) |
 
 Queries and helpers in `src/lib/content.ts`: `getCurrentPrograms(area?)`,
-`getUpcomingPrograms(area?)`, `getCompletedPrograms(area?)`, `programHref`,
-`STATUS_LABEL`, `startLabel`, `programYear`, `resolveInstructors`,
-`getTeamGroup`, `displayName`, `teamHasPage`, `excerpt`.
+`getUpcomingPrograms(area?)`, `getClosedPrograms(area?)`,
+`getCompletedPrograms(area?)`, `programHref`, `STATUS_LABEL`, `startLabel`,
+`programYear`, `resolveInstructors`, `getTeamGroup`, `displayName`,
+`teamHasPage`, `excerpt`.
 
 **A new page** is a file in `src/pages/` wrapped in `BaseLayout`, opening with
 `PageHero`, with sections that open with `SectionHeading`, and ending with a
