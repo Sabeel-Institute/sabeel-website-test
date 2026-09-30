@@ -171,7 +171,7 @@ const milestones = defineCollection({
     year: z.string().min(1).optional(),
     title: z.string().min(1),
     text: z.string().min(1),
-    /** A related program record; its flyer or photo illustrates the milestone. */
+    /** A related program record; its program image, or else its flyer, illustrates the milestone. */
     program: reference('programs').optional(),
   }),
 });
