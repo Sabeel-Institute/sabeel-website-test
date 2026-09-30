@@ -1,15 +1,13 @@
 ---
-/** Program-area page: what is open now in the area, then its past programs' flyers by year. */
+/** Program-area page: what is open now in the area and what is coming soon. */
 import BaseLayout from '../layouts/BaseLayout.astro';
 import PageHero from './PageHero.astro';
 import SectionHeading from './SectionHeading.astro';
 import ProgramCard from './ProgramCard.astro';
 import CtaBand from './CtaBand.astro';
 import CurrentPrograms from './CurrentPrograms.astro';
-import FlyerArchive from './FlyerArchive.astro';
-import Lightbox from './Lightbox.astro';
 import { areas, type AreaId } from '../site.config';
-import { getCompletedPrograms, getCurrentPrograms, getUpcomingPrograms } from '../lib/content';
+import { getCurrentPrograms, getUpcomingPrograms } from '../lib/content';
 
 interface Props {
   area: AreaId;
@@ -19,7 +17,6 @@ const { area: id, intro } = Astro.props;
 const area = areas[id];
 const current = await getCurrentPrograms(id);
 const upcoming = await getUpcomingPrograms(id);
-const past = await getCompletedPrograms(id);
 ---
 
 <BaseLayout title={area.label} description={area.description}>
@@ -60,24 +57,9 @@ const past = await getCompletedPrograms(id);
     </div>
   </section>
 
-  {
-    past.length > 0 && (
-      <section id="past" class="scroll-mt-6 border-t border-border py-14 md:py-16" aria-labelledby="past-heading">
-        <div class="container-page">
-          <SectionHeading eyebrow="Program archive" title="Past programs" id="past-heading">
-            <p>{area.archiveText}</p>
-          </SectionHeading>
-          <div class="mt-10">
-            <FlyerArchive programs={past} id="past" />
-          </div>
-        </div>
-      </section>
-    )
-  }
-
   <CtaBand title="Looking for something else?">
-    <p>See everything open for registration across all three program areas.</p>
+    <p>See everything open for registration across all three program areas, or look back at past programs.</p>
     <a slot="actions" href="/programs/" class="btn btn-primary px-7 text-base">View All Programs</a>
+    <a slot="actions" href="/past-programs/" class="btn btn-outline px-6 text-base">Past Programs</a>
   </CtaBand>
-  <Lightbox />
 </BaseLayout>

@@ -117,7 +117,7 @@ stateDiagram-v2
 | `open` | Registration open | Home (first three), Programs, its area page |
 | `ongoing` | Ongoing series | Same places, after open programs |
 | `upcoming` | Coming soon | “Coming soon” on Programs and its area page |
-| `completed` | Program completed | Past Programs, its area page’s archive; its own page stays up as a record |
+| `completed` | Program completed | Past Programs; its own page stays up as a record |
 
 When a program ends, change only `status` to `completed`. Its page stays,
 registration buttons disappear, and shared links keep working.
