@@ -9,6 +9,10 @@
 - `assertBespokePages` (`src/lib/content.ts`) runs while program pages are
   generated and fails the build when a `page:` value has no matching file in
   `src/pages/`.
+- `assertProgramImages` (`src/lib/content.ts`) runs in the same place and
+  fails the build when a program's `image` is not 16:9 (within 0.02). It
+  cannot be a schema rule: `image()` does not know an image's size when the
+  schema is checked.
 - `src/assets/images/logo.png` is `sabeel-logo.png` from the brand
   repository (`skills/sabeel-brand/logo/`), scaled to 1600 px wide.
   `public/icon-*.png` are its `sabeel-icon.png` design: the calligraphy

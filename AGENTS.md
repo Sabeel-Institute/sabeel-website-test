@@ -37,6 +37,25 @@ npm run preview   # serve the built dist/
 against the schemas in `src/content.config.ts`, and errors name the file and
 field.
 
+## Everyday tasks
+
+| Task | What to do |
+|---|---|
+| Announce, open, or end a program | Set its `status` (see Status). Listings update themselves |
+| Add a program | Programs → Recipes → Add a program |
+| New session of a monthly gathering | Programs → Recipes → Recurring gathering |
+| Images from the program's designers | Programs → Program images |
+| Add, rename, or hide a person | Team |
+| Add a testimonial or a milestone | Testimonials, Milestones |
+| Add a photo to a page | Photos |
+| Change contact details, links, or menus | Site settings |
+| Donations, newsletter | Site settings → Donations, Newsletter |
+| Rename or move a page | Pages and components → Moving or removing a page |
+
+The home page, Programs, the area pages, and Past Programs list programs from
+each program's `status`. Never edit those pages to add, move, or remove a
+program.
+
 ## How the site is put together
 
 ```mermaid
@@ -61,7 +80,7 @@ flowchart LR
 
 | Path | Holds |
 |---|---|
-| `src/content/programs/` | One folder per program: `index.md` plus its flyer and photo |
+| `src/content/programs/` | One folder per program: `index.md` plus its flyer and program image |
 | `src/content/team/` | One Markdown file per person |
 | `src/content/milestones.yaml` | Through the Years timeline |
 | `src/content/testimonials.yaml` | Student quotes |
@@ -112,15 +131,17 @@ stateDiagram-v2
   completed --> [*]
 ```
 
-| `status` | Shown as | Appears in |
-|---|---|---|
-| `open` | Registration open | Home (first three), Programs, its area page |
-| `ongoing` | Ongoing series | Same places, after open programs |
-| `upcoming` | Coming soon | “Coming soon” on Programs and its area page |
-| `completed` | Program completed | Past Programs; its own page stays up as a record |
+| `status` | Use when | Shown as | Listed on | Its page offers |
+|---|---|---|---|---|
+| `open` | Registration is open | Registration open | Home, Programs, its area page | Register buttons (`registerUrl`) |
+| `ongoing` | A series has begun and people can still join | Ongoing series | Same places, after open programs | Register buttons |
+| `upcoming` | Announced; registration is not open yet | Coming soon | “Coming soon” on Programs and its area page | Join the Interest List |
+| `completed` | The program has ended | Program completed | Past Programs | Join the Interest List; kept as a record |
 
-When a program ends, change only `status` to `completed`. Its page stays,
-registration buttons disappear, and shared links keep working.
+Current programs are listed open before ongoing, latest start date first;
+the home page shows the first three. When a program ends,
+change only `status` to `completed` and keep every other field: its page stays
+up, its registration buttons go, and shared links keep working.
 
 ### Format
 
@@ -149,10 +170,11 @@ Every program gets a page in one of two ways:
   template skips it. If `page` names a file that does not exist, the build
   fails and says which file to create.
 
-To make a standard program bespoke: create `src/pages/<name>.astro` (use the
-components and conventions below and `src/pages/hikam-foundations.astro` as
-the reference), then add `page: /<name>/` to the program. To go back, delete
-the page file and the `page` field.
+To make a standard program bespoke: create `src/pages/<name>.astro` from the
+components and conventions below, then add `page: /<name>/` to the program.
+To go back, delete the page file and the `page` field. The Hikam Foundations
+page is the only bespoke page, and its content and design are not final: do
+not copy it as a pattern or take conventions from it.
 
 ### Fields
 
@@ -184,7 +206,7 @@ Required for `open` and `ongoing`: `title`, `summary`, `area`, `date`,
 | `instructors` | Team file names and/or inline guests `{ name, role, highlights }` | `sameera-shah` |
 | `expect` | Teaching format, activities, participation | |
 | `policies` | Attendance, refunds, recording, safeguarding | |
-| `image`, `imageAlt` | The program image, 16:9 (see Program images); alt text required with it | `./image.jpg` |
+| `image`, `imageAlt` | The program image, 16:9 (see Program images); alt text required with it | `./image.webp` |
 | `flyer` | Original flyer, US Letter portrait (see Program images) | `./flyer.webp` |
 | `page` | Bespoke page path | `/hikam-foundations/` |
 
@@ -212,16 +234,27 @@ guidance is the `sabeel-flyers` skill in
 
 ### Recipes
 
-**Add a program.** Copy the most similar current program folder, rename it,
-replace `flyer.webp` and `image.jpg` (see Program images) and their fields,
-edit `index.md`, run `npm run build`, and check the program page, the Programs
-page, and the home page in `npm run dev`.
+**Add a program.**
+1. Copy the most similar current program folder and rename it (see the
+   naming rule under Programs).
+2. In `index.md`, set every field the status needs (see Fields), copying
+   names, dates, fees, and the registration link exactly as the organisation
+   gives them.
+3. Replace `flyer.webp` with the new flyer and `image.webp` with the new
+   program image (see Program images), and rewrite `imageAlt`. Without a
+   program image, delete the file and both fields: the card then has no
+   picture and the page shows a patterned panel in its place.
+4. Write the Markdown body, or delete it if there is nothing beyond the
+   fields.
+5. Run `npm run build`, then check the program page, Programs, its area page,
+   and (for an open program) the home page in `npm run dev`.
 
-**Retire a program.** Set `status: completed`.
+**Retire a program.** Change only `status` to `completed`.
 
 **Recurring gathering** (for example Anchored Hearts): edit the same folder
-each cycle — `date`, `starts`, flyer, `registerUrl`, instructors, and the
-“This month” text.
+each cycle: `date`, `starts`, `registerUrl`, instructors, and the “This
+month” text. Replace `flyer.webp` with the new flyer under the same name, and
+`image.webp` too if the artwork changed.
 
 **Archive-only record** (a past program that only has a flyer): a folder with
 `status: completed`, `title`, `area`, `date` (plus `dateApprox: true` if only
@@ -242,31 +275,62 @@ Front matter: `name`, `honorific` (`Ustadhah`, `Ust.`, `Sr.`, `Br.`, `Dr.`),
 `group` (`founder`, `board`, `teachers`, `volunteers`), `order` (ascending
 within the group; use steps of 10), optional `role`, `sub` (a second line
 under the role), `highlights`, and `listed` (`false` hides the person).
-`highlights` lists credentials only: the Sabeel
-certificate or studies and any other degree, one per line, as “credential,
-institution” (`‘Alimiyyah, Institute of Islamic Education`,
+`highlights` lists credentials only (certificates, degrees, studies, never
+roles or jobs), one per line, as “credential, institution”
+(`‘Alimiyyah, Institute of Islamic Education`,
 `Classical Islamic Knowledge certificate, Sabeel`). The body is the bio; a listed
 person with a bio gets `/teachers-and-team/<name>/`. Refer to people in
 programs by file name under `instructors`.
 
+- **Add a person:** create `src/content/team/<name>.md`, where `<name>` is
+  their name in lowercase words joined by hyphens (`sameera-shah`). Give it an
+  `order` between those of the people it should sit between, and start the
+  bio with the plain name (see Writing conventions).
+- **Hide a person:** set `listed: false`. Their card and bio page go; programs
+  that list them still show their name, without a link.
+- **Rename a person:** correct `name`, rename the file, change every
+  `instructors` entry that uses the old file name, fix the old spelling
+  wherever else it appears in `src/`, and add a 301 redirect from
+  `/teachers-and-team/<old>{,/}` to `/teachers-and-team/<new>/` (see Moving or
+  removing a page).
+
 ### Milestones (`src/content/milestones.yaml`)
 
 `id`, `order`, `title`, `text`, optional `year` (only once verified), and
-optional `program` (a program folder whose photo or flyer illustrates it).
+optional `program` (a program folder whose program image or flyer illustrates
+it).
 
 ### Testimonials (`src/content/testimonials.yaml`)
 
-`id`, `program`, `quote`. Quotes whose `program` is `Certification Program`
-appear on the Hikam Foundations page.
+`id` (unique), `program` (the program the quote is about, as the student or
+parent names it), and `quote` (their words, exactly as given). The only page
+that shows testimonials is Hikam Foundations, which picks them in its page
+file; a quote added here appears nowhere else on the site.
 
 ### Photos (`src/assets/photos/<slot>.jpg`)
 
 Pages have named photo slots. Drop a file named after the slot (`.jpg`,
 `.png`, or `.webp`) to fill it; until then the slot shows a geometric panel.
-Find slot names by searching `src/pages` and `src/components` for `slot="`
-and `photo="`. Use only real, approved Sabeel photos. `home-hero`,
-`hikam-hero`, `about-hero`, and `about-story` hold illustrations, not photos
-of Sabeel classes; replace them with approved photos when available.
+Photos are cropped to fill their frame, so use landscape photos with the
+subject near the centre, at least 1600 × 1200 px (4:3); `about-story` is 5:4,
+at least 1500 × 1200 px.
+
+| Page | Slots |
+|---|---|
+| Home | `home-hero` |
+| About | `about-hero`; `about-story` (5:4) |
+| Programs | `programs-women`, `programs-teens`, `programs-children` (collage) |
+| Women’s Learning, Youth & Children | `area-womens-learning`, `area-youth-children` |
+| Hikam Foundations | `hikam-hero` |
+| Past Programs | `past-programs-hero` |
+| Through the Years | `history-hero`; `milestone-<id>` for a milestone without a program |
+| Teachers & Team | `team-hero`, `founder` |
+| Support | `support-hero`, `rukaiya` |
+
+A new slot on a page gets a row here. Use only real, approved Sabeel photos.
+`home-hero`, `hikam-hero`, `about-hero`, and `about-story` hold
+illustrations, not photos of Sabeel classes; replace them with approved photos
+when available.
 
 Team cards and bio pages are text only: do not add a photo slot, an initials
 badge, or any other stand-in picture for a person. Three slots hold pictures the
@@ -281,6 +345,8 @@ campaign, Zelle address, tax ID, `mailingListAction`, `hikamOverviewPdf`,
 program areas, and the header (`mainNav`) and footer (`footerNav`) menus.
 Change a value here, never by typing it into a page.
 
+#### Newsletter
+
 `mailingListAction` is the `action` URL from the Mailchimp embedded form's
 code (`https://<account>.<dc>.list-manage.com/subscribe/post?u=…&id=…&f_id=…`);
 the rest of Mailchimp's embed code, its CSS and scripts, is not used. The
@@ -292,10 +358,17 @@ opt-in in the audience settings switches reCAPTCHA on, so switch it off again
 after. While `mailingListAction` is `null`, and always for the interest-list
 form, signing up opens a pre-filled email to the organisation.
 
+#### Donations
+
 `zeffyCampaign`, at the top of the file, is the name at the end of the Zeffy
 donation campaign's links (`https://www.zeffy.com/en-US/donation-form/<name>`).
-The Support page's Donate button opens that campaign's form in a dialog, where
-donors choose the amount and how often to give.
+The Support page's Donate buttons open that campaign's form in a dialog, where
+donors choose the amount and how often to give. The suggested amounts,
+frequencies, and the form's colour are set in the campaign editor on
+zeffy.com and need no change here; change `zeffyCampaign` only to switch to
+another campaign. `zelle` and `taxId` appear on the Support page. Donors do
+not choose a fund: every gift supports both priorities the Support page
+describes, so do not add a choice of fund.
 
 ## Pages and components
 
@@ -308,6 +381,7 @@ Routes: `/`, `/about/`, `/programs/`, `/programs/<slug>/`,
 | Component | Use for |
 |---|---|
 | `BaseLayout` | Every page. Props: `title`, `description`, `shareImage` |
+| `Header`, `Footer` | The logo and menus on every page; the menus come from `mainNav` and `footerNav` |
 | `PageHero` | Page opening: `eyebrow`, `title`, lead text (default slot), `actions` slot, and optionally a photo slot or `media` slot beside the text |
 | `SectionHeading` | Section opening: `eyebrow`, `title`, gold divider; the default slot is aside text on the right |
 | `CtaBand` | Closing band: `title`, optional `eyebrow`, text and an `actions` slot |
@@ -337,7 +411,11 @@ Queries and helpers in `src/lib/content.ts`: `getCurrentPrograms(area?)`,
 belongs in a menu.
 
 **Moving or removing a page:** add a 301 redirect for the old path to
-`firebase.json` so shared links keep working.
+`redirects` in `firebase.json` so shared links keep working:
+
+```json
+{ "source": "/old-path{,/}", "destination": "/new-path/", "type": 301 }
+```
 
 ## Design rules
 
