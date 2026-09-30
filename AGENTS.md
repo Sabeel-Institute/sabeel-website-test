@@ -322,11 +322,12 @@ Pages have named photo slots. Drop a file named after the slot (`.jpg`,
 `.png`, or `.webp`) to fill it; until then the slot shows a geometric panel.
 Photos are cropped to fill their frame, so use landscape photos with the
 subject near the centre, at least 1600 × 1200 px (4:3); `about-story` is 5:4,
-at least 1500 × 1200 px.
+at least 1500 × 1200 px, and `home-teachers` and `home-service` are square, at
+least 600 × 600 px.
 
 | Page | Slots |
 |---|---|
-| Home | `home-hero` |
+| Home | `home-hero`; `home-teachers`, `home-service` (square) |
 | About | `about-hero`; `about-story` (5:4) |
 | Programs | `programs-women`, `programs-teens`, `programs-children` (collage) |
 | Women’s Learning, Youth & Children | `area-womens-learning`, `area-youth-children` |
