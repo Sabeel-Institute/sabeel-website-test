@@ -39,6 +39,11 @@ const d = program.data;
 const area = areas[d.area];
 const registering = d.status === 'open' || d.status === 'ongoing';
 const completed = d.status === 'completed';
+const closed = d.status === 'closed';
+/** Closing text for pages that no longer take registrations. */
+const laterNote = completed
+  ? 'This page is kept as a record of the program. Join the interest list to hear when similar programs open.'
+  : 'Registration for this program has closed. Join the interest list to hear when it is offered again.';
 const { Content } = await render(program);
 const body = program.body?.trim();
 const instructors = await resolveInstructors(d.instructors);
@@ -54,7 +59,7 @@ const glance = [
   { icon: 'users', label: instructors.length > 1 ? 'Instructors' : 'Instructor', value: completed ? undefined : instructors.map((i) => i.name).join(', ') },
   { icon: 'tag', label: 'Fee', value: completed ? undefined : d.fee },
   { icon: 'book-open', label: 'Materials & prerequisites', value: d.prerequisites },
-  { icon: 'clock', label: 'Registration deadline', value: completed ? undefined : d.deadline },
+  { icon: 'clock', label: 'Registration deadline', value: completed || closed ? undefined : d.deadline },
 ].filter((r) => r.value);
 const showGlance = glance.length > 0 || (registering && Boolean(d.registerUrl));
 const cards = [
@@ -290,9 +295,9 @@ const cards = [
           <a href="/financial-aid/" class="btn btn-outline bg-surface/60 px-6 text-base">Financial Aid</a>
         </Fragment>
       </CtaBand>
-    ) : completed ? (
-      <CtaBand title="Interested in a future offering?" eyebrow="Program completed">
-        <p>This page is kept as a record of the program. Join the interest list to hear when similar programs open.</p>
+    ) : completed || closed ? (
+      <CtaBand title="Interested in a future offering?" eyebrow={STATUS_LABEL[d.status]}>
+        <p>{laterNote}</p>
         <Fragment slot="actions">
           <a href="/contact/?inquiry=interest-list" data-interest class="btn btn-outline bg-surface/60 px-6 text-base">
             Join the Interest List

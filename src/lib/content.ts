@@ -7,26 +7,32 @@ export type Instructor = { name: string; role?: string; highlights?: readonly st
 
 /* ---------- Programs ---------- */
 
-const newestFirst = (a: Program, b: Program) => b.data.date.getTime() - a.data.date.getTime();
-const statusRank = { open: 0, ongoing: 1, upcoming: 2, completed: 3 } as const;
+type Status = Program['data']['status'];
 
-/** Open and ongoing programs: open first, then newest start first. */
+const newestFirst = (a: Program, b: Program) => b.data.date.getTime() - a.data.date.getTime();
+const statusRank: Record<Status, number> = { open: 0, ongoing: 1, closed: 2, upcoming: 3, completed: 4 };
+
+const withStatus = (statuses: readonly Status[], area?: AreaId) =>
+  getCollection('programs', (p) => statuses.includes(p.data.status) && (!area || p.data.area === area));
+
+/** Programs people can join: open first, then newest start first. */
 export async function getCurrentPrograms(area?: AreaId): Promise<Program[]> {
-  const list = await getCollection(
-    'programs',
-    (p) => (p.data.status === 'open' || p.data.status === 'ongoing') && (!area || p.data.area === area),
-  );
+  const list = await withStatus(['open', 'ongoing'], area);
   return list.sort((a, b) => statusRank[a.data.status] - statusRank[b.data.status] || newestFirst(a, b));
 }
 
 export async function getUpcomingPrograms(area?: AreaId): Promise<Program[]> {
-  const list = await getCollection('programs', (p) => p.data.status === 'upcoming' && (!area || p.data.area === area));
+  const list = await withStatus(['upcoming'], area);
   return list.sort((a, b) => a.data.date.getTime() - b.data.date.getTime());
 }
 
+/** Running programs whose registration has closed. */
+export async function getClosedPrograms(area?: AreaId): Promise<Program[]> {
+  return (await withStatus(['closed'], area)).sort(newestFirst);
+}
+
 export async function getCompletedPrograms(area?: AreaId): Promise<Program[]> {
-  const list = await getCollection('programs', (p) => p.data.status === 'completed' && (!area || p.data.area === area));
-  return list.sort(newestFirst);
+  return (await withStatus(['completed'], area)).sort(newestFirst);
 }
 
 /** Where a program lives: its bespoke page, or the standard template page. */
@@ -37,6 +43,7 @@ export function programHref(program: Program): string {
 export const STATUS_LABEL = {
   open: 'Registration open',
   ongoing: 'Ongoing series',
+  closed: 'Registration closed',
   upcoming: 'Coming soon',
   completed: 'Program completed',
 } as const;
