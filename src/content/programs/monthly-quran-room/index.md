@@ -13,7 +13,7 @@ duration: 30 minutes, monthly
 fee: Free
 registerUrl: https://forms.gle/mMNGQ3e832SsFQTQ6
 image: ./image.webp
-imageAlt: Monthly Qur’an Room banner
+imageAlt: "Title artwork: Monthly Qur’an Room"
 flyer: ./flyer.webp
 ---
 

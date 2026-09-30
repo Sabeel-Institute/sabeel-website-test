@@ -19,7 +19,7 @@ outcomes:
   - A foundation for the Hikam Foundations program
 expect: One morning a week in three parts — Arabic grammar, tafsir, and tajweed practice on the same surah, so you apply what you learn immediately.
 image: ./image.webp
-imageAlt: Quran Immersion Fall Semester banner
+imageAlt: "Title artwork: Quran Immersion, Fall Semester"
 flyer: ./flyer.webp
 ---
 

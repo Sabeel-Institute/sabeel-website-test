@@ -184,20 +184,38 @@ Required for `open` and `ongoing`: `title`, `summary`, `area`, `date`,
 | `instructors` | Team file names and/or inline guests `{ name, role, highlights }` | `sameera-shah` |
 | `expect` | Teaching format, activities, participation | |
 | `policies` | Attendance, refunds, recording, safeguarding | |
-| `image`, `imageAlt` | Real photo for the top of the page (not the flyer); alt text required with it | `./photo.jpg` |
-| `flyer` | Original flyer, shown lower on the page | `./flyer.webp` |
+| `image`, `imageAlt` | The program image, 16:9 (see Program images); alt text required with it | `./image.jpg` |
+| `flyer` | Original flyer, US Letter portrait (see Program images) | `./flyer.webp` |
 | `page` | Bespoke page path | `/hikam-foundations/` |
 
 The Markdown body after the front matter is “Program details”. Use `##` and
 `###` headings (never `#`), `-` bullets, `**bold**`, and site-relative links
 that end in `/` (for example `/teachers-and-team/sameera-shah/`).
 
+### Program images
+
+A program has up to two images, each in one standard size, so the site uses
+them as they are:
+
+| Image | Size | Where the site shows it |
+|---|---|---|
+| Flyer (`flyer`) | US Letter portrait: 8.5 × 11 in, 2550 × 3300 px | Whole, lower on the program page, in Past Programs, and enlarged in the flyer viewer |
+| Program image (`image`) | 16:9 landscape: 1920 × 1080 px | On the program's card, at the top of its page, and in link previews, which trim it slightly to 1.91:1 |
+
+The program image is a photograph or artwork, not a copy of the flyer: at most
+a large title, no small text (dates, times, and fees are on the page and
+change), and nothing important within 5% of an edge. The build stops if a
+program image is not 16:9. Until a program has its own, its image can be a
+16:9 crop of its flyer's title area, as the current programs use. Designers'
+guidance is the `sabeel-flyers` skill in
+[Sabeel-Institute/brand](https://github.com/Sabeel-Institute/brand).
+
 ### Recipes
 
 **Add a program.** Copy the most similar current program folder, rename it,
-replace `flyer.webp` (and add `photo.jpg` with `image`/`imageAlt` if there is a
-real photo), edit `index.md`, run `npm run build`, and check the program page,
-the Programs page, and the home page in `npm run dev`.
+replace `flyer.webp` and `image.jpg` (see Program images) and their fields,
+edit `index.md`, run `npm run build`, and check the program page, the Programs
+page, and the home page in `npm run dev`.
 
 **Retire a program.** Set `status: completed`.
 

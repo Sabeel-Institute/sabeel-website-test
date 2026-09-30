@@ -28,14 +28,15 @@ const line2 = [d.format, d.venue].filter(Boolean).join(' · ');
   class="group relative flex h-full flex-col rounded-card border border-gold/60 border-t-4 border-t-gold bg-surface p-6 transition-shadow duration-200 hover:shadow-card sm:p-7"
 >
   {
+    // The program's 16:9 image. Decorative here: the title below names it.
     d.image && (
       <div class="-mx-6 -mt-6 mb-5 overflow-hidden rounded-t-[calc(var(--radius-card)-1px)] sm:-mx-7 sm:-mt-7">
         <Image
           src={d.image}
-          alt={d.imageAlt ?? d.title}
-          widths={[360, 720]}
-          sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
-          class="aspect-[16/9] w-full object-cover object-top transition-transform duration-300 group-hover:scale-105"
+          alt=""
+          widths={[400, 800]}
+          sizes="(min-width: 1024px) 400px, (min-width: 768px) 50vw, 100vw"
+          class="aspect-video w-full object-cover transition-transform duration-300 motion-safe:group-hover:scale-105"
         />
       </div>
     )

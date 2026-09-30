@@ -17,6 +17,7 @@ import { areas } from '../../site.config';
 import {
   STATUS_LABEL,
   assertBespokePages,
+  assertProgramImages,
   resolveInstructors,
   startLabel,
   type Program,
@@ -25,6 +26,7 @@ import {
 export const getStaticPaths = (async () => {
   const programs = await getCollection('programs');
   assertBespokePages(programs);
+  assertProgramImages(programs);
   return programs.filter((p) => !p.data.page).map((program) => ({ params: { slug: program.id }, props: { program } }));
 }) satisfies GetStaticPaths;
 
@@ -101,7 +103,7 @@ const cards = [
           image={d.image}
           alt={d.imageAlt ?? ''}
           icon={area.icon}
-          class="aspect-[4/3] shadow-card"
+          class="aspect-video shadow-card"
           sizes="(min-width: 768px) 48vw, 100vw"
           eager
         />
