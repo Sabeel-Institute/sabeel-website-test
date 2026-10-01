@@ -1,15 +1,13 @@
 ---
-import { Image } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import PageHero from '../components/PageHero.astro';
 import SectionHeading from '../components/SectionHeading.astro';
 import Divider from '../components/Divider.astro';
 import Icon from '../components/Icon.astro';
+import Photo from '../components/Photo.astro';
 import ProgramCard from '../components/ProgramCard.astro';
 import MailingListForm from '../components/MailingListForm.astro';
 import SabeelDifference from '../components/SabeelDifference.astro';
-import teacherIcon from '../assets/images/icon-teacher.png';
-import serviceIcon from '../assets/images/icon-service.png';
 import { getCurrentPrograms } from '../lib/content';
 
 const featured = (await getCurrentPrograms()).slice(0, 3);
@@ -66,14 +64,18 @@ const featured = (await getCurrentPrograms()).slice(0, 3);
       {
         [
           {
-            icon: teacherIcon,
+            slot: 'home-teachers',
+            alt: 'Sabeel teachers leading a lesson',
+            icon: 'graduation-cap' as const,
             title: 'Meet the teachers',
             text: 'Learn from ‘Alimiyyah graduates who pair rigorous training in the Islamic sciences with clarity, care, and an understanding of the questions women are carrying today.',
             link: 'Meet the teaching team',
             href: '/teachers-and-team/#teachers',
           },
           {
-            icon: serviceIcon,
+            slot: 'home-service',
+            alt: 'Sabeel students engaged in community service',
+            icon: 'hand-heart' as const,
             title: 'From student to service',
             text: 'At Sabeel, learning is meant to be lived. Students carry what they gain into their homes, masajid, classrooms, and communities — serving with greater knowledge, confidence, and ihsan.',
             link: 'Meet our Sacred Service Team',
@@ -81,7 +83,13 @@ const featured = (await getCurrentPrograms()).slice(0, 3);
           },
         ].map((card) => (
           <article class="flex flex-col gap-6 rounded-card border-2 border-gold/25 bg-surface p-7 sm:flex-row sm:items-center sm:gap-8 sm:p-10">
-            <Image src={card.icon} alt="" width={140} class="size-28 shrink-0 sm:size-[132px]" />
+            <Photo
+              slot={card.slot}
+              alt={card.alt}
+              icon={card.icon}
+              class="size-28 shrink-0 sm:size-[132px] rounded-full"
+              compact
+            />
             <div>
               <h2 class="font-display text-[2rem] leading-tight font-bold text-raspberry">{card.title}</h2>
               <p class="mt-3 leading-[1.8] text-ink-soft">{card.text}</p>

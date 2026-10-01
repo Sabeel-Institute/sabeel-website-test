@@ -335,7 +335,7 @@ at least 1500 × 1200 px.
 
 | Page | Slots |
 |---|---|
-| Home | `home-hero` |
+| Home | `home-hero`, `home-teachers`, `home-service` |
 | About | `about-hero`; `about-story` (5:4) |
 | Programs | `programs-women`, `programs-teens`, `programs-children` (collage) |
 | Women’s Learning, Youth & Children | `area-womens-learning`, `area-youth-children` |
