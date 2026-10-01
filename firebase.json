@@ -61,16 +61,6 @@
         "type": 301
       },
       {
-        "source": "/teachers-and-team/zona-bukhari{,/}",
-        "destination": "/teachers-and-team/zona-bokhari/",
-        "type": 301
-      },
-      {
-        "source": "/teachers-and-team/khadija{,/}",
-        "destination": "/teachers-and-team/khadija-muhammad/",
-        "type": 301
-      },
-      {
         "source": "/directors-and-teachers{,/**}",
         "destination": "/teachers-and-team/",
         "type": 301
