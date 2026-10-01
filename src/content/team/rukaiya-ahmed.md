@@ -5,8 +5,8 @@ group: board
 order: 20
 role: Executive Assistant
 highlights:
-- Classical Islamic Knowledge certificate, Sabeel
-- B.Sc. Nutrition, University of Houston
+- Sabeel Graduate
+- BS Nutrition
 ---
 
-Rukaiya Ahmed received her B.Sc. in Nutrition from the University of Houston and holds a three-year Classical Islamic Knowledge certification from Sabeel. She is a Certified Surgical Technologist and serves as the executive assistant/board member at Sabeel Institute, while also teaching young girls about Islam.
+Rukaiya Ahmed holds a three-year Classical Islamic Knowledge certification from Sabeel Institute, where she also serves as Executive Assistant and a board member. She received her B.S. in Nutrition from the University of Houston and is a certified Surgical Technologist. Rukaiya also teaches young girls about Islam.

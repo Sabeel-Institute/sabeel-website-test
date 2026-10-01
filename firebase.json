@@ -61,8 +61,8 @@
         "type": 301
       },
       {
-        "source": "/teachers-and-team/khadija-muhammad{,/}",
-        "destination": "/teachers-and-team/khadija/",
+        "source": "/teachers-and-team/khadija{,/}",
+        "destination": "/teachers-and-team/khadija-muhammad/",
         "type": 301
       },
       {

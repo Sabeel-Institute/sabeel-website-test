@@ -5,7 +5,8 @@ group: teachers
 order: 20
 listed: true
 highlights:
-- ‘Alimiyyah, New York
+- ‘Alimiyyah
+- BA Psychology
 ---
 
-Zainab Fatima completed her ‘Alimiyyah degree in New York and serves on Sabeel’s teaching team.
+Zainab Fatima teaches Fiqh and Arabic at Sabeel Institute. She completed her Hifz and six years of ‘Alimiyyah studies in New York City, followed by post-‘Alimiyyah coursework with Whitethread Institute and Mufti Ismail Moosa. She holds a B.A. in Psychology from Stony Brook University with a minor in Writing and also tutors middle school students online.

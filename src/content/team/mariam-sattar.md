@@ -3,11 +3,11 @@ name: Mariam Sattar
 honorific: Ust.
 group: board
 order: 10
-role: Programming Lead
-sub: Teacher
+role: Adults Programming Lead
 highlights:
-- ‘Alimiyyah degree
-- B.Sc. Biochemistry, University of Houston
+- Former Sabeel Student
+- ‘Alimiyyah
+- BS Biochemistry
 ---
 
-Mariam Sattar received her B.Sc. in Biochemistry from the University of Houston and completed her ‘Alimiyyah degree in 2015. Mariam is a homeschooling mom of six and loves teaching and mentoring young girls and women.
+Mariam Sattar joined Sabeel Institute as a student and progressed to the role of co-teacher with Ustadhah Sameera in a short period. She received her B.S. in Biochemistry from the University of Houston and graduated with her ‘Alimiyyah degree in 2015, after which she continued her Islamic studies at Qalam Institute. A homeschooling mom of five, Mariam loves teaching the Islamic sciences and mentoring young girls and women.
