@@ -293,12 +293,13 @@ Front matter: `name`, `honorific` (`Ustadhah`, `Ust.`, `Sr.`, `Br.`, `Dr.`),
 `group` (`founder`, `board`, `teachers`, `volunteers`), `order` (ascending
 within the group; use steps of 10), optional `role`, `sub` (a second line
 under the role), `highlights`, and `listed` (`false` hides the person).
-`highlights` lists up to three credentials (certificates, degrees, studies,
-never roles or jobs), one per line, as “credential, institution”
-(`‘Alimiyyah, Institute of Islamic Education`,
-`Classical Islamic Knowledge certificate, Sabeel`). The body is the bio; a listed
-person with a bio gets `/teachers-and-team/<name>/`. Refer to people in
-programs by file name under `instructors`.
+Each person has a short bio and a long one, both as the organisation writes
+them. The short bio is `highlights`: up to three short lines of studies and
+degrees, never roles or jobs (`Sabeel Graduate`, `‘Alimiyyah`,
+`BS Biochemistry`), shown under the name and `role` on the Teachers & Team
+page. The long bio is the Markdown body, shown on the person's own page,
+`/teachers-and-team/<name>/`, which every listed person with a body gets.
+Refer to people in programs by file name under `instructors`.
 
 - **Add a person:** create `src/content/team/<name>.md`, where `<name>` is
   their name in lowercase words joined by hyphens (`sameera-shah`). Give it an

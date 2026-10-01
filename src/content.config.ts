@@ -149,7 +149,7 @@ const team = defineCollection({
     role: z.string().min(1).optional(),
     /** Optional subtitle below the main role/title. */
     sub: z.string().min(1).optional(),
-    /** Credentials only: the Sabeel certificate or studies and any other degree, one per line ("‘Alimiyyah, Institute of Islamic Education"). */
+    /** The short bio under the name: studies and degrees, one short line each ("Sabeel Graduate", "‘Alimiyyah"). The body is the long bio. */
     highlights: z.array(z.string().min(1)).max(3).optional(),
     /** false keeps the file but hides the person from the site. */
     listed: z.boolean().default(true),
