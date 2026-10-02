@@ -401,10 +401,9 @@ A new slot on a page gets a row here. Use only real, approved Sabeel photos.
 approved photo when available.
 
 Team cards and bio pages are text only: do not add a photo slot, an initials
-badge, or any other stand-in picture for a person. Three slots hold pictures the
-organisation will supply, and show the geometric panel until then: `team-hero`
-and `founder` on the Teachers & Team page, and `rukaiya` beside Rukaiya's story
-on Support.
+badge, or any other stand-in picture for a person. Two slots hold pictures the
+organisation will supply, and show the geometric panel until then: `founder` on
+the Teachers & Team page, and `rukaiya` beside Rukaiya's story on Support.
 
 ### Site settings (`src/site.config.ts`)
 
