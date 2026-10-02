@@ -12,8 +12,12 @@ type Status = Program['data']['status'];
 const newestFirst = (a: Program, b: Program) => b.data.date.getTime() - a.data.date.getTime();
 const statusRank: Record<Status, number> = { open: 0, ongoing: 1, closed: 2, upcoming: 3, completed: 4 };
 
+/** Programs on the site (not drafts) with one of these statuses. */
 const withStatus = (statuses: readonly Status[], area?: AreaId) =>
-  getCollection('programs', (p) => statuses.includes(p.data.status) && (!area || p.data.area === area));
+  getCollection(
+    'programs',
+    (p) => !p.data.draft && statuses.includes(p.data.status) && (!area || p.data.area === area),
+  );
 
 /** Programs people can join: open first, then newest start first. */
 export async function getCurrentPrograms(area?: AreaId): Promise<Program[]> {
@@ -83,12 +87,15 @@ export async function resolveInstructors(list: Program['data']['instructors']): 
  * a missing page. Called while the build generates program pages.
  */
 const pageRoutes = new Set(
-  Object.keys(import.meta.glob('/src/pages/**/*.astro')).map((file) =>
-    file
-      .replace(/^\/src\/pages/, '')
-      .replace(/(\/index)?\.astro$/, '/')
-      .replace(/\/+$/, '/'),
-  ),
+  Object.keys(import.meta.glob('/src/pages/**/*.astro'))
+    // Astro builds no page from a file or folder whose name starts with "_".
+    .filter((file) => !file.includes('/_'))
+    .map((file) =>
+      file
+        .replace(/^\/src\/pages/, '')
+        .replace(/(\/index)?\.astro$/, '/')
+        .replace(/\/+$/, '/'),
+    ),
 );
 
 export function assertBespokePages(programs: Program[]): void {

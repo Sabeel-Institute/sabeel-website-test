@@ -9,7 +9,11 @@
   `womens-learning` / `youth-children` are reserved for the area pages.
 - `assertBespokePages` (`src/lib/content.ts`) runs while program pages are
   generated and fails the build when a `page:` value has no matching file in
-  `src/pages/`.
+  `src/pages/`. Its route list skips files and folders starting with `_`, as
+  Astro does, so a published program cannot point at an unbuilt page.
+- `draft: true` programs are left out by `withStatus`, which every listing
+  query uses, and by `getStaticPaths` in `programs/[slug].astro`, so they get
+  no page and no listing. Drafts skip the bespoke-page and image checks.
 - `assertProgramImages` (`src/lib/content.ts`) runs in the same place and
   fails the build when a program's `image` is not 16:9 (within 0.02). It
   cannot be a schema rule: `image()` does not know an image's size when the
