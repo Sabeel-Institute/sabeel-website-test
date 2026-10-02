@@ -6,10 +6,10 @@ area: womens-learning
 date: 2026-03-25
 starts: Last Wednesday of each month
 audience: Women
-schedule: Last Wednesday monthly · 10:00–10:30 AM CT
+schedule: Last Wednesday · 10:00–10:30 AM CT
+frequency: monthly
 format: Online
-venue: Zoom
-duration: 30 minutes, monthly
+platform: Zoom
 fee: Free
 registerUrl: https://forms.gle/mMNGQ3e832SsFQTQ6
 image: ./image.webp

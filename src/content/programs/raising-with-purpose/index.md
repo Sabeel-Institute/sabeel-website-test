@@ -6,10 +6,11 @@ summary: A monthly circle, with the Muslim Homeschooling Community of Greater Ho
 area: womens-learning
 date: 2026-09-27
 audience: Homeschooling mothers
-schedule: Sunday · 5:00–7:00 PM CT
+schedule: Sundays · 5:00–7:00 PM CT
+frequency: monthly
 format: On-site
-venue: Sabeel Classroom at Masjid Istiqlal
-duration: Monthly support circle
+venue: masjid-istiqlal
+room: Sabeel Classroom
 fee: $5
 registerUrl: https://forms.gle/1rrFAvRPa5oRCL9S7
 instructors:

@@ -11,6 +11,13 @@
   generated and fails the build when a `page:` value has no matching file in
   `src/pages/`. Its route list skips files and folders starting with `_`, as
   Astro does, so a published program cannot point at an unbuilt page.
+- The schedule, length, and venue rules for current programs (no dates on
+  card lines, a venue unless online only) are in the programs schema's
+  `superRefine` (`src/content.config.ts`); past programs keep the schedules
+  they announced. `resolveLocation`, `rhythmLabel`, and `dateRange`
+  (`src/lib/content.ts`) word the fields for cards and pages, so the course
+  files hold each fact once. Map links are Google Maps search URLs built from
+  a venue's name and address.
 - `draft: true` programs are left out by `withStatus`, which every listing
   query uses, and by `getStaticPaths` in `programs/[slug].astro`, so they get
   no page and no listing. Drafts skip the bespoke-page and image checks.

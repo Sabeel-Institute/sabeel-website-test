@@ -8,7 +8,7 @@ dateApprox: true
 audience: Youth
 schedule: Sundays, 12:00-1:15 PM CT, Feb 1st-Mar 8th
 format: Online
-venue: Online via Zoom
+platform: Zoom
 instructors:
 - sameera-shah
 flyer: ./flyer.webp

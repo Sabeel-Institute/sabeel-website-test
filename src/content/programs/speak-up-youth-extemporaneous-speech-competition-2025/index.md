@@ -9,6 +9,7 @@ dateApprox: true
 audience: Youth
 schedule: Saturday, July 12th, 10:30 AM-2 PM
 format: On-site
-venue: Kendall Branch Library, 1st Floor Meeting Room
+venue: kendall-branch-library
+room: 1st Floor Meeting Room
 flyer: ./flyer.webp
 ---

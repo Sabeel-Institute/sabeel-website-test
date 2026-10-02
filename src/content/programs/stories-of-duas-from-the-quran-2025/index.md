@@ -8,6 +8,6 @@ dateApprox: true
 audience: Women
 schedule: '21st-30th Night (March 20-29): 11:45 PM Talk, 2 AM Games/Activities, 4:30 AM Dua nightly'
 format: Online
-venue: Online via Zoom
+platform: Zoom
 flyer: ./flyer.webp
 ---

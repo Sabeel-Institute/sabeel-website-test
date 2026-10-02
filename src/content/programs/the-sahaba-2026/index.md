@@ -9,6 +9,6 @@ dateApprox: true
 audience: Children
 schedule: Thursdays, 4:15-5 PM CT, Jan 22nd-Feb 12th
 format: Online
-venue: Online via Zoom
+platform: Zoom
 flyer: ./flyer.webp
 ---

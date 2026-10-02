@@ -9,6 +9,6 @@ dateApprox: true
 audience: Women
 schedule: February 18th - March 9th, Mondays & Wednesdays, 12-1:15 PM CT
 format: Online
-venue: Online via Zoom
+platform: Zoom
 flyer: ./flyer.webp
 ---

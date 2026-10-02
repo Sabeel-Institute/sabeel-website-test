@@ -9,7 +9,7 @@ dateApprox: true
 audience: Adults
 schedule: Monday, May 25th, 12:00 PM-1:00 PM CST
 format: Online
-venue: Online via Zoom + YouTube
+platform: Zoom and YouTube
 instructors:
 - name: Imam Zaid Noor
 flyer: ./flyer.webp

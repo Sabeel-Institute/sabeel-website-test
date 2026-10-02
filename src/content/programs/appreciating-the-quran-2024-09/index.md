@@ -9,7 +9,7 @@ dateApprox: true
 audience: Women
 schedule: Sep 13 - Dec 16, Wednesdays 11:45 AM-1:00 PM, Saturdays 10:00-11:30 AM
 format: Online
-venue: Online via Zoom
+platform: Zoom
 instructors:
 - mariam-sattar
 - sharmeen-shamsi

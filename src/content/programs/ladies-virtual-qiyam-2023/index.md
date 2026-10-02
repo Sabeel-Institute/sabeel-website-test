@@ -9,6 +9,6 @@ dateApprox: true
 audience: Women
 schedule: Tues, April 11 - Wed, April 19; Reflections @ 11:30 PM CST, Nasheeds & Duas @ Tahajjud (4:00 AM CST)
 format: Online
-venue: Online via Zoom
+platform: Zoom
 flyer: ./flyer.webp
 ---

@@ -1,6 +1,6 @@
 /**
- * Content schemas. Every program, team member, and testimonial is validated
- * against these at build time, so a missing or mistyped field fails
+ * Content schemas. Every program, team member, testimonial, and venue is
+ * validated against these at build time, so a missing or mistyped field fails
  * `npm run build` with a message naming the file and the field.
  *
  * How to add or change content: see AGENTS.md.
@@ -14,6 +14,16 @@ export const PROGRAM_AREAS = ['hikam-foundations', 'womens-learning', 'youth-chi
 
 /** Where a program meets. Current programs are grouped by this on Programs and area pages. */
 export const PROGRAM_FORMATS = ['Online', 'On-site', 'Online & on-site'] as const;
+/** How often a program meets; labels in FREQUENCY_LABEL (src/lib/content.ts). */
+export const PROGRAM_FREQUENCIES = ['weekly', 'twice-monthly', 'monthly', 'daily', 'once'] as const;
+
+/** Days, then the time: "Mondays · 12:00–1:30 PM CT", "Last Wednesday · 10:00–10:30 AM CT". */
+const SCHEDULE = /^[^\d·]+ · \d{1,2}:\d{2}(?: [AP]M)?–\d{1,2}:\d{2} [AP]M CT$/;
+/** Days alone, allowed while a program is upcoming: "Mondays & Thursdays". */
+const SCHEDULE_DAYS = /^[^\d·]+$/;
+const MONTH = /\b(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]*\b/;
+/** A length without dates: "7 sessions", "10 weeks", "5 days", "2 years". */
+const DURATION = /^\d+ (?:sessions?|weeks?|days?|months?|years?)$/;
 
 /** Route segments under /programs/ that belong to pages, not programs. */
 const RESERVED_SLUGS = new Set(['womens-learning', 'youth-children']);
@@ -60,13 +70,27 @@ const programs = defineCollection({
       starts: z.string().min(1).optional(),
       /** Who may attend, e.g. "Adult women" or "Boys 12–16, Girls 13+". */
       audience: z.string().min(1),
-      /** Day, time, and zone, e.g. "Mondays · 12:00–1:30 PM CT". */
+      /**
+       * Days and time, without dates: "Mondays · 12:00–1:30 PM CT". Past
+       * programs keep the schedule they announced, dates included.
+       */
       schedule: z.string().min(1),
       format: z.enum(PROGRAM_FORMATS),
-      /** Where it meets, e.g. "Masjid Istiqlal" or "Masjid Istiqlal and Zoom". */
-      venue: z.string().min(1),
-      /** Length, e.g. "Seven sessions" or "Monthly gathering". */
-      duration: z.string().min(1),
+      /** How often it meets. */
+      frequency: z.enum(PROGRAM_FREQUENCIES),
+      /** Length without dates ("7 sessions", "10 weeks"); left out for open-ended gatherings. */
+      duration: z
+        .string()
+        .regex(DURATION, 'duration is the length without dates, e.g. "7 sessions" or "10 weeks" (see Fields in AGENTS.md)')
+        .optional(),
+      /** Last session (YYYY-MM-DD); the page shows the dates from `date` to here. */
+      endDate: z.coerce.date().optional(),
+      /** A place in src/content/venues.yaml, or a list of them; needed unless the program is online only. */
+      venue: z.union([reference('venues'), z.array(reference('venues')).min(1)]).optional(),
+      /** The room at the venue, e.g. "Sabeel Classroom", shown as "Sabeel Classroom at Masjid Istiqlal". */
+      room: z.string().min(1).optional(),
+      /** The online platform, e.g. "Zoom", shown as "Online via Zoom". */
+      platform: z.string().min(1).optional(),
       fee: z.string().min(1),
       registerUrl: z.url(),
       /** Registration deadline as people should read it. */
@@ -88,12 +112,12 @@ const programs = defineCollection({
       imageAlt: z.string().min(1).optional(),
       /** The original flyer, US Letter portrait (2550 × 3300 px), shown lower on the page. */
       flyer: image().optional(),
+      /** true keeps the program in the repository but off the site: no page and no listing. */
+      draft: z.boolean().optional(),
       /**
        * Bespoke page path (e.g. "/hikam-foundations/"). When set, listings link
        * there and the standard template does not render this program.
        */
-      /** true keeps the program in the repository but off the site: no page and no listing. */
-      draft: z.boolean().optional(),
       page: z
         .string()
         .regex(/^\/[a-z0-9-]+(?:\/[a-z0-9-]+)*\/$/, 'page must look like "/hikam-foundations/"')
@@ -112,8 +136,7 @@ const programs = defineCollection({
       status: z.literal('upcoming'),
       schedule: fields.schedule.optional(),
       format: fields.format.optional(),
-      venue: fields.venue.optional(),
-      duration: fields.duration.optional(),
+      frequency: fields.frequency.optional(),
       fee: fields.fee.optional(),
       registerUrl: fields.registerUrl.optional(),
     });
@@ -125,14 +148,29 @@ const programs = defineCollection({
       audience: fields.audience.optional(),
       schedule: fields.schedule.optional(),
       format: fields.format.optional(),
-      venue: fields.venue.optional(),
-      duration: fields.duration.optional(),
+      frequency: fields.frequency.optional(),
       fee: fields.fee.optional(),
       registerUrl: fields.registerUrl.optional(),
     });
     return z.discriminatedUnion('status', [open, ongoing, closed, upcoming, completed]).superRefine((d, ctx) => {
       if (d.image && !d.imageAlt) {
         ctx.addIssue({ code: 'custom', path: ['imageAlt'], message: 'imageAlt is required when image is set' });
+      }
+      if (d.status !== 'completed' && d.schedule) {
+        const shape = SCHEDULE.test(d.schedule) || (d.status === 'upcoming' && SCHEDULE_DAYS.test(d.schedule));
+        if (!shape || MONTH.test(d.schedule)) {
+          ctx.addIssue({
+            code: 'custom',
+            path: ['schedule'],
+            message: 'schedule is the days, then the time, without dates: "Mondays · 12:00–1:30 PM CT" (see Fields in AGENTS.md)',
+          });
+        }
+      }
+      if ((d.status === 'open' || d.status === 'ongoing' || d.status === 'closed') && d.format !== 'Online' && !d.venue) {
+        ctx.addIssue({ code: 'custom', path: ['venue'], message: 'venue is required unless the program is online only' });
+      }
+      if (d.endDate && d.endDate < d.date) {
+        ctx.addIssue({ code: 'custom', path: ['endDate'], message: 'endDate is before date' });
       }
     });
   },
@@ -166,4 +204,14 @@ const testimonials = defineCollection({
   }),
 });
 
-export const collections = { programs, team, testimonials };
+/** Places programs meet; a program names one by its id in `venue`. */
+const venues = defineCollection({
+  loader: file('src/content/venues.yaml'),
+  schema: z.object({
+    name: z.string().min(1),
+    /** Street address, linked to a map on program pages. Only as the organisation gives it. */
+    address: z.string().min(1).optional(),
+  }),
+});
+
+export const collections = { programs, team, testimonials, venues };

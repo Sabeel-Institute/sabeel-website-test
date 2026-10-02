@@ -9,6 +9,6 @@ dateApprox: true
 audience: Women
 schedule: Last 10 nights of Ramadan, nightly starting at 11:45 PM
 format: Online
-venue: Online via Zoom
+platform: Zoom
 flyer: ./flyer.webp
 ---

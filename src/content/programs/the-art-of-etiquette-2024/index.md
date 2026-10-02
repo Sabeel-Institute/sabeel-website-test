@@ -9,7 +9,7 @@ dateApprox: true
 audience: Women
 schedule: Daily June 19-22 & June 26-27, 12-1 PM
 format: Online
-venue: Online via Zoom
+platform: Zoom
 instructors:
 - mariam-sattar
 flyer: ./flyer.webp

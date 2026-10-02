@@ -7,6 +7,6 @@ date: '2023-11-11'
 audience: Girls
 schedule: Saturday, November 11th 2023, 11:00 AM-12:00 PM
 format: On-site
-venue: Brand Lane Islamic Center
+venue: brand-lane-islamic-center
 flyer: ./flyer.webp
 ---

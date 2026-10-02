@@ -7,10 +7,10 @@ area: womens-learning
 date: 2026-10-16
 starts: Friday, October 16
 audience: Women and youth girls
-schedule: Fridays, monthly · 5:30–7:45 PM CT
+schedule: Fridays · 5:30–7:45 PM CT
+frequency: monthly
 format: On-site
-venue: Masjid Istiqlal
-duration: Monthly gathering
+venue: masjid-istiqlal
 fee: "Halaqa $5 · Halaqa and optional activity $15"
 registerUrl: https://docs.google.com/forms/d/e/1FAIpQLSeBJEQ-oACUCoeQbQnPD8JMoPvrknjB7D3EciGytteB1c_fpA/viewform
 deadline: Optional activity — register by Wednesday, October 7

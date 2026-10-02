@@ -8,7 +8,7 @@ dateApprox: true
 audience: Women
 schedule: Wednesdays, starting April 1st, 12:00 PM-1:00 PM
 format: On-site
-venue: Masjid Istiqlal (In-Person)
+venue: masjid-istiqlal
 instructors:
 - mariam-sattar
 flyer: ./flyer.webp
