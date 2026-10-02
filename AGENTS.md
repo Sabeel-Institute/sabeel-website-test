@@ -435,8 +435,9 @@ donors choose the amount and how often to give. The suggested amounts,
 frequencies, and the form's colour are set in the campaign editor on zeffy.com
 (the organisation's Zeffy account) and need no change here; change
 `zeffyCampaign` only to switch to another campaign. `zelle` and `taxId` appear
-on the Support page. Donors do not choose a fund: every gift supports both
-priorities the Support page describes, so do not add a choice of fund.
+on the Support page. Every gift is a general gift: the Support page describes
+what gifts support, and the donation form asks only for the amount and how
+often to give.
 
 ## Pages and components
 
