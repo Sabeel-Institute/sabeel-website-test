@@ -5,7 +5,7 @@ import { getImage } from 'astro:assets';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import InterestDialog from '../components/InterestDialog.astro';
-import logo from '../assets/images/logo.png';
+import linkPreview from '../assets/images/link-preview.webp';
 import { site } from '../site.config';
 
 interface Props {
@@ -16,13 +16,8 @@ interface Props {
   shareImage?: ImageMetadata;
 }
 
-// The default link preview is the home page photo, whichever file type it has
-// (see Photos in AGENTS.md), or the logo while that slot is empty.
-const homePhoto = import.meta.glob<{ default: ImageMetadata }>('../assets/photos/home-hero.{jpg,jpeg,png,webp}', {
-  eager: true,
-});
-const defaultShare = Object.values(homePhoto)[0]?.default ?? logo;
-const { title, description = site.description, shareImage = defaultShare } = Astro.props;
+// Pages without an image of their own share this photo (see Photos in AGENTS.md).
+const { title, description = site.description, shareImage = linkPreview } = Astro.props;
 const fullTitle = title ? `${title} | ${site.name}` : `${site.name} | Islamic Learning for Women in Houston`;
 const canonical = new URL(Astro.url.pathname, Astro.site);
 const share = await getImage({ src: shareImage, width: 1200, format: 'jpg', quality: 82 });
