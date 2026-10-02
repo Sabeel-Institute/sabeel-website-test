@@ -382,9 +382,8 @@ at least 1500 × 1200 px.
 | Support | `support-hero`, `rukaiya` |
 
 A new slot on a page gets a row here. Use only real, approved Sabeel photos.
-`home-hero`, `hikam-hero`, `about-hero`, and `about-story` hold
-illustrations, not photos of Sabeel classes; replace them with approved photos
-when available.
+`hikam-hero` holds an illustration, not a photo of Sabeel; replace it with an
+approved photo when available.
 
 Team cards and bio pages are text only: do not add a photo slot, an initials
 badge, or any other stand-in picture for a person. Three slots hold pictures the
