@@ -18,7 +18,10 @@ import {
   STATUS_LABEL,
   assertBespokePages,
   assertProgramImages,
+  dateRange,
   resolveInstructors,
+  resolveLocation,
+  rhythmLabel,
   startLabel,
   type Program,
 } from '../../lib/content';
@@ -49,13 +52,14 @@ const body = program.body?.trim();
 const instructors = await resolveInstructors(d.instructors);
 const flyerFull = d.flyer ? await getImage({ src: d.flyer, width: 1600 }) : undefined;
 const start = startLabel(program);
-const place = [d.format, d.venue].filter(Boolean).join(' · ');
+const location = await resolveLocation(program);
 const askHref = `/contact/?inquiry=program&program=${encodeURIComponent(d.title)}`;
 const outcomesFirst = Boolean(d.outcomes?.length);
 /** Flyer-only records put the flyer in the About column instead of repeating the summary. */
 const flyerInAbout = !outcomesFirst && !body && Boolean(flyerFull);
 const glance = [
-  { icon: 'calendar', label: 'Length', value: d.duration },
+  { icon: 'calendar', label: d.frequency ? 'How often' : 'Length', value: rhythmLabel(program) },
+  { icon: 'calendar', label: 'Dates', value: dateRange(program) },
   { icon: 'users', label: instructors.length > 1 ? 'Instructors' : 'Instructor', value: completed ? undefined : instructors.map((i) => i.name).join(', ') },
   { icon: 'tag', label: 'Fee', value: completed ? undefined : d.fee },
   { icon: 'book-open', label: 'Materials & prerequisites', value: d.prerequisites },
@@ -124,7 +128,7 @@ const cards = [
           { label: 'Audience', value: d.audience },
           { label: completed ? 'Started' : 'Starts', value: start },
           { label: 'Schedule', value: d.schedule },
-          { label: 'Format', value: place },
+          { label: 'Location', value: location?.text, links: location?.places.map((p) => ({ text: p.label, href: p.map })) },
         ]}
       />
     </div>
@@ -287,7 +291,7 @@ const cards = [
   {
     registering ? (
       <CtaBand title="Ready to join?">
-        <p>{[start && `Starts ${start}`, place, d.fee].filter(Boolean).join(' · ')}</p>
+        <p>{[start && `Starts ${start}`, d.format, d.fee].filter(Boolean).join(' · ')}</p>
         <Fragment slot="actions">
           <a href={d.registerUrl} class="btn btn-primary px-7 text-base" target="_blank" rel="noopener">
             Register Now <Icon name="external" class="size-4" />

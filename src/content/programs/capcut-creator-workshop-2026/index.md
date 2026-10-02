@@ -9,7 +9,7 @@ dateApprox: true
 audience: Youth
 schedule: 'Day 1: June 22, Day 2: June 29, 3:30-4:30 PM CST'
 format: Online
-venue: Online via Zoom
+platform: Zoom
 instructors:
 - name: Jennifer Richardson
 flyer: ./flyer.webp

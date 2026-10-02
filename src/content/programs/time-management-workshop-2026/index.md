@@ -8,7 +8,7 @@ date: '2026-08-21'
 audience: Women
 schedule: Friday, 8/21/2026, 6:00-7:00 PM CT
 format: Online
-venue: Online via Zoom
+platform: Zoom
 instructors:
 - name: Dr. Sabeen Najam
 flyer: ./flyer.webp

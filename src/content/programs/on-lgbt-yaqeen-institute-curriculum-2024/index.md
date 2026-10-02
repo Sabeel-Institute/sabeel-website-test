@@ -8,7 +8,7 @@ dateApprox: true
 audience: Boys
 schedule: Sept 9, 11 AM-1 PM
 format: On-site
-venue: Masjid Hamza
+venue: masjid-hamza
 instructors:
 - sameera-shah
 flyer: ./flyer.webp

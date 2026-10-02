@@ -6,10 +6,10 @@ summary: A part-time, in-person program giving women a foundational knowledge ba
 area: hikam-foundations
 date: 2024-09-04
 audience: Girls and women
-schedule: Wednesdays 10:30 AM–1:30 PM · Saturdays 10:15 AM–1:00 PM CT
+schedule: Wednesdays at Masjid Istiqlal, 10:30 AM–1:30 PM CT · Saturdays at Maryam Islamic Center, 10:15 AM–1:00 PM CT
 format: On-site
-venue: Masjid Istiqlal (Wednesdays) and Maryam Islamic Center (Saturdays)
-duration: One year, part time
+venue: [masjid-istiqlal, maryam-islamic-center]
+duration: 1 year
 fee: Free of charge
 outcomes:
   - Arabic grammar

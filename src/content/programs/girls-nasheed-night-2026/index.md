@@ -8,6 +8,6 @@ date: '2026-03-14'
 audience: Girls
 schedule: 12:30-1:30 AM, March 14, 2026 (Late Friday Night/Early Saturday Morning)
 format: Online
-venue: Online via Zoom
+platform: Zoom
 flyer: ./flyer.webp
 ---

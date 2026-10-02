@@ -9,6 +9,6 @@ dateApprox: true
 audience: Girls
 schedule: Wednesdays, Sept 20th-Nov 15th, 7-7:45 PM CST
 format: Online
-venue: Online via Zoom
+platform: Zoom
 flyer: ./flyer.webp
 ---

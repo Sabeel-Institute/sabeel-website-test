@@ -9,6 +9,6 @@ dateApprox: true
 audience: Youth
 schedule: Starting Sunday, August 9, 11 AM - 1 PM; student showcase on August 30
 format: On-site
-venue: Maryam Islamic Center
+venue: maryam-islamic-center
 flyer: ./flyer.webp
 ---

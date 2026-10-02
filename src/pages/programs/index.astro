@@ -14,6 +14,7 @@ import {
   getCurrentPrograms,
   getUpcomingPrograms,
   programHref,
+  rhythmLabel,
   startLabel,
   type Program,
 } from '../../lib/content';
@@ -24,9 +25,9 @@ const notJoinable = [
   {
     label: STATUS_LABEL.upcoming,
     programs: await getUpcomingPrograms(),
-    detail: (p: Program) => `${p.data.duration ? `${p.data.duration} · ` : ''}Starts ${startLabel(p)}`,
+    detail: (p: Program) => [rhythmLabel(p), `Starts ${startLabel(p)}`].filter(Boolean).join(' · '),
   },
-  { label: STATUS_LABEL.closed, programs: await getClosedPrograms(), detail: (p: Program) => p.data.duration },
+  { label: STATUS_LABEL.closed, programs: await getClosedPrograms(), detail: (p: Program) => rhythmLabel(p) },
 ].filter((l) => l.programs.length > 0);
 ---
 

@@ -1,0 +1,30 @@
+# Places programs meet. A program names one by its id in `venue`. Add an
+# address only as the organisation gives it: program pages link it to a map.
+- id: masjid-istiqlal
+  name: Masjid Istiqlal
+  address: 15303 Mc Kaskle Rd, Sugar Land, TX 77498
+- id: maryam-islamic-center
+  name: Maryam Islamic Center
+  address: 504 Sartartia Rd, Sugar Land, TX 77479
+- id: masjid-al-aqsa
+  name: Masjid Al-Aqsa (Katy Islamic Center, ISGH)
+- id: masjid-arafat
+  name: Masjid Arafat
+- id: masjid-dar-un-noor
+  name: Masjid Dar un Noor
+- id: masjid-hamza
+  name: Masjid Hamza
+- id: brand-lane-islamic-center
+  name: Brand Lane Islamic Center
+- id: bear-creek-islamic-center
+  name: Bear Creek Islamic Center
+- id: cullinan-park
+  name: Cullinan Park
+- id: everest-academy
+  name: Everest Academy
+- id: kendall-branch-library
+  name: Kendall Branch Library
+- id: ricc-richmond
+  name: RICC (Richmond)
+- id: private-residence-richmond
+  name: Private residence, Richmond, TX

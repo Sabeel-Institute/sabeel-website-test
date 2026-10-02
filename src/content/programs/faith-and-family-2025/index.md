@@ -9,6 +9,6 @@ dateApprox: true
 audience: Women
 schedule: Sept 6th - Dec 13th, Saturdays, 11:00 AM-1:00 PM
 format: On-site
-venue: Maryam Islamic Center
+venue: maryam-islamic-center
 flyer: ./flyer.webp
 ---

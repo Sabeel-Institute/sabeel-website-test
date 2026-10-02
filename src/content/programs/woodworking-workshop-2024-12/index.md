@@ -9,7 +9,8 @@ dateApprox: true
 audience: Girls
 schedule: Saturday, December 16th, 11:00 AM-1:30 PM
 format: On-site
-venue: Maryam Islamic Center, Upstairs Sisters Hall
+venue: maryam-islamic-center
+room: Upstairs Sisters Hall
 instructors:
 - sameera-shah
 - name: Sr. Fariha Nasir

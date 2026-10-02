@@ -5,11 +5,13 @@ subtitle: Fall Semester · Arabic Grammar, Tafsir, Tajweed
 summary: A 10-week course that builds your foundations in Qur’anic Arabic, tafsir, and tajweed through Surah Qaf — and prepares you for Hikam Foundations.
 area: womens-learning
 date: 2026-09-17
-audience: Women; youth girls welcome
+endDate: 2026-11-19
+audience: Women and youth girls
 schedule: Thursdays · 10:00 AM–1:00 PM CT
+frequency: weekly
 format: Online & on-site
-venue: Masjid Istiqlal or online
-duration: 10 weeks, Sept 17 – Nov 19
+venue: masjid-istiqlal
+duration: 10 sessions
 fee: $50 in person · $75 online
 registerUrl: https://docs.google.com/forms/d/e/1FAIpQLSdpKGbEk2z0ulOvDlL3U0HvJA9zw8qO0WtpD5icZtjw_9dLvQ/viewform
 outcomes:

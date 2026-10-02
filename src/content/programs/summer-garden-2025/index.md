@@ -8,6 +8,6 @@ date: '2025-06-29'
 audience: Girls
 schedule: June 29th-July 3rd, Sunday-Thursday, 11 AM-2 PM CST
 format: On-site
-venue: Maryam Islamic Center
+venue: maryam-islamic-center
 flyer: ./flyer.webp
 ---

@@ -9,7 +9,7 @@ dateApprox: true
 audience: Adults
 schedule: Resuming May 4, Every Thursday, 4:30-5:30 PM
 format: Online
-venue: Online via Zoom
+platform: Zoom
 instructors:
 - sameera-shah
 flyer: ./flyer.webp

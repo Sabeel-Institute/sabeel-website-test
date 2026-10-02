@@ -9,7 +9,7 @@ dateApprox: true
 audience: Women
 schedule: Tuesday, May 26th, starting at 12:00 PM
 format: Online
-venue: Online via Zoom
+platform: Zoom
 instructors:
 - sameera-shah
 - mariam-sattar

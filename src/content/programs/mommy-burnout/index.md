@@ -5,11 +5,14 @@ subtitle: A Journey from Burnout to Barakah
 summary: Our flagship seven-session course helps mothers step out of survival mode, rooted in Qur’anic guidance, Prophetic wisdom, and practical insights from psychology.
 area: womens-learning
 date: 2026-09-14
+endDate: 2026-10-26
 audience: Adult women
 schedule: Mondays · 12:00–1:30 PM CT
+frequency: weekly
 format: Online & on-site
-venue: Masjid Istiqlal and Zoom
-duration: Seven sessions, Sept 14 – Oct 26
+venue: masjid-istiqlal
+platform: Zoom
+duration: 7 sessions
 fee: $150
 registerUrl: https://forms.gle/vsHn6Akc9wreh2118
 outcomes:

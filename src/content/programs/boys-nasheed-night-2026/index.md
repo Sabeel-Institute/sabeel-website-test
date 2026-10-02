@@ -8,6 +8,6 @@ dateApprox: true
 audience: Boys
 schedule: Late Sat Night/Early Sunday Morn, March 15, 1 AM
 format: Online
-venue: Online via Zoom
+platform: Zoom
 flyer: ./flyer.webp
 ---

@@ -9,7 +9,7 @@ dateApprox: true
 audience: Women
 schedule: Beginning Sunday, July 4, Sundays 11 AM-1 PM CST
 format: On-site
-venue: Brand Lane Islamic Center (Masjid Sabireen / Dulles Masjid)
+venue: brand-lane-islamic-center
 instructors:
 - sameera-shah
 flyer: ./flyer.webp

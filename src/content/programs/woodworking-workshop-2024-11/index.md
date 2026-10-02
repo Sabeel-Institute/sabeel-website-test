@@ -8,7 +8,8 @@ dateApprox: true
 audience: Boys
 schedule: Saturday, November 25th, 10:30 AM-1:00 PM
 format: On-site
-venue: Maryam Islamic Center, Upstairs Sisters Hall
+venue: maryam-islamic-center
+room: Upstairs Sisters Hall
 instructors:
 - sameera-shah
 - name: Sr. Fariha Nasir

@@ -9,7 +9,7 @@ dateApprox: true
 audience: Youth
 schedule: Wednesdays, 6:30 PM CST, Nov 26-Jan 7
 format: Online
-venue: Online via Zoom
+platform: Zoom
 instructors:
 - sameera-shah
 - mariam-sattar

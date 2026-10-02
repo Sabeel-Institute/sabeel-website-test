@@ -9,7 +9,9 @@ dateApprox: true
 audience: Women
 schedule: Sep 28 - Nov 16, Wednesdays, 12:00-1:15 PM
 format: Online & on-site
-venue: Maryam Islamic Center, Women's Prayer Hall, and Online via Zoom
+venue: maryam-islamic-center
+room: Women’s Prayer Hall
+platform: Zoom
 instructors:
 - name: Sr. Selina Ali
   role: LPC-Associate

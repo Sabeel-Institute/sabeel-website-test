@@ -9,7 +9,7 @@ dateApprox: true
 audience: Women
 schedule: Sept 2nd - Sept 30th, Tuesdays, 12 PM-1:30 PM
 format: On-site
-venue: Maryam Islamic Center
+venue: maryam-islamic-center
 instructors:
 - name: Sr. Selina Ali
   role: LPC-Associate
