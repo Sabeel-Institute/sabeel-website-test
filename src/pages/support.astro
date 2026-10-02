@@ -18,7 +18,8 @@ const possible = [
 // What gifts support.
 const priorities = [
   { title: 'A permanent home', text: 'A home of Sabeel’s own in Houston, with room to learn, gather, and serve.' },
-  { title: 'Programs and access', text: 'Teachers, curriculum, youth programming, and scholarships today.' },
+  { title: 'Programs today', text: 'Teachers, curriculum, and youth programming for the classes running now.' },
+  { title: 'Scholarships', text: 'Financial aid, so cost never keeps a student from learning.' },
 ] as const;
 ---
 
@@ -92,7 +93,7 @@ const priorities = [
       <SectionHeading eyebrow="Where your gift goes" title="A permanent home, and the work happening now." id="give-heading" />
       <div class="mt-8 grid gap-10 lg:grid-cols-[1fr_minmax(0,32rem)] lg:gap-14">
         <div>
-          <ul class="grid gap-4 sm:grid-cols-2">
+          <ul class="grid gap-4 sm:grid-cols-3 lg:grid-cols-1">
             {
               priorities.map((d) => (
                 <li class="rounded-card border border-gold/60 bg-surface p-6">
