@@ -33,11 +33,6 @@
 - `Photo.astro` resolves named slots from `src/assets/photos/` with
   `import.meta.glob`; a missing file renders the geometric fallback, so slots
   never break the build.
-- `about-hero.jpg` and `about-story.jpg` are the WordPress theme's demo
-  images from the Design Rector site (uploaded there in December 2023, not
-  Sabeel's own), used at the organisation's request; their license is
-  unconfirmed. They are cropped to their frames (4:3 and 5:4) and upscaled
-  2x from small originals, so replace them first when Sabeel has its own.
 - `DonationDialog` shows Zeffy's plain embed (`/embed/donation-form/<name>`)
   in the site's own `<dialog>` and loads it on first open. Zeffy's pop-up
   script (`embed-form-script.min.js`) is not used: it loads the form in a
