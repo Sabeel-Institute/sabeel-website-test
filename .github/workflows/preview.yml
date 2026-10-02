@@ -2,14 +2,19 @@ name: Preview
 
 # Publishes a pull request's built site to a preview channel, with the visual
 # comparison site.yml made at /_visual-diff/, and comments the links on the
-# pull request. GitHub always runs this file from main, so pull request
-# branches cannot change what it does. It never executes code from the pull
-# request: it only publishes the static files that site.yml built.
+# pull request. The channel keeps only its latest version, and is deleted when
+# the pull request closes. GitHub always runs this file from main, so pull
+# request branches cannot change what it does. It never executes code from the
+# pull request: it only publishes the static files that site.yml built.
 
 on:
   workflow_run:
     workflows: [Site]
     types: [completed]
+  # Runs from main when a pull request closes, merged or not; delete-preview
+  # checks out only main's Firebase settings.
+  pull_request_target:
+    types: [closed]
 
 permissions:
   contents: read
@@ -22,11 +27,46 @@ env:
   FIREBASE_TOOLS: firebase-tools@15
 
 jobs:
-  deploy-preview:
+  # The open pull request this Site run built. A pull request that closed
+  # before its build finished gets no preview, so delete-preview's work stays
+  # done.
+  find-pr:
     if: >-
+      github.event_name == 'workflow_run' &&
       github.event.workflow_run.event == 'pull_request' &&
       github.event.workflow_run.conclusion == 'success' &&
       github.event.workflow_run.head_repository.full_name == github.repository
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: read
+    outputs:
+      number: ${{ steps.pr.outputs.number }}
+    steps:
+      - name: Find the pull request
+        id: pr
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ github.event.workflow_run.pull_requests[0].number }}
+          HEAD_SHA: ${{ github.event.workflow_run.head_sha }}
+        run: |
+          number="$PR_NUMBER"
+          if [[ -z "$number" ]]; then
+            number="$(gh api "repos/$GITHUB_REPOSITORY/commits/$HEAD_SHA/pulls" -q '.[0].number')"
+          fi
+          if [[ ! "$number" =~ ^[0-9]+$ ]]; then
+            echo "No pull request found for $HEAD_SHA, so no preview"
+            exit 0
+          fi
+          if [[ "$(gh api "repos/$GITHUB_REPOSITORY/pulls/$number" -q .state)" != open ]]; then
+            echo "Pull request #$number is closed, so no preview"
+            exit 0
+          fi
+          echo "number=$number" >> "$GITHUB_OUTPUT"
+
+  deploy-preview:
+    needs: find-pr
+    if: needs.find-pr.outputs.number != ''
     runs-on: ubuntu-latest
     # On the job, so that runs which skip it do not cancel a deploy in progress.
     concurrency:
@@ -45,23 +85,6 @@ jobs:
             .firebaserc
             firebase.json
           sparse-checkout-cone-mode: false
-
-      - name: Find the pull request
-        id: pr
-        env:
-          GH_TOKEN: ${{ github.token }}
-          PR_NUMBER: ${{ github.event.workflow_run.pull_requests[0].number }}
-          HEAD_SHA: ${{ github.event.workflow_run.head_sha }}
-        run: |
-          number="$PR_NUMBER"
-          if [[ -z "$number" ]]; then
-            number="$(gh api "repos/$GITHUB_REPOSITORY/commits/$HEAD_SHA/pulls" -q '.[0].number')"
-          fi
-          if [[ ! "$number" =~ ^[0-9]+$ ]]; then
-            echo "No pull request found for $HEAD_SHA" >&2
-            exit 1
-          fi
-          echo "number=$number" >> "$GITHUB_OUTPUT"
 
       - uses: actions/download-artifact@v8
         with:
@@ -114,23 +137,38 @@ jobs:
           cat firebase.json
 
       - uses: google-github-actions/auth@v3
+        id: auth
         with:
           workload_identity_provider: projects/176680257141/locations/global/workloadIdentityPools/github/providers/github-oidc
           service_account: github-action-1388459667@sabeel-website-test.iam.gserviceaccount.com
+          token_format: access_token
 
       - name: Deploy preview channel
         id: preview
         run: |
-          npx --yes "$FIREBASE_TOOLS" hosting:channel:deploy "pr-${{ steps.pr.outputs.number }}" --expires 7d --json | tee deploy.json
+          npx --yes "$FIREBASE_TOOLS" hosting:channel:deploy "pr-${{ needs.find-pr.outputs.number }}" --expires 7d --json | tee deploy.json
           echo "url=$(jq -r '.result[].url' deploy.json)" >> "$GITHUB_OUTPUT"
           echo "expires=$(jq -r '.result[].expireTime' deploy.json)" >> "$GITHUB_OUTPUT"
+
+      # Hosting keeps 10 versions per channel unless told otherwise, and every
+      # push to a pull request is a new version of the whole site, so storage
+      # would fill up. Keep only the latest.
+      - name: Keep only the latest preview version
+        env:
+          TOKEN: ${{ steps.auth.outputs.access_token }}
+          CHANNEL: pr-${{ needs.find-pr.outputs.number }}
+        run: |
+          site=$(jq -r '.hosting.site' firebase.json)
+          curl -fsS -X PATCH -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' \
+            "https://firebasehosting.googleapis.com/v1beta1/sites/$site/channels/$CHANNEL?updateMask=retainedReleaseCount" \
+            -d '{"retainedReleaseCount": 1}' > /dev/null
 
       - name: Comment preview URL
         uses: actions/github-script@v9
         env:
           URL: ${{ steps.preview.outputs.url }}
           EXPIRES: ${{ steps.preview.outputs.expires }}
-          PR_NUMBER: ${{ steps.pr.outputs.number }}
+          PR_NUMBER: ${{ needs.find-pr.outputs.number }}
           HEAD_SHA: ${{ github.event.workflow_run.head_sha }}
           RUN_URL: ${{ github.event.workflow_run.html_url }}
           DIFFERENT: ${{ steps.counts.outputs.different }}
@@ -185,3 +223,42 @@ jobs:
               description: changes ? changes[0].toUpperCase() + changes.slice(1) : 'Comparison unavailable',
               target_url: changes ? report : process.env.RUN_URL,
             });
+
+  # Deletes a pull request's preview when it closes, merged or not. It runs
+  # from main and checks out only main's .firebaserc and firebase.json.
+  delete-preview:
+    if: >-
+      github.event_name == 'pull_request_target' &&
+      github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    # Shares deploy-preview's group, so it cancels a deploy still in progress.
+    concurrency:
+      group: preview-${{ github.event.pull_request.head.ref }}
+      cancel-in-progress: true
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          sparse-checkout: |
+            .firebaserc
+            firebase.json
+          sparse-checkout-cone-mode: false
+
+      - uses: google-github-actions/auth@v3
+        with:
+          workload_identity_provider: projects/176680257141/locations/global/workloadIdentityPools/github/providers/github-oidc
+          service_account: github-action-1388459667@sabeel-website-test.iam.gserviceaccount.com
+
+      - name: Delete preview channel
+        env:
+          CHANNEL: pr-${{ github.event.pull_request.number }}
+        run: |
+          site=$(jq -r '.hosting.site' firebase.json)
+          if npx --yes "$FIREBASE_TOOLS" hosting:channel:list --site "$site" --json |
+            jq -e --arg c "/channels/$CHANNEL" '.result.channels[] | select(.name | endswith($c))' > /dev/null; then
+            npx --yes "$FIREBASE_TOOLS" hosting:channel:delete "$CHANNEL" --site "$site" --force
+          else
+            echo "No preview channel $CHANNEL"
+          fi

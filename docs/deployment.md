@@ -35,7 +35,11 @@ flowchart TB
   request's `firebase.json` (the site name comes from `main`'s copy), deploys
   to the `pr-<number>` channel (expires after 7 days), comments the links,
   and adds a `preview` status and a `visual changes` status to the pull
-  request.
+  request. The channel keeps only its latest version. When the pull request
+  closes, merged or not, the same workflow deletes the channel: its
+  `pull_request_target` trigger runs `main`'s copy, which checks out only
+  `main`'s `.firebaserc` and `firebase.json`. A pull request that has closed
+  by the time its build finishes gets no preview.
 - `preview.yml` and the `deploy-live` job run from `main`, so changes to them
   take effect once merged. The `build` and `visual-diff` jobs run from the
   pull request's merge commit, so a pull request's own changes to them (or to
@@ -71,7 +75,10 @@ The project is on Firebase's no-cost Spark plan (no billing account). Hosting
 on Spark allows 10 GB of storage and 10 GB of data transfer a month (about
 360 MB a day), counted across the live site and every preview channel
 together. Past the transfer limit, Firebase disables the sites until the next
-month; past the storage limit, deploys fail. Before the site serves the
+month; past the storage limit, deploys fail. Each deploy stores a whole copy of
+the site (about 100 MB), so the live channel keeps only its 10 latest releases
+(step 1), each preview channel keeps only its latest, and a preview is deleted
+when its pull request closes. Before the site serves the
 organization's real traffic, switch the project to the Blaze plan
 (in the Firebase console, ⚙ → Usage and billing → Details & settings → modify
 the plan), which keeps the same no-cost amounts and bills usage beyond
@@ -370,6 +377,17 @@ ACCOUNT=faisal.shah@oursabeel.com
    the steps once. This creates the default site named after the project. The
    CLI steps it shows can be skipped; the repository already contains the
    configuration.
+4. Still in **Hosting**, open the live channel's **Release history** → ⋮ →
+   **Release storage settings**, and keep **10** releases. Firebase otherwise
+   keeps every release, and the storage limit fills within weeks. The same
+   with the API:
+
+   ```bash
+   curl -X PATCH -H "Authorization: Bearer $(gcloud auth print-access-token --account=$ACCOUNT)" \
+     -H "x-goog-user-project: $PROJECT_ID" -H "Content-Type: application/json" \
+     "https://firebasehosting.googleapis.com/v1beta1/sites/$PROJECT_ID/channels/live?updateMask=retainedReleaseCount" \
+     -d '{"retainedReleaseCount": 10}'
+   ```
 4. Look up the project number: Firebase console → ⚙ **Project settings** →
    General → **Project number**, or:
 
