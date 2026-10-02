@@ -196,7 +196,7 @@ const {{ class: className = 'w-full max-w-[32rem]' }} = Astro.props;
 ---
 
 <svg aria-hidden="true" focusable="false" viewBox="0 0 {W} {H}" class:list={{['pointer-events-none block h-auto', className]}}>
-  <path d="{head_d}" fill="none" stroke="url(#gilt)" stroke-width="1.2" stroke-linecap="round" vector-effect="non-scaling-stroke"></path>
+  <path d="{head_d}" pathLength="1" class="draw" fill="none" stroke="url(#gilt)" stroke-width="1.2" stroke-linecap="round" vector-effect="non-scaling-stroke"></path>
   <path d="{crest_d}" fill="currentColor"></path>
 </svg>
 ''',
@@ -238,18 +238,26 @@ OUT.mkdir(exist_ok=True)
 for name, body in components.items():
     (OUT / f'{name}.astro').write_text(body)
 
-# Photo.astro draws the arch rim with the same path as the clip.
-photo = ROOT / 'src/components/Photo.astro'
-text = photo.read_text()
-text, n = re.subn(r"const archPath = '[^']*';", f"const archPath = '{arch_d}';", text)
-assert n == 1, 'Photo.astro has no archPath line'
-photo.write_text(text)
+# ArchRim.astro draws the rim with the same path as the clip.
+rim = OUT / 'ArchRim.astro'
+text = rim.read_text()
+text, n = re.subn(r"const path = '[^']*';", f"const path = '{arch_d}';", text)
+assert n == 1, 'ArchRim.astro has no path line'
+rim.write_text(text)
 
-# The rosette as a CSS mask for the band on cards.
-svg = f"<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='{rosette_d}'/></svg>"
-mask = 'url("data:image/svg+xml,' + quote(svg, safe="/:'=<>") + '")'
+# The rosette and the lattice as CSS masks: the band on cards, and the page.
+def mask(svg: str) -> str:
+    return 'url("data:image/svg+xml,' + quote(svg, safe="/:'=<>") + '")'
+
+
+rosette_mask = mask(f"<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='{rosette_d}'/></svg>")
+lattice_mask = mask(
+    f"<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 {T} {T}'><path d='{lattice}' fill='none' stroke='black' stroke-width='1'/></svg>"
+)
 css = CSS.read_text()
-css, n = re.subn(r'url\("data:image/svg\+xml,[^"]*"\)', lambda _: mask, css)
+css, n = re.subn(r'(linear-gradient\(#000, #000\),\n\s+)url\("[^"]*"\)', lambda m: m.group(1) + rosette_mask, css)
 assert n == 1, 'global.css has no rosette mask'
+css, n = re.subn(r'(--mask-lattice: )url\("[^"]*"\)', lambda m: m.group(1) + lattice_mask, css)
+assert n == 1, 'global.css has no lattice mask'
 CSS.write_text(css)
-print('wrote', ', '.join(sorted(p.name for p in OUT.iterdir())), 'and updated Photo.astro and global.css')
+print('wrote', ', '.join(sorted(p.name for p in OUT.iterdir())), 'and updated global.css')

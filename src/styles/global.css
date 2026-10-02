@@ -61,10 +61,32 @@
     scroll-behavior: smooth;
     -webkit-text-size-adjust: 100%;
   }
+  :root {
+    /* The lattice tile as a mask, written by scripts/illumination/generate.py. */
+    --mask-lattice: url("data:image/svg+xml,<svg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2080%2080'><path%20d='M55.84%2055.84L24.16%2055.84L24.16%2024.16L55.84%2024.16ZM62.4%2040L40%2062.4L17.6%2040L40%2017.6ZM15.84%2015.84L-15.84%2015.84L-15.84%20-15.84L15.84%20-15.84ZM22.4%200L0%2022.4L-22.4%200L-0%20-22.4ZM95.84%2015.84L64.16%2015.84L64.16%20-15.84L95.84%20-15.84ZM102.4%200L80%2022.4L57.6%200L80%20-22.4ZM15.84%2095.84L-15.84%2095.84L-15.84%2064.16L15.84%2064.16ZM22.4%2080L0%20102.4L-22.4%2080L-0%2057.6ZM95.84%2095.84L64.16%2095.84L64.16%2064.16L95.84%2064.16ZM102.4%2080L80%20102.4L57.6%2080L80%2057.6ZM35.2%200L40%20-4.8L44.8%200L40%204.8ZM35.2%2080L40%2075.2L44.8%2080L40%2084.8ZM-4.8%2040L0%2035.2L4.8%2040L0%2044.8ZM75.2%2040L80%2035.2L84.8%2040L80%2044.8Z'%20fill='none'%20stroke='black'%20stroke-width='1'/></svg>");
+  }
   body {
     @apply bg-canvas font-sans text-ink antialiased;
+    /* Parchment: a touch lighter at the top, like light falling on a page. */
+    background-image: radial-gradient(120% 70% at 50% 0%, var(--color-surface), transparent 70%);
+    /* Ornaments may reach past the page edge; they never widen it. */
+    overflow-x: clip;
+  }
+  /* The lattice, faint and fixed, under every page. */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background-color: var(--color-gold);
+    mask-image: var(--mask-lattice);
+    mask-size: 80px 80px;
+    opacity: 0.055;
+  }
+  body {
     font-size: 17px;
-    line-height: 1.7;
+    line-height: 1.75;
   }
   :focus-visible {
     outline: 2px solid var(--color-raspberry);
@@ -72,6 +94,75 @@
   }
   ::selection {
     background: var(--color-accent-soft);
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    /*
+     * Content rises into view as it enters the viewport, driven by scrolling
+     * itself, so there is no script and no work off the compositor. Browsers
+     * without view timelines show everything at rest.
+     */
+    @supports (animation-timeline: view()) {
+      .rise {
+        /* Longhands, with the timeline behind a variable: the CSS minifier
+           would otherwise fold the timeline into the `animation` shorthand,
+           which browsers do not accept. */
+        --rise-timeline: view();
+        animation-name: rise;
+        animation-timing-function: linear;
+        animation-fill-mode: both;
+        animation-timeline: var(--rise-timeline);
+        animation-range: entry 0% entry 55%;
+      }
+    }
+    @keyframes rise {
+      from {
+        opacity: 0;
+        translate: 0 2rem;
+      }
+      to {
+        opacity: 1;
+        translate: 0 0;
+      }
+    }
+    /* A page opening arrives in order: the headpiece draws, then the rest. */
+    .enter {
+      animation: enter 0.9s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+    }
+    .enter-2 {
+      animation-delay: 0.2s;
+    }
+    .enter-3 {
+      animation-delay: 0.4s;
+    }
+    @keyframes enter {
+      from {
+        opacity: 0;
+        translate: 0 1.25rem;
+      }
+      to {
+        opacity: 1;
+        translate: 0 0;
+      }
+    }
+    .draw {
+      stroke-dasharray: 1;
+      stroke-dashoffset: 1;
+      animation: draw 1.8s ease-out 0.1s forwards;
+    }
+    @keyframes draw {
+      to {
+        stroke-dashoffset: 0;
+      }
+    }
+    /* A sunburst turns once every few minutes: felt, not seen. */
+    .turn {
+      animation: turn 200s linear infinite;
+    }
+    @keyframes turn {
+      to {
+        rotate: 1turn;
+      }
+    }
   }
   @media (prefers-reduced-motion: reduce) {
     html {
@@ -112,17 +203,57 @@
     }
   }
 
+  /* Display type, from the page-opening size down to section titles. */
+  .display-hero {
+    @apply font-display font-semibold text-raspberry;
+    font-size: clamp(3.25rem, 7.4vw, 7.25rem);
+    line-height: 0.96;
+    letter-spacing: -0.015em;
+    text-wrap: balance;
+  }
   .display-xl {
-    @apply font-display text-[2.6rem] leading-[1.05] font-bold text-raspberry sm:text-[3.25rem] lg:text-[3.6rem];
+    @apply font-display font-semibold text-raspberry;
+    font-size: clamp(2.9rem, 5.4vw, 5.25rem);
+    line-height: 1.02;
+    letter-spacing: -0.01em;
     text-wrap: balance;
   }
   .display-lg {
-    @apply font-display text-[2.2rem] leading-[1.1] font-bold text-raspberry sm:text-5xl;
+    @apply font-display font-semibold text-raspberry;
+    font-size: clamp(2.35rem, 3.9vw, 3.75rem);
+    line-height: 1.06;
     text-wrap: balance;
   }
   .display-md {
-    @apply font-display text-[1.9rem] leading-tight font-bold text-raspberry;
+    @apply font-display font-semibold text-raspberry;
+    font-size: clamp(1.85rem, 2.6vw, 2.5rem);
+    line-height: 1.12;
     text-wrap: balance;
+  }
+  .heading-sans {
+    @apply font-sans text-[1.75rem] leading-tight font-semibold text-raspberry sm:text-[2rem];
+  }
+  /* Opening and introductory text, set in the display face. */
+  .lead {
+    @apply font-display text-[1.4rem] leading-[1.45] font-medium text-ink-soft sm:text-[1.65rem];
+    text-wrap: pretty;
+  }
+  /* A running label: small capitals, widely tracked. */
+  .label {
+    @apply font-label text-[12px] font-bold tracking-[0.2em] text-gold-text uppercase sm:text-[13px];
+  }
+  /* The label turned to run up the margin beside a page opening. */
+  .label-vertical {
+    @apply font-label text-[12px] font-bold tracking-[0.2em] text-gold-text uppercase sm:text-[13px];
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+  }
+  /* A chapter numeral, large and faint, in lining figures. */
+  .numeral {
+    @apply font-display leading-none font-medium text-gold;
+    font-size: clamp(3.5rem, 6vw, 5.5rem);
+    font-variant-numeric: lining-nums tabular-nums;
+    opacity: 0.55;
   }
 
   /* A gilt hairline that catches the light at its centre and fades at its ends. */
@@ -157,7 +288,7 @@
   }
 
   .btn {
-    @apply inline-flex min-h-11 items-center justify-center gap-2 rounded-lg px-6 py-3 text-[15px] leading-none font-medium transition-colors duration-200;
+    @apply inline-flex min-h-12 items-center justify-center gap-2 rounded-lg px-7 py-3 font-label text-[13px] leading-none font-bold tracking-[0.14em] uppercase transition-colors duration-200;
   }
   /* Use together with .btn: class="btn btn-primary". Raspberry with a gilt edge. */
   .btn-primary {
@@ -223,17 +354,20 @@
     @apply inline-flex items-center gap-2 font-medium text-raspberry transition-[gap] duration-200 hover:gap-3;
   }
 
-  /* Program cards, up to three to a row, with a short last row centred. */
-  .card-grid {
-    @apply flex flex-wrap justify-center gap-5;
-    & > * {
-      width: 100%;
-      @variant md {
-        width: calc((100% - var(--spacing) * 5) / 2);
-      }
-      @variant lg {
-        width: calc((100% - var(--spacing) * 10) / 3);
-      }
+  /* An index of entries (programs, people): rows divided by gold hairlines. */
+  .entry-list {
+    & > * + * {
+      @apply border-t border-gold/40;
+    }
+  }
+
+  /* A panel in the shape of a pointed arch, filled with the surface colour. */
+  .arch-panel {
+    @apply relative;
+    &::before {
+      content: '';
+      @apply absolute inset-0 bg-surface;
+      clip-path: url(#arch);
     }
   }
 

@@ -1,4 +1,9 @@
 ---
+/**
+ * The masthead: the menu at the left, the logo at the centre, and the Support
+ * button at the right on large screens; the logo at the left with the button
+ * and the menu toggle on small ones. A double gilt rule closes it.
+ */
 import { Image } from 'astro:assets';
 import logo from '../assets/images/logo.png';
 import Icon from './Icon.astro';
@@ -12,35 +17,21 @@ const isActive = (item: (typeof nav)[number]) =>
 
 <header class="relative z-40 bg-canvas">
   <span aria-hidden="true" class="gilt-rule-double absolute inset-x-0 bottom-0"></span>
-  <div class="container-page flex h-20 items-center justify-between gap-3 sm:gap-6 lg:h-24">
-    <a href="/" class="shrink-0" aria-label="Sabeel Institute home">
-      <Image
-        src={logo}
-        alt="Sabeel Institute"
-        height={84}
-        class="h-[68px] w-auto lg:h-[84px]"
-        loading="eager"
-        layout="fixed"
-      />
-    </a>
-
+  <div class="container-page grid h-20 grid-cols-[auto_1fr] items-center gap-4 lg:h-28 lg:grid-cols-[1fr_auto_1fr]">
     <nav aria-label="Main" class="hidden lg:block">
-      <ul class="flex items-center gap-2 xl:gap-4">
+      <ul class="flex items-center gap-7 xl:gap-9">
         {
           nav.map((item) => (
             <li>
               <a
                 href={item.href}
                 aria-current={isActive(item) ? 'page' : undefined}
-                class="relative rounded px-2 py-1.5 text-base text-ink transition-colors hover:text-raspberry aria-[current=page]:text-raspberry xl:px-3 xl:text-[17px]"
+                class="label relative inline-block py-2 text-ink transition-colors hover:text-raspberry aria-[current=page]:text-raspberry"
               >
                 {item.label}
                 <span
                   aria-hidden="true"
-                  class:list={[
-                    'gilt-rule absolute inset-x-2 -bottom-1 w-auto transition-opacity',
-                    isActive(item) ? 'opacity-100' : 'opacity-0',
-                  ]}
+                  class:list={['gilt-rule absolute inset-x-0 -bottom-0.5 transition-opacity', isActive(item) ? 'opacity-100' : 'opacity-0']}
                 />
               </a>
             </li>
@@ -49,10 +40,12 @@ const isActive = (item: (typeof nav)[number]) =>
       </ul>
     </nav>
 
-    <div class="flex items-center gap-2">
-      <a href="/support/" class="btn btn-primary px-4 text-sm whitespace-nowrap sm:px-5 sm:text-base lg:px-6 lg:text-[16px]">
-        Support Our Work
-      </a>
+    <a href="/" class="shrink-0 lg:justify-self-center" aria-label="Sabeel Institute home">
+      <Image src={logo} alt="Sabeel Institute" height={96} class="h-[66px] w-auto lg:h-[96px]" loading="eager" layout="fixed" />
+    </a>
+
+    <div class="flex items-center justify-end gap-2 lg:gap-4">
+      <a href="/support/" class="btn btn-primary px-4 text-[12px] whitespace-nowrap sm:px-6 lg:text-[13px]">Support Our Work</a>
       <button
         type="button"
         class="inline-flex size-11 items-center justify-center rounded-lg text-ink hover:bg-inset lg:hidden"
@@ -79,7 +72,7 @@ const isActive = (item: (typeof nav)[number]) =>
             <a
               href={item.href}
               aria-current={isActive(item) ? 'page' : undefined}
-              class="flex min-h-12 items-center border-b border-border/70 text-lg text-ink aria-[current=page]:font-semibold aria-[current=page]:text-raspberry"
+              class="flex min-h-14 items-center border-b border-border/70 font-display text-[1.6rem] font-semibold text-ink aria-[current=page]:text-raspberry"
             >
               {item.label}
             </a>

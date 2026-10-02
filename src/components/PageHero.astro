@@ -1,8 +1,9 @@
 ---
 /**
- * Page opening, laid out like the first page of an illuminated manuscript: a
- * ruled frame around the section, a headpiece over the title, and the photo
- * (or custom media) set in an arch on the right with a sunburst behind it.
+ * Page opening, laid out like the first page of an illuminated manuscript: the
+ * running label up the left margin, a headpiece, the title across the page,
+ * the opening text in the display face, and the photo (or custom media) set in
+ * an arch that breaks through the frame at the foot of the page.
  */
 import Divider from './Divider.astro';
 import Photo from './Photo.astro';
@@ -19,7 +20,7 @@ interface Props {
   photo?: string;
   photoAlt?: string;
   photoIcon?: IconName;
-  /** Use the larger home-page title size. */
+  /** Use the largest title size, for the home page. */
   large?: boolean;
 }
 
@@ -27,52 +28,61 @@ const { eyebrow, title, photo, photoAlt = '', photoIcon, large = false } = Astro
 const hasMedia = Astro.slots.has('media') || Boolean(photo);
 ---
 
-<section class="relative overflow-hidden border-b border-border bg-linear-to-br from-surface via-canvas to-canvas">
-  <Lattice class="text-gold opacity-[0.09]" fade />
-  {
-    !hasMedia && (
-      <Shamsa class="absolute top-1/2 right-0 hidden w-[36rem] translate-x-1/3 -translate-y-1/2 text-gold opacity-[0.12] md:block" />
-    )
-  }
+<section class:list={['relative overflow-x-clip border-b border-border', hasMedia && 'lg:mb-24']}>
+  <div aria-hidden="true" class="absolute inset-0 overflow-hidden bg-linear-to-br from-surface via-canvas to-canvas">
+    <Lattice class="text-gold opacity-[0.09]" fade />
+    {!hasMedia && <Shamsa class="turn absolute top-1/2 right-0 hidden w-[40rem] translate-x-1/4 -translate-y-1/2 text-gold opacity-[0.14] md:block" />}
+  </div>
   <Frame />
-  <div class:list={['container-page relative py-14 md:py-20 lg:py-24', hasMedia && 'grid items-center gap-12 md:grid-cols-[1.05fr_1fr] md:gap-12']}>
-    <div>
-      <Headpiece class="mb-7 w-full max-w-[30rem] text-gold" />
-      <p class="eyebrow">{eyebrow}</p>
-      <h1 class:list={['mt-5', large ? 'display-xl' : 'display-lg lg:text-[3.1rem]']}>{title}</h1>
-      <Divider width="sm" class="mt-5" />
-      <div class="mt-6 max-w-[36rem] text-base leading-[1.8] text-ink-soft md:text-[17px] [&_p+p]:mt-4">
-        <slot />
+  <div class="container-page relative pt-12 pb-16 lg:pt-16 lg:pb-20">
+    <div class="lg:grid lg:grid-cols-[2.5rem_1fr] lg:items-start lg:gap-8">
+      <div class="hidden lg:flex lg:justify-center lg:pt-2">
+        <p class="label-vertical">{eyebrow}</p>
       </div>
-      {
-        Astro.slots.has('actions') && (
-          <div class="mt-8 flex flex-wrap items-center gap-3">
-            <slot name="actions" />
+      <div>
+        <Headpiece class="w-full max-w-[36rem] text-gold" />
+        <p class="eyebrow mt-8 lg:hidden">{eyebrow}</p>
+        <div class:list={[hasMedia && 'lg:grid lg:grid-cols-[1fr_minmax(0,26rem)] lg:items-end lg:gap-16']}>
+          <div class="mt-6 lg:mt-10">
+            <h1 class:list={['enter', large ? 'display-hero' : 'display-xl']}>{title}</h1>
+            <div class:list={['enter enter-2', !hasMedia && 'lg:ml-[38%]']}>
+              <Divider width="sm" class="mt-8" />
+              <div class="lead mt-7 max-w-[38rem] [&_p+p]:mt-4">
+                <slot />
+              </div>
+              {
+                Astro.slots.has('actions') && (
+                  <div class="mt-9 flex flex-wrap items-center gap-3">
+                    <slot name="actions" />
+                  </div>
+                )
+              }
+            </div>
           </div>
-        )
-      }
-    </div>
-    {
-      hasMedia && (
-        <div class="relative">
-          <Shamsa class="absolute top-1/2 left-1/2 w-[125%] max-w-none -translate-x-1/2 -translate-y-1/2 text-gold opacity-[0.16]" />
-          <div class="relative">
-            {Astro.slots.has('media') ? (
-              <slot name="media" />
-            ) : (
-              <Photo
-                slot={photo}
-                alt={photoAlt}
-                icon={photoIcon}
-                shape="arch"
-                class="mx-auto aspect-[5/6] w-full max-w-[26rem]"
-                sizes="(min-width: 768px) 26rem, 100vw"
-                eager
-              />
-            )}
-          </div>
+          {
+            hasMedia && (
+              <div class="enter enter-2 relative mt-14 lg:mt-0 lg:translate-y-24">
+                <Shamsa class="turn absolute top-1/2 left-1/2 w-[125%] max-w-none -translate-x-1/2 -translate-y-1/2 text-gold opacity-[0.16]" />
+                <div class="relative">
+                  {Astro.slots.has('media') ? (
+                    <slot name="media" />
+                  ) : (
+                    <Photo
+                      slot={photo}
+                      alt={photoAlt}
+                      icon={photoIcon}
+                      shape="arch"
+                      class="mx-auto aspect-[5/6] w-full max-w-[24rem] lg:max-w-none"
+                      sizes="(min-width: 1024px) 26rem, 100vw"
+                      eager
+                    />
+                  )}
+                </div>
+              </div>
+            )
+          }
         </div>
-      )
-    }
+      </div>
+    </div>
   </div>
 </section>

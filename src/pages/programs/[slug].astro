@@ -81,11 +81,13 @@ const cards = [
 ---
 
 <BaseLayout title={d.title} description={d.summary ?? d.subtitle ?? d.title} shareImage={d.image ?? d.flyer}>
-  <!-- Hero -->
-  <section class="relative overflow-hidden border-b border-border bg-linear-to-br from-surface via-canvas to-canvas">
-    <Lattice class="text-gold opacity-[0.09]" fade />
+  <!-- Opening -->
+  <section class="relative overflow-x-clip border-b border-border">
+    <div aria-hidden="true" class="absolute inset-0 overflow-hidden bg-linear-to-br from-surface via-canvas to-canvas">
+      <Lattice class="text-gold opacity-[0.09]" fade />
+    </div>
     <Frame />
-    <div class="container-page relative pt-8 pb-14 md:pb-20">
+    <div class="container-page relative pt-10 pb-16 lg:pt-12 lg:pb-24">
       <nav aria-label="Breadcrumb" class="text-[15px] text-ink-soft">
         <ol class="flex flex-wrap items-center gap-2">
           <li><a href={completed ? '/past-programs/' : '/programs/'} class="hover:text-raspberry">{completed ? 'Past Programs' : 'Programs'}</a></li>
@@ -93,55 +95,62 @@ const cards = [
           <li>{area.href ? <a href={area.href} class="hover:text-raspberry">{area.label}</a> : area.label}</li>
         </ol>
       </nav>
-      <div class="mt-8 grid items-center gap-12 md:grid-cols-[1.05fr_1fr] md:gap-12">
-        <div>
-          <Headpiece class="mb-7 w-full max-w-[30rem] text-gold" />
-          <p class="eyebrow">{STATUS_LABEL[d.status]} · {area.label}</p>
-          <h1 class="display-lg mt-5 lg:text-[3.1rem]">{d.title}</h1>
-          <Divider width="sm" class="mt-5" />
-          {d.subtitle && <p class="mt-3 font-display text-2xl leading-snug text-ink-soft italic">{d.subtitle}</p>}
-          {d.summary && <p class="mt-5 max-w-[36rem] text-lg leading-relaxed text-ink-soft">{d.summary}</p>}
-          <div class="mt-8 flex flex-wrap gap-3">
-            {
-              registering && d.registerUrl ? (
-                <a href={d.registerUrl} class="btn btn-primary px-7 text-base" target="_blank" rel="noopener">
-                  Register <Icon name="external" class="size-4" />
-                </a>
-              ) : (
-                <a href="/contact/?inquiry=interest-list" data-interest class="btn btn-primary px-7 text-base">
-                  Join the Interest List
-                </a>
-              )
-            }
-            {
-              payment && (
-                <a href={payment.page} target="_blank" rel="noopener" data-zeffy="pay-dialog" class="btn btn-outline px-6 text-base">
-                  Pay
-                </a>
-              )
-            }
-            <a href={completed ? '/programs/' : askHref} class="btn btn-outline px-6 text-base">
-              {completed ? 'View Current Programs' : 'Ask a Question'}
-            </a>
-          </div>
+      <div class="mt-10 lg:grid lg:grid-cols-[2.5rem_1fr] lg:items-start lg:gap-8">
+        <div class="hidden lg:flex lg:justify-center lg:pt-2">
+          <p class="label-vertical">{STATUS_LABEL[d.status]} · {area.label}</p>
         </div>
-        <div class="relative">
-          <Shamsa class="absolute top-1/2 left-1/2 w-[110%] max-w-none -translate-x-1/2 -translate-y-1/2 text-gold opacity-[0.16]" />
-          <Photo
-            image={d.image}
-            alt={d.imageAlt ?? ''}
-            icon={area.icon}
-            class="relative aspect-video"
-            sizes="(min-width: 768px) 48vw, 100vw"
-            eager
-          />
+        <div>
+          <Headpiece class="w-full max-w-[36rem] text-gold" />
+          <p class="eyebrow mt-8 lg:hidden">{STATUS_LABEL[d.status]} · {area.label}</p>
+          <div class="mt-6 grid gap-12 lg:mt-10 lg:grid-cols-[1.05fr_1fr] lg:items-center lg:gap-16">
+            <div>
+              <h1 class="display-xl enter">{d.title}</h1>
+              {d.subtitle && <p class="lead enter enter-2 mt-5 italic">{d.subtitle}</p>}
+              <Divider width="sm" class="enter enter-2 mt-7" />
+              {d.summary && <p class="enter enter-2 mt-6 max-w-[36rem] text-lg leading-relaxed text-ink-soft">{d.summary}</p>}
+              <div class="enter enter-3 mt-9 flex flex-wrap gap-3">
+                {
+                  registering && d.registerUrl ? (
+                    <a href={d.registerUrl} class="btn btn-primary px-8" target="_blank" rel="noopener">
+                      Register <Icon name="external" class="size-4" />
+                    </a>
+                  ) : (
+                    <a href="/contact/?inquiry=interest-list" data-interest class="btn btn-primary px-8">
+                      Join the Interest List
+                    </a>
+                  )
+                }
+                {
+                  payment && (
+                    <a href={payment.page} target="_blank" rel="noopener" data-zeffy="pay-dialog" class="btn btn-outline px-7">
+                      Pay
+                    </a>
+                  )
+                }
+                <a href={completed ? '/programs/' : askHref} class="btn btn-outline px-7">
+                  {completed ? 'View Current Programs' : 'Ask a Question'}
+                </a>
+              </div>
+            </div>
+            <div class="enter enter-2 relative">
+              <Shamsa class="turn absolute top-1/2 left-1/2 w-[110%] max-w-none -translate-x-1/2 -translate-y-1/2 text-gold opacity-[0.16]" />
+              <Photo
+                image={d.image}
+                alt={d.imageAlt ?? ''}
+                icon={area.icon}
+                class="relative aspect-video"
+                sizes="(min-width: 1024px) 48vw, 100vw"
+                eager
+              />
+            </div>
+          </div>
         </div>
       </div>
     </div>
   </section>
 
   <!-- Key facts -->
-  <section class="py-8 md:py-10">
+  <section class="py-12 lg:py-16">
     <div class="container-page">
       <FactsBar
         facts={[
@@ -155,15 +164,15 @@ const cards = [
   </section>
 
   <!-- What students will learn + at a glance -->
-  <section class="border-y border-border py-12 md:py-16">
+  <section class="border-y border-border py-20 lg:py-28">
     <div class:list={['container-page grid gap-10', showGlance && 'lg:grid-cols-[1.2fr_1fr] lg:gap-14']}>
       <div>
-        <p class="eyebrow">About this program</p>
+        <p class="label">About this program</p>
         {
           outcomesFirst ? (
             <>
-              <h2 class="display-md mt-1">What students will learn</h2>
-              <Divider class="mt-4" />
+              <h2 class="display-lg mt-3">What students will learn</h2>
+              <Divider class="mt-6" />
               <div class="prose-sabeel mt-6 text-[17px]">
                 <ul>
                   {d.outcomes!.map((o) => (
@@ -174,8 +183,8 @@ const cards = [
             </>
           ) : (
             <>
-              <h2 class="display-md mt-1">{flyerInAbout ? 'Original flyer' : completed ? 'About the program' : 'What to know'}</h2>
-              <Divider class="mt-4" />
+              <h2 class="display-lg mt-3">{flyerInAbout ? 'Original flyer' : completed ? 'About the program' : 'What to know'}</h2>
+              <Divider class="mt-6" />
               {flyerInAbout && flyerFull && d.flyer ? (
                 <a
                   href={flyerFull.src}
@@ -200,8 +209,8 @@ const cards = [
       </div>
 
       {showGlance && (
-      <aside class="card-illuminated self-start rounded-card p-6 sm:p-8" aria-labelledby="glance-heading">
-        <h2 id="glance-heading" class="font-display text-2xl font-bold text-raspberry">At a glance</h2>
+      <aside class="card-illuminated rise self-start rounded-card p-6 sm:p-8" aria-labelledby="glance-heading">
+        <h2 id="glance-heading" class="display-md">At a glance</h2>
         <dl class="mt-4 divide-y divide-border text-[15px]">
           {
             glance.map((r) => (
@@ -241,11 +250,11 @@ const cards = [
   <!-- Instructor, what to expect, policies -->
   {
     cards.length > 0 && (
-      <section class="py-12 md:py-14">
-        <div class:list={['container-page grid gap-5', cards.length === 3 ? 'lg:grid-cols-3' : cards.length === 2 ? 'md:grid-cols-2' : '']}>
+      <section class="py-16 lg:py-20">
+        <div class:list={['container-page grid gap-6', cards.length === 3 ? 'lg:grid-cols-3' : cards.length === 2 ? 'md:grid-cols-2' : '']}>
           {instructors.length > 0 && (
-            <div class="card-illuminated rounded-card p-7">
-              <h2 class="text-xl font-semibold text-ink">{instructors.length > 1 ? 'Instructors' : 'Instructor'}</h2>
+            <div class="card-illuminated rise rounded-card p-7">
+              <h2 class="display-md text-[1.5rem]">{instructors.length > 1 ? 'Instructors' : 'Instructor'}</h2>
               <ul class="mt-4 space-y-4">
                 {instructors.map((i) => (
                   <li>
@@ -260,14 +269,14 @@ const cards = [
             </div>
           )}
           {d.expect && (
-            <div class="card-illuminated rounded-card p-7">
-              <h2 class="text-xl font-semibold text-ink">What to expect</h2>
+            <div class="card-illuminated rise rounded-card p-7">
+              <h2 class="display-md text-[1.5rem]">What to expect</h2>
               <p class="mt-3 leading-[1.75] text-ink-soft">{d.expect}</p>
             </div>
           )}
           {d.policies && (
-            <div class="card-illuminated rounded-card p-7">
-              <h2 class="text-xl font-semibold text-ink">Policies</h2>
+            <div class="card-illuminated rise rounded-card p-7">
+              <h2 class="display-md text-[1.5rem]">Policies</h2>
               <p class="mt-3 leading-[1.75] text-ink-soft">{d.policies}</p>
             </div>
           )}
@@ -279,12 +288,12 @@ const cards = [
   <!-- Full details and original flyer -->
   {
     ((outcomesFirst && body) || (flyerFull && !flyerInAbout)) && (
-      <section class:list={['py-12 md:py-14', cards.length > 0 && 'pt-0 md:pt-0']}>
+      <section class:list={['py-16 lg:py-20', cards.length > 0 && 'pt-0 lg:pt-0']}>
         <div class:list={['container-page grid gap-10', outcomesFirst && body && flyerFull && 'lg:grid-cols-[1fr_minmax(0,340px)] lg:gap-16']}>
           {outcomesFirst && body && (
             <div>
-              <h2 class="display-md">Program details</h2>
-              <Divider class="mt-4" />
+              <h2 class="display-lg">Program details</h2>
+              <Divider class="mt-6" />
               <div class="prose-sabeel mt-6 max-w-[46rem] text-[17px] leading-[1.8]">
                 <Content />
               </div>
@@ -292,7 +301,7 @@ const cards = [
           )}
           {flyerFull && d.flyer && !flyerInAbout && (
             <figure class:list={['self-start', !(outcomesFirst && body) && 'max-w-[340px]']}>
-              <figcaption class="mb-3 text-sm font-bold tracking-wide text-gold-text uppercase">Original flyer</figcaption>
+              <figcaption class="label mb-4">Original flyer</figcaption>
               <a
                 href={flyerFull.src}
                 data-lightbox="flyer"

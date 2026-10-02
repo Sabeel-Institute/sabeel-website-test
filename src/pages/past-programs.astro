@@ -24,12 +24,12 @@ const all = await getCompletedPrograms();
     </p>
   </PageHero>
 
-  <section class="py-14 md:py-16" aria-labelledby="archive-heading">
+  <section class="py-20 lg:py-28" aria-labelledby="archive-heading">
     <div class="container-page">
-      <SectionHeading eyebrow="Program archive" title="Past programs by year." id="archive-heading">
+      <SectionHeading number="01" eyebrow="Program archive" title="Past programs by year." id="archive-heading">
         <p>{all.length} programs so far, across all three program areas.</p>
       </SectionHeading>
-      <div class="mt-10">
+      <div class="mt-14">
         <FlyerArchive programs={all} id="archive" showArea />
       </div>
     </div>

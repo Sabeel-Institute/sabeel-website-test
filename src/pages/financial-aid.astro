@@ -24,13 +24,13 @@ const steps = [
     <ol slot="media" class="grid gap-4">
       {
         steps.map((s, i) => (
-          <li class="card-illuminated flex gap-5 rounded-card p-6">
+          <li class="card-illuminated rise flex gap-5 rounded-card p-6">
             <span class="flex size-12 shrink-0 items-center justify-center rounded-full bg-canvas text-gold-text">
               <Icon name={s.icon} class="size-6" />
             </span>
             <span>
-              <span class="block text-sm font-bold tracking-wide text-gold-text uppercase">Step {i + 1}</span>
-              <span class="block text-lg font-semibold text-ink">{s.title}</span>
+              <span class="label block">Step {i + 1}</span>
+              <span class="mt-1 block font-display text-[1.45rem] leading-tight font-semibold text-raspberry">{s.title}</span>
               <span class="block text-ink-soft">{s.text}</span>
               <a href={s.href} class="link-arrow mt-1 text-[15px]">
                 {s.link} <Icon name="arrow-right" class="size-4" />

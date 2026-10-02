@@ -1,5 +1,5 @@
 ---
-/** Row of labelled facts (Audience, Starts, Schedule, Location ...); a fact can add links under its value, such as map links. */
+/** A ledger of labelled facts (Audience, Starts, Schedule, Location ...) between gilt rules; a fact can add links under its value, such as map links. */
 import Icon from './Icon.astro';
 
 interface Props {
@@ -12,18 +12,18 @@ const shown = facts.filter((f) => f.value);
 
 <dl
   class:list={[
-    'card-illuminated grid overflow-hidden rounded-card sm:grid-cols-2',
+    'rise grid gap-x-8 gap-y-8 border-y border-gold/50 py-9 sm:grid-cols-2',
     shown.length >= 4 ? 'lg:grid-cols-4' : shown.length === 3 ? 'lg:grid-cols-3' : '',
     className,
   ]}
 >
   {
     shown.map((f) => (
-      <div class="border-b border-gold/40 px-5 py-4 last:border-b-0 sm:border-r sm:[&:nth-child(2n)]:border-r-0 lg:border-b-0 lg:[&:nth-child(2n)]:border-r lg:last:border-r-0">
-        <dt class="text-sm text-ink-soft">{f.label}</dt>
-        <dd class="mt-0.5 text-[17px] font-semibold text-ink">{f.value}</dd>
+      <div class="sm:border-l sm:border-gold/40 sm:pl-6 sm:first:border-l-0 sm:first:pl-0">
+        <dt class="label">{f.label}</dt>
+        <dd class="mt-3 font-display text-[1.5rem] leading-[1.2] font-semibold text-ink">{f.value}</dd>
         {f.links?.map((l) => (
-          <dd class="mt-1">
+          <dd class="mt-2">
             <a
               href={l.href}
               target="_blank"

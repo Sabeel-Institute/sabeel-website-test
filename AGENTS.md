@@ -386,13 +386,14 @@ Pages have named photo slots. Drop a file named after the slot (`.jpg`,
 `.png`, or `.webp`) to fill it; until then the slot shows a geometric panel.
 Photos are cropped to fill their frame, so use landscape photos with the
 subject near the centre, at least 1600 × 1200 px (4:3); `about-story` is 5:4,
-at least 1500 × 1200 px. A page's opening photo (`PageHero`) is shown in a
-pointed arch, taller than it is wide, so only the middle of a landscape photo
-shows there: keep the subject in the centre third.
+at least 1500 × 1200 px. A page's opening photo (`PageHero`), `about-story`,
+and `founder` are shown in a pointed arch, taller than it is wide, so only
+the middle of a landscape photo shows there: keep the subject in the centre
+third.
 
 | Page | Slots |
 |---|---|
-| About | `about-hero`; `about-story` (5:4) |
+| About | `about-hero`; `about-story` |
 | Programs | `programs-women`, `programs-teens`, `programs-children` (collage) |
 | Women’s Learning, Youth & Children | `area-womens-learning`, `area-youth-children` |
 | Hikam Foundations (draft, not on the site) | `hikam-hero` |
@@ -426,8 +427,8 @@ Keep it to a few photos, four to eight, and replace them as programs happen.
 | `alt` | What the photo shows, for people who cannot see it | `Women studying at low tables in a Sabeel class` |
 | `program` | Optional: the program the photo is from, by folder name. Its name and year go under the photo, linked to its page | `summer-garden-2025` |
 
-Each photo keeps its own shape at one height, so portrait and landscape photos
-both work. Use only photos the organisation approves for the website. Its
+Each photo is shown in an arch of the same size, cropped to it, so keep the
+subject in the middle. Use only photos the organisation approves for the website. Its
 photo consent says that faces are blurred and that children’s names are never
 shared without separate permission, so use photos with faces blurred or turned
 away, and never name a child in `alt`.
@@ -497,26 +498,26 @@ Routes: `/`, `/about/`, `/programs/`, `/programs/<slug>/`,
 | Component | Use for |
 |---|---|
 | `BaseLayout` | Every page. Props: `title`, `description`, `shareImage` |
-| `Header`, `Footer` | The logo and menus on every page; the menus come from `mainNav` and `footerNav` |
-| `PageHero` | Page opening: `eyebrow`, `title`, lead text (default slot), `actions` slot, and optionally a photo slot or `media` slot beside the text |
-| `SectionHeading` | Section opening: `eyebrow`, `title`, gold divider; the default slot is aside text on the right |
+| `Header`, `Footer` | The masthead (menu, logo, Support button) and the footer with the colophon; the menus come from `mainNav` and `footerNav` |
+| `PageHero` | Page opening: `eyebrow` (the running label), `title`, opening text (default slot), `actions` slot, and optionally a photo slot or `media` slot in the arch |
+| `SectionHeading` | Chapter opening: `number`, `eyebrow`, `title` under a gilt rule; the default slot is aside text on the right |
 | `CtaBand` | Closing band: `title`, optional `eyebrow`, text and an `actions` slot |
-| `FactsBar` | Labelled facts row (`facts=[{ label, value }]`) |
-| `ProgramCard` | A program's card: the same lines for every current program (see Cards); completed ones show year and summary |
+| `FactsBar` | A ledger of labelled facts (`facts=[{ label, value }]`) |
+| `ProgramCard` | A program as an entry in an `entry-list`: the same facts for every current program (see Cards); completed ones show year and summary |
 | `CurrentPrograms` | Current programs grouped by format |
-| `AreaCards` | The three program-area cards on Programs |
+| `AreaCards` | The program areas on Programs, as an arcade |
 | `FlyerArchive` | Completed programs' flyers, one tab per year; the page also includes `Lightbox` |
 | `AreaPage` | A whole program-area page |
-| `TeamCard` | A person |
+| `TeamCard` | A person, as a panel |
 | `Photo` | A photo slot (`slot=`) or a specific image (`image=`), with the pattern fallback (never for people; see Photos). In a gilt frame, or a pointed arch with `shape="arch"` |
 | `Collage` | Three photo slots with captions |
-| `Gallery` | The row of photos from past programs on the home page (see Gallery) |
+| `Gallery` | The arcade of photos from past programs on the home page (see Gallery) |
 | `MailingListForm`, `InterestDialog` | Newsletter and interest-list sign-up. Any link with `data-interest` opens the dialog |
 | `ZeffyDialog` | A Zeffy form in a dialog: the donation form on Support, a program's payment form on its page. A link with `data-zeffy="<id>"` opens the dialog with that `id` |
 | `Lightbox` | Enlarging flyers: links with `data-lightbox="<group>"` |
-| `SabeelDifference` | The three-column band on Home and About |
+| `SabeelDifference` | The arcade of three pillars on Home and About |
 | `Divider`, `Icon` | Gilt rule with a rosette; inline icons (add new ones to `Icon.astro` using Lucide paths) |
-| `illumination/Frame`, `Headpiece`, `Lattice`, `Shamsa`, `Rosette`, `Defs` | The ornaments (see Illumination in Design rules) |
+| `illumination/Frame`, `Headpiece`, `Lattice`, `Shamsa`, `Rosette`, `ArchRim`, `Defs` | The ornaments (see Illumination in Design rules) |
 
 Queries and helpers in `src/lib/content.ts`: `getCurrentPrograms(area?)`,
 `getUpcomingPrograms(area?)`, `getClosedPrograms(area?)`,
@@ -525,8 +526,8 @@ Queries and helpers in `src/lib/content.ts`: `getCurrentPrograms(area?)`,
 `displayName`, `teamHasPage`, `excerpt`.
 
 **A new page** is a file in `src/pages/` wrapped in `BaseLayout`, opening with
-`PageHero`, with sections that open with `SectionHeading`, and ending with a
-`CtaBand`. Add it to `mainNav` or `footerNav` in `src/site.config.ts` if it
+`PageHero`, with chapters that open with a numbered `SectionHeading`, and
+ending with a `CtaBand`. Add it to `mainNav` or `footerNav` in `src/site.config.ts` if it
 belongs in a menu.
 
 **Moving or removing a page:** add a 301 redirect for the old path to
@@ -552,27 +553,42 @@ belongs in a menu.
   decoration only; readable gold text is `text-gold-text`. Raspberry is for
   headings, links, buttons, and small bands, not large backgrounds. There is
   one light theme; do not add a dark mode.
-- **Type.** Page titles `display-xl` / `display-lg`; section titles
-  `display-md` (or `heading-sans` where the home page uses it); small labels
-  `eyebrow`; long Markdown text in `prose-sabeel`.
+- **Type.** The site is set like a manuscript: large. Page titles
+  `display-hero` (home) and `display-xl`; chapter titles `display-lg`;
+  panel and entry titles `display-md`; opening and introductory text `lead`
+  (the display face at reading size); running labels `label` (small
+  capitals, widely tracked), or `label-vertical` up the margin of a page
+  opening on large screens; the label in a cartouche, `eyebrow`, where a
+  page opens on small screens and on bio pages; long Markdown text in
+  `prose-sabeel`, which opens with an illuminated initial. Sizes are fluid
+  (`clamp`), so set none by hand.
+- **Structure.** Every page opens with `PageHero`: the running label, a
+  headpiece, the title, the opening text, and, when the page has one, its
+  photo in an arch that hangs below the opening's frame. Each section after
+  it is a chapter: it opens with `SectionHeading`, a gilt rule across the page
+  with the chapter numeral (`number="01"`, counted from the first chapter
+  after the opening), the label, and the title. Lists of programs and people
+  are indexes, `entry-list`, of `ProgramCard` entries (an image, the facts,
+  and a button in one row), never grids of cards. The three pillars on Home
+  and About and the program areas are arcades: `arch-panel` arches in a row.
+  Photos from past programs form an arcade too (`Gallery`).
 - **Layout.** Wrap content in `container-page`. Sections use
-  `py-14 md:py-16`. Cards and panels use `card-illuminated` with
-  `rounded-card` and their own padding: a gilt band with a rosette along the
-  top and a hairline frame inset from the edge, on `bg-surface`. Cards that
-  are links add `card-lift`. Lists of program cards use `card-grid`: up to
-  three to a row, with a short last row centred.
-- **Illumination.** The site is ornamented like an illuminated manuscript,
-  with the pieces in `src/components/illumination/`: every page opening
-  (`PageHero`, the program and bio pages, the 404 page) has a `Frame` around
-  the section, a `Headpiece` above the eyebrow, a faint `Lattice` behind, and
-  a `Shamsa` sunburst in the margin or behind the photo; `CtaBand` and the
-  raspberry bands have a `Lattice`; dividers and card bands carry the
-  `Rosette`. `Defs` (in `BaseLayout`) holds the shared drawings once. Keep
-  ornaments in gold at the opacities the components use (lattice at most
-  0.14, sunburst at most 0.16) so text keeps its contrast, keep them
-  `aria-hidden`, and never put one between a person and the text or a button.
-  A new ornament is drawn in SVG with `currentColor` or the gold tokens, never
-  as a raster image, and goes in the same folder.
+  `py-20 lg:py-28`. Panels use `card-illuminated` with `rounded-card` and
+  their own padding: a gilt band with a rosette along the top and a hairline
+  frame inset from the edge, on `bg-surface`. Panels that are links add
+  `card-lift`.
+- **Illumination.** The ornaments are in `src/components/illumination/`:
+  `Frame` (a ruled frame with corner rosettes) around page openings and the
+  closing and newsletter bands; `Headpiece` above every page title;
+  `Lattice` behind openings and bands; `Shamsa`, the sunburst, in a page
+  opening's margin or behind an arch; `Rosette` on dividers and card bands;
+  `ArchRim` on anything shaped by the arch; `Defs` (in `BaseLayout`) holds
+  the shared drawings once. Keep ornaments in gold at the opacities the
+  components use (lattice at most 0.16, sunburst at most 0.18) so text keeps
+  its contrast, keep them `aria-hidden`, and never put one between a person
+  and the text or a button. A new ornament is drawn in SVG with
+  `currentColor` or the gold tokens, never as a raster image, and goes in the
+  same folder.
 - **Section backgrounds.** Sections sit on ivory, the page background, with no
   background class; where two ivory sections meet, the lower one has
   `border-t border-border`. Light sage (`bg-sage-mist`) marks an occasional
@@ -580,12 +596,24 @@ belongs in a menu.
   band. The stronger sage (`bg-sage-wash`) is only the closing `CtaBand`.
   `bg-surface` is for cards and panels, never a whole section.
 - **Buttons and links.** `btn btn-primary` for the main action,
-  `btn btn-outline` for a secondary one, `link-arrow` with an `arrow-right`
-  icon for text links. External registration links open in a new tab with
+  `btn btn-outline` for a secondary one, both in small capitals, `link-arrow`
+  with an `arrow-right` icon for text links. External registration links open in a new tab with
   `rel="noopener"` and an `external` icon.
 - **Images.** Use `Image` from `astro:assets` with `widths` and `sizes`, never
   a plain `<img>` for local images. Meaningful images have alt text;
   decorative ones use `alt=""`.
+- **Motion.** Everything moves by transform and opacity only, and nothing
+  moves for people who ask for reduced motion. Chapters, entries, arches, and
+  panels carry `rise`, which brings them up into view as they enter the
+  viewport (a scroll-driven animation: no script, and browsers without it
+  show the page at rest). A page opening arrives in order with `enter`,
+  `enter-2`, and `enter-3` after the headpiece draws itself. Sunbursts carry
+  `turn`, one turn every few minutes. Nothing else animates on its own:
+  no sliders that move by themselves, no shimmer, no parallax of text.
+- **Backgrounds.** The page is parchment: ivory, lighter at the top, with
+  the lattice faint under everything. Sections keep the rules under Section
+  backgrounds; the lattice over a band comes from `Lattice`, never from a
+  background image.
 - **Accessibility.** One `h1` per page; headings in order; icon-only controls
   have a `label`; tap targets at least 44 px.
 - **Phone first.** Check every change at about 390 px wide as well as desktop.

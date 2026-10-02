@@ -10,20 +10,20 @@ const { role, sub, highlights } = member.data;
 const href = teamHasPage(member) ? `/teachers-and-team/${member.id}/` : undefined;
 ---
 
-<article id={member.id} class="card-illuminated card-lift flex h-full scroll-mt-6 flex-col rounded-card p-5">
-  <h3 class="font-display text-[1.45rem] leading-tight font-bold text-raspberry">
+<article id={member.id} class="card-illuminated card-lift rise flex h-full scroll-mt-6 flex-col rounded-card p-7">
+  {role && <p class="label">{role}</p>}
+  <h3 class="display-md mt-3">
     {href ? <a href={href} class="after:absolute after:inset-0 after:content-['']">{displayName(member)}</a> : displayName(member)}
   </h3>
-  {role && <p class="mt-1.5 text-[15px] font-medium text-ink">{role}</p>}
-  {sub && <p class="text-[14px] text-ink-soft">{sub}</p>}
+  {sub && <p class="mt-2 text-[15px] text-ink">{sub}</p>}
   {
     highlights && (
-      <ul class="mt-2 space-y-1 text-[14px] leading-snug text-ink-soft">
+      <ul class="mt-4 space-y-1 text-[15px] leading-snug text-ink-soft">
         {highlights.map((h) => (
           <li>{h}</li>
         ))}
       </ul>
     )
   }
-  {href && <p class="mt-3 text-[15px] font-medium text-raspberry">Read bio</p>}
+  {href && <p class="link-arrow mt-auto pt-6 text-[15px]">Read bio</p>}
 </article>

@@ -1,0 +1,31 @@
+---
+/**
+ * The gilt rim of an arch: the arch outline drawn over a box that is clipped
+ * with the arch (`clip-path: url(#arch)` or `.arch-panel`), plus a finial at
+ * the apex. The outline is the same path as the clip in Defs.astro, in a unit
+ * square stretched to the box, so rim and clip always agree.
+ */
+import Rosette from './Rosette.astro';
+
+interface Props {
+  /** Leave out the finial, for small arches. */
+  finial?: boolean;
+}
+const { finial = true } = Astro.props;
+const path = 'M0 1V0.44C0 0.26 0.1 0.14 0.26 0.1C0.38 0.07 0.46 0.04 0.5 0C0.54 0.04 0.62 0.07 0.74 0.1C0.9 0.14 1 0.26 1 0.44V1Z';
+---
+
+<svg aria-hidden="true" focusable="false" viewBox="0 0 1 1" preserveAspectRatio="none" class="pointer-events-none absolute inset-0 size-full overflow-visible">
+  <path d={path} fill="none" stroke="var(--color-gold-deep)" stroke-width="3" vector-effect="non-scaling-stroke"></path>
+  <path d={path} fill="none" stroke="var(--color-gold-light)" stroke-width="1" vector-effect="non-scaling-stroke"></path>
+</svg>
+{
+  finial && (
+    <span
+      aria-hidden="true"
+      class="absolute top-0 left-1/2 flex size-7 -translate-x-1/2 -translate-y-[60%] items-center justify-center rounded-full border border-gold/70 bg-canvas"
+    >
+      <Rosette class="size-3.5 text-gold" />
+    </span>
+  )
+}

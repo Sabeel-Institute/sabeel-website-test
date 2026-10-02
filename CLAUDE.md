@@ -58,10 +58,33 @@
   `::after` at `z-10` so it shows over a card's image. `.eyebrow` is a
   cartouche made of `border-block` rules and two pseudo-element diamonds,
   which still works when the label wraps.
+- A page opening's arch hangs below the opening: the section has
+  `lg:mb-24` and the arch `lg:translate-y-24`, so the arch crosses the frame
+  and the border into the margin, not into the next chapter. The opening
+  therefore cannot be `overflow-hidden`; it and the other sections with a
+  sunburst clip sideways only (`overflow-x-clip`), and `body` does too, so
+  no ornament ever widens the page. Bands with a lattice clip with
+  `overflow-clip`, not `overflow-hidden`: `hidden` makes a section a scroll
+  container, which a `view()` timeline inside it then measures against,
+  stalling the reveal. The running label (`label-vertical`)
+  reads upward, as on a spine, and its grid row is `items-start` so it hangs
+  from the top of the opening whatever the title's height.
+- `.btn` is small capitals in DM Sans at 13 px; the brand's accessibility
+  cuts are unaffected because buttons are ivory on raspberry or raspberry on
+  ivory, both well over 4.5:1.
 - Ornament opacities are chosen so text contrast is unchanged in practice:
-  gold at 14% over ivory, sage, or plum shifts the background's luminance by
-  well under a contrast step. Nothing animates continuously: the visual
-  comparison needs repeatable captures, and the ornaments read better still.
+  gold at 16% over ivory, sage, or plum shifts the background's luminance by
+  well under a contrast step.
+- Motion and the visual comparison: `engine/ready.cjs` finishes every finite
+  animation and cancels every endless one before a capture, so `enter` and
+  `draw` are captured at their end and `turn` at rest; `rise` uses a view
+  timeline, which cannot be finished and is cancelled, leaving the element at
+  rest and visible. All three are inside `prefers-reduced-motion:
+  no-preference`, and `draw` sets its hidden dash state inside it too, so the
+  headpiece is complete for anyone with reduced motion. The page lattice is a
+  `position: fixed` masked pseudo-element on `body`, one compositor layer
+  that never repaints on scroll; the mask is the lattice tile written by
+  `generate.py` into `--mask-lattice`.
 - `gallery.yaml` has one entry, `photos`, whose value is the whole list:
   Astro returns a collection's entries sorted by id, so one entry per photo
   would lose the order editors set. `getGalleryPhotos` (`src/lib/content.ts`)

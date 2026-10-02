@@ -1,58 +1,64 @@
 ---
 /**
- * Photos from past programs in one row. People swipe through it on a phone or
- * move along it with the arrows; it never moves by itself. Each photo keeps
- * its own shape at one height, and a photo from a program has the program's
- * name and year under it, linked to its page.
+ * Photos from past programs as an arcade: a row of arches at one height that
+ * people swipe through on a phone or move along with the arrows; it never
+ * moves by itself. A photo from a program has the program's name and year
+ * under it, linked to its page.
  */
 import { Image } from 'astro:assets';
 import Icon from './Icon.astro';
 import SectionHeading from './SectionHeading.astro';
+import ArchRim from './illumination/ArchRim.astro';
 import type { GalleryPhoto } from '../lib/content';
 
 interface Props {
   photos: GalleryPhoto[];
+  /** The chapter numeral shown with the heading. */
+  number?: string;
 }
 
-const { photos } = Astro.props;
-/** The tallest a photo shows (lg:h-96); image files are made for this height. */
-const HEIGHT = 384;
-/** Arrows sit level with the middle of the photos: the list's pt-2 plus half of sm:h-80 or lg:h-96. */
+const { photos, number } = Astro.props;
+/** The tallest an arch shows (lg:h-[26rem]); image files are made for it. */
+const HEIGHT = 416;
+/** Arrows sit level with the middle of the arches. */
 const arrow =
-  'absolute top-42 z-10 hidden size-11 -translate-y-1/2 items-center justify-center rounded-full bg-surface/95 text-ink shadow-card transition-opacity hover:bg-white disabled:pointer-events-none disabled:opacity-0 sm:flex lg:top-50';
+  'absolute top-[11rem] z-10 hidden size-11 -translate-y-1/2 items-center justify-center rounded-full border border-gold/60 bg-surface/95 text-ink shadow-card transition-opacity hover:bg-white disabled:pointer-events-none disabled:opacity-0 sm:flex lg:top-[14rem]';
 ---
 
-<section class="border-t border-border py-14 md:py-16" aria-labelledby="gallery-heading">
+<section class="py-20 lg:py-28" aria-labelledby="gallery-heading">
   <div class="container-page">
-    <SectionHeading eyebrow="Life at Sabeel" title="Moments from our programs" id="gallery-heading">
+    <SectionHeading eyebrow="Life at Sabeel" title="Moments from our programs" id="gallery-heading" number={number}>
       <p>Photos from recent classes, gatherings, and camps.</p>
       <a href="/past-programs/" class="link-arrow mt-3 font-semibold">
         Browse past programs <Icon name="arrow-right" class="size-5" />
       </a>
     </SectionHeading>
-    <div class="relative mt-8" data-gallery>
+    <div class="rise relative mt-12" data-gallery>
       <ul
         tabindex="0"
         aria-labelledby="gallery-heading"
-        class="-mx-4 flex snap-x snap-mandatory scroll-px-4 gap-4 overflow-x-auto px-4 pt-2 pb-6 [scrollbar-color:var(--color-gold)_transparent] [scrollbar-width:thin] motion-safe:scroll-smooth sm:-mx-6 sm:scroll-px-6 sm:px-6 lg:-mx-3 lg:scroll-px-3 lg:px-3"
+        class="-mx-4 flex snap-x snap-mandatory scroll-px-4 gap-6 overflow-x-auto px-4 pt-4 pb-6 [scrollbar-color:var(--color-gold)_transparent] [scrollbar-width:thin] motion-safe:scroll-smooth sm:-mx-6 sm:scroll-px-6 sm:px-6 lg:-mx-3 lg:scroll-px-3 lg:px-3"
       >
         {
           photos.map((photo) => (
             <li class="shrink-0 snap-start">
               <figure>
-                <Image
-                  src={photo.image}
-                  alt={photo.alt}
-                  width={Math.round((HEIGHT * photo.image.width) / photo.image.height)}
-                  densities={[1, 2]}
-                  class="h-64 w-auto max-w-[calc(100vw-4rem)] rounded-card object-cover shadow-card sm:h-80 lg:h-96"
-                />
+                <div class="relative aspect-[5/6] h-[18rem] sm:h-[22rem] lg:h-[26rem]">
+                  <div class="absolute inset-0 overflow-hidden [clip-path:url(#arch)]">
+                    <Image
+                      src={photo.image}
+                      alt={photo.alt}
+                      width={Math.round((HEIGHT * 5) / 6)}
+                      height={HEIGHT}
+                      densities={[1, 2]}
+                      class="size-full object-cover"
+                    />
+                  </div>
+                  <ArchRim finial={false} />
+                </div>
                 {photo.program && (
-                  <figcaption class="mt-3 w-0 min-w-full text-[15px] leading-snug">
-                    <a
-                      href={photo.program.href}
-                      class="font-semibold text-raspberry underline decoration-gold underline-offset-4 hover:decoration-raspberry"
-                    >
+                  <figcaption class="mt-4 w-0 min-w-full text-center text-[15px] leading-snug">
+                    <a href={photo.program.href} class="font-semibold text-raspberry underline decoration-gold underline-offset-4 hover:decoration-raspberry">
                       {photo.program.title}
                     </a>
                     <span class="text-ink-soft"> · {photo.program.year}</span>
