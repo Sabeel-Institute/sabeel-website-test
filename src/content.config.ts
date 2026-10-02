@@ -1,6 +1,6 @@
 /**
- * Content schemas. Every program, team member, testimonial and milestone is
- * validated against these at build time, so a missing or mistyped field fails
+ * Content schemas. Every program, team member, and testimonial is validated
+ * against these at build time, so a missing or mistyped field fails
  * `npm run build` with a message naming the file and the field.
  *
  * How to add or change content: see AGENTS.md.
@@ -164,18 +164,4 @@ const testimonials = defineCollection({
   }),
 });
 
-const milestones = defineCollection({
-  loader: file('src/content/milestones.yaml'),
-  schema: z.object({
-    /** Position on the timeline, ascending. */
-    order: z.number().int(),
-    /** Leave out until the year is verified against records. */
-    year: z.string().min(1).optional(),
-    title: z.string().min(1),
-    text: z.string().min(1),
-    /** A related program record; its program image, or else its flyer, illustrates the milestone. */
-    program: reference('programs').optional(),
-  }),
-});
-
-export const collections = { programs, team, testimonials, milestones };
+export const collections = { programs, team, testimonials };

@@ -75,7 +75,7 @@ export type NavItem = { label: string; href: string; match?: string[] };
 
 export const mainNav: NavItem[] = [
   { label: 'Programs', href: '/programs/', match: ['/past-programs/', '/hikam-foundations/'] },
-  { label: 'About', href: '/about/', match: ['/through-the-years/'] },
+  { label: 'About', href: '/about/' },
   { label: 'Teachers & Team', href: '/teachers-and-team/' },
 ];
 
@@ -94,7 +94,6 @@ export const footerNav: { title: string; links: NavItem[] }[] = [
     links: [
       { label: 'Teachers & Team', href: '/teachers-and-team/' },
       { label: 'Past Programs', href: '/past-programs/' },
-      { label: 'Through the Years', href: '/through-the-years/' },
       { label: 'Financial Aid', href: '/financial-aid/' },
       { label: 'Contact', href: '/contact/' },
     ],

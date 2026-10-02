@@ -46,7 +46,7 @@ field.
 | New session of a monthly gathering | Programs → Recipes → Recurring gathering |
 | Images from the program's designers | Programs → Program images |
 | Add, rename, or hide a person | Team |
-| Add a testimonial or a milestone | Testimonials, Milestones |
+| Add a testimonial | Testimonials |
 | Add a photo to a page | Photos |
 | Change contact details, links, or menus | Site settings |
 | Donations, newsletter | Site settings → Donations, Newsletter |
@@ -63,7 +63,6 @@ flowchart LR
   subgraph content["src/content/ — data"]
     P["programs/&lt;slug&gt;/index.md"]
     T["team/&lt;slug&gt;.md"]
-    M["milestones.yaml"]
     Q["testimonials.yaml"]
   end
   CFG["src/site.config.ts<br/>links, areas, nav"]
@@ -82,7 +81,6 @@ flowchart LR
 |---|---|
 | `src/content/programs/` | One folder per program: `index.md` plus its flyer and program image |
 | `src/content/team/` | One Markdown file per person |
-| `src/content/milestones.yaml` | Through the Years timeline |
 | `src/content/testimonials.yaml` | Student quotes |
 | `src/content.config.ts` | Schemas: every field each content file may have, with comments |
 | `src/site.config.ts` | Contact email, social and form links, program areas, navigation |
@@ -312,12 +310,6 @@ programs by file name under `instructors`.
   `/teachers-and-team/<old>{,/}` to `/teachers-and-team/<new>/` (see Moving or
   removing a page).
 
-### Milestones (`src/content/milestones.yaml`)
-
-`id`, `order`, `title`, `text`, optional `year` (only once verified), and
-optional `program` (a program folder whose program image or flyer illustrates
-it).
-
 ### Testimonials (`src/content/testimonials.yaml`)
 
 `id` (unique), `program` (the program the quote is about, as the student or
@@ -341,7 +333,6 @@ at least 1500 × 1200 px.
 | Women’s Learning, Youth & Children | `area-womens-learning`, `area-youth-children` |
 | Hikam Foundations | `hikam-hero` |
 | Past Programs | `past-programs-hero` |
-| Through the Years | `history-hero`; `milestone-<id>` for a milestone without a program |
 | Teachers & Team | `team-hero`, `founder` |
 | Support | `support-hero`, `rukaiya` |
 
@@ -393,8 +384,8 @@ priorities the Support page describes, so do not add a choice of fund.
 Routes: `/`, `/about/`, `/programs/`, `/programs/<slug>/`,
 `/programs/womens-learning/`, `/programs/youth-children/`,
 `/past-programs/`, `/hikam-foundations/`, `/teachers-and-team/`,
-`/teachers-and-team/<slug>/`, `/through-the-years/`, `/support/`,
-`/contact/`, `/financial-aid/`, and the 404 page.
+`/teachers-and-team/<slug>/`, `/support/`, `/contact/`, `/financial-aid/`,
+and the 404 page.
 
 | Component | Use for |
 |---|---|
