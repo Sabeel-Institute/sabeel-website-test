@@ -394,7 +394,6 @@ at least 1500 × 1200 px.
 | Programs | `programs-women`, `programs-teens`, `programs-children` (collage) |
 | Women’s Learning, Youth & Children | `area-womens-learning`, `area-youth-children` |
 | Hikam Foundations (draft, not on the site) | `hikam-hero` |
-| Past Programs | `past-programs-hero` |
 | Teachers & Team | `team-hero`, `founder` |
 | Support | `support-hero`, `rukaiya` |
 
