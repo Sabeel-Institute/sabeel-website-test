@@ -1,3 +1,4 @@
+import type { ImageMetadata } from 'astro';
 import { getCollection, getEntry, type CollectionEntry } from 'astro:content';
 import type { AreaId } from '../site.config';
 import type { PROGRAM_FREQUENCIES } from '../content.config';
@@ -175,6 +176,46 @@ export function assertProgramImages(programs: Program[]): void {
       );
     }
   }
+}
+
+/* ---------- Gallery ---------- */
+
+export type GalleryPhoto = {
+  image: ImageMetadata;
+  alt: string;
+  /** The program the photo is from, named under the photo. */
+  program?: { title: string; year: number; href: string };
+};
+
+/**
+ * The home page's photos from past programs, in the order gallery.yaml lists
+ * them. Fails the build for a photo that is not WebP or names a draft program
+ * (see Gallery in AGENTS.md).
+ */
+export async function getGalleryPhotos(): Promise<GalleryPhoto[]> {
+  const entry = await getEntry('gallery', 'photos');
+  if (!entry) {
+    throw new Error('src/content/gallery.yaml needs a photos list, which may be empty: photos: [] (see Gallery in AGENTS.md).');
+  }
+  return Promise.all(
+    entry.data.map(async ({ image, alt, program: ref }) => {
+      if (image.format !== 'webp') {
+        throw new Error(
+          `The gallery photo "${alt}" is a ${image.format.toUpperCase()} file. ` +
+            'Convert it to WebP with the command under Gallery in AGENTS.md.',
+        );
+      }
+      if (!ref) return { image, alt };
+      const program = (await getEntry(ref))!;
+      if (program.data.draft) {
+        throw new Error(
+          `The gallery photo "${alt}" names program "${program.id}", which is a draft and not on the site. ` +
+            'Remove the photo’s program field or publish the program.',
+        );
+      }
+      return { image, alt, program: { title: program.data.title, year: programYear(program), href: programHref(program) } };
+    }),
+  );
 }
 
 /* ---------- Team ---------- */

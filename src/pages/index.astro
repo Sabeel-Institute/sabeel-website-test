@@ -8,11 +8,13 @@ import Icon from '../components/Icon.astro';
 import ProgramCard from '../components/ProgramCard.astro';
 import MailingListForm from '../components/MailingListForm.astro';
 import SabeelDifference from '../components/SabeelDifference.astro';
+import Gallery from '../components/Gallery.astro';
 import teacherIcon from '../assets/images/icon-teacher.png';
 import serviceIcon from '../assets/images/icon-service.png';
-import { getCurrentPrograms } from '../lib/content';
+import { getCurrentPrograms, getGalleryPhotos } from '../lib/content';
 
 const featured = (await getCurrentPrograms()).slice(0, 3);
+const gallery = await getGalleryPhotos();
 ---
 
 <BaseLayout>
@@ -91,6 +93,8 @@ const featured = (await getCurrentPrograms()).slice(0, 3);
       }
     </div>
   </section>
+
+  {gallery.length > 0 && <Gallery photos={gallery} />}
 
   <!-- Stay connected -->
   <section class="bg-raspberry py-10 text-on-raspberry" aria-labelledby="stay-heading">

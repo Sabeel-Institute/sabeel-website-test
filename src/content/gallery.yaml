@@ -1,0 +1,12 @@
+# Photos from past programs, in the row near the bottom of the home page, in
+# this order. Each photo is a WebP file in gallery/. How to add, replace, or
+# remove one: Gallery in AGENTS.md.
+photos:
+  - image: ./gallery/community-in-the-park.webp
+    alt: Sabeel’s community praying together in a park beside a Sabeel tent
+  - image: ./gallery/womens-class.webp
+    alt: Women studying at low tables in a Sabeel class
+  - image: ./gallery/teen-boys-class.webp
+    alt: Teen boys in a Sabeel class
+  - image: ./gallery/women-arm-in-arm.webp
+    alt: Women standing arm in arm in a Sabeel classroom

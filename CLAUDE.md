@@ -33,6 +33,16 @@
 - `Photo.astro` resolves named slots from `src/assets/photos/` with
   `import.meta.glob`; a missing file renders the geometric fallback, so slots
   never break the build.
+- `gallery.yaml` has one entry, `photos`, whose value is the whole list:
+  Astro returns a collection's entries sorted by id, so one entry per photo
+  would lose the order editors set. `getGalleryPhotos` (`src/lib/content.ts`)
+  checks that each photo is WebP and names no draft program while the home
+  page builds, because `image()` does not know a file's format when the
+  schema is checked.
+- `Gallery` never moves on its own: content that moves by itself needs a
+  pause control (WCAG 2.2.2), and people choose when to see the next photo.
+  Its arrows are disabled, and so hidden, at either end and while every photo
+  fits.
 - `ZeffyDialog` shows Zeffy's plain embed (`/embed/donation-form/<name>`,
   or `/embed/ticketing/<name>` for a program's `zeffyTicketing`) in the
   site's own `<dialog>` and loads it on first open; `zeffyForm` in
