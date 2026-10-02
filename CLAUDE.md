@@ -95,6 +95,12 @@
   release whose dependencies have no known vulnerabilities, and
   `allowScripts` (honoured by npm 11.18 and later) stops Puppeteer
   downloading its own Chrome.
+- `preview.yml`'s `delete-preview` job runs on `pull_request_target`, which
+  GitHub runs from `main` with `ref` set to `refs/heads/main`, so the identity
+  pool's condition accepts it. It checks out only `main`'s Firebase settings
+  and must never check out or run pull-request code. `deploy-preview` sets its
+  channel's `retainedReleaseCount` to 1 through the Hosting API, with the
+  access token the auth step mints.
 - `preview.yml` treats the `visual-diff` artifact as untrusted: it publishes
   only static files, drops the report if it is over 50 MB, and reads nothing
   from it except the five whole-number counts in `summary.json`, which must
