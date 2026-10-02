@@ -40,7 +40,7 @@ const priorities = [
       available. We are ready for the next chapter: a permanent home where learning, teaching, suhbah, youth programs,
       and service can grow together.
     </p>
-    <dl class="mt-6 grid grid-cols-2 overflow-hidden rounded-card border border-gold/60 bg-surface text-sm sm:grid-cols-4">
+    <dl class="card-illuminated rise mt-6 grid grid-cols-2 overflow-hidden rounded-card text-sm sm:grid-cols-4">
       {
         [
           ['For 15+ years', 'Borrowed and shared spaces'],
@@ -62,9 +62,9 @@ const priorities = [
   </PageHero>
 
   <!-- What a home makes possible -->
-  <section class="py-14 md:py-16" aria-labelledby="possible-heading">
+  <section class="py-20 lg:py-28" aria-labelledby="possible-heading">
     <div class="container-page">
-      <SectionHeading eyebrow="What a permanent home could make possible" title="A place for learning — and for life together." id="possible-heading">
+      <SectionHeading number="01" eyebrow="What a permanent home could make possible" title="A place for learning — and for life together." id="possible-heading">
         <p>
           Among Sabeel’s students and team, community is already taking shape: they organize meal trains and show up for
           one another at births and weddings. A permanent home would help extend that same care and belonging to the
@@ -74,7 +74,7 @@ const priorities = [
       <ul class="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
         {
           possible.map((p) => (
-            <li class="rounded-card border border-gold/60 border-t-4 border-t-gold bg-surface p-6">
+            <li class="card-illuminated rise rounded-card p-6">
               <span class="flex size-12 items-center justify-center rounded-full bg-canvas text-gold-text">
                 <Icon name={p.icon} class="size-6" />
               </span>
@@ -88,13 +88,13 @@ const priorities = [
   </section>
 
   <!-- What gifts support -->
-  <section class="border-t border-border py-14 md:py-16" aria-labelledby="gift-heading">
+  <section class="border-t border-border py-20 lg:py-28" aria-labelledby="gift-heading">
     <div class="container-page">
-      <SectionHeading eyebrow="Where your gift goes" title="A permanent home, and the work happening now." id="gift-heading" />
+      <SectionHeading number="02" eyebrow="Where your gift goes" title="A permanent home, and the work happening now." id="gift-heading" />
       <ul class="mt-8 grid gap-4 sm:grid-cols-3">
         {
           priorities.map((d) => (
-            <li class="rounded-card border border-gold/60 bg-surface p-6">
+            <li class="card-illuminated rise rounded-card p-6">
               <h3 class="text-xl font-semibold text-ink">{d.title}</h3>
               <p class="mt-2 text-[15px] leading-relaxed text-ink-soft">{d.text}</p>
             </li>
@@ -105,12 +105,12 @@ const priorities = [
   </section>
 
   <!-- How to give -->
-  <section id="give" class="scroll-mt-6 border-y border-border bg-sage-mist py-14 md:py-16" aria-labelledby="give-heading">
+  <section id="give" class="scroll-mt-6 border-y border-border bg-sage-mist py-20 lg:py-28" aria-labelledby="give-heading">
     <div class="container-page">
-      <SectionHeading eyebrow="How to give" title="Give online or with Zelle." id="give-heading" />
+      <SectionHeading number="03" eyebrow="How to give" title="Give online or with Zelle." id="give-heading" />
       <div class="mt-8 grid gap-5 md:grid-cols-2">
-        <article class="flex flex-col rounded-card border border-gold/70 border-t-4 border-t-gold bg-surface p-6 shadow-card sm:p-8">
-          <span class="flex size-12 items-center justify-center rounded-full bg-canvas text-gold-text">
+        <article class="card-illuminated rise flex flex-col rounded-card p-6 shadow-card sm:p-8">
+          <span class="flex size-12 items-center justify-center rounded-full border border-gold/60 bg-canvas text-gold-text">
             <Icon name="credit-card" class="size-6" />
           </span>
           <h3 class="mt-4 text-2xl font-semibold text-ink">Donate online</h3>
@@ -126,8 +126,8 @@ const priorities = [
             </p>
           </div>
         </article>
-        <article class="flex flex-col rounded-card border border-gold/70 border-t-4 border-t-gold bg-surface p-6 shadow-card sm:p-8">
-          <span class="flex size-12 items-center justify-center rounded-full bg-canvas text-gold-text">
+        <article class="card-illuminated rise flex flex-col rounded-card p-6 shadow-card sm:p-8">
+          <span class="flex size-12 items-center justify-center rounded-full border border-gold/60 bg-canvas text-gold-text">
             <Icon name="landmark" class="size-6" />
           </span>
           <h3 class="mt-4 text-2xl font-semibold text-ink">Donate with Zelle</h3>
@@ -145,20 +145,21 @@ const priorities = [
   </section>
 
   <!-- Rukaiya's story -->
-  <section class="py-14 md:py-16" aria-labelledby="story-heading">
+  <section class="py-20 lg:py-28" aria-labelledby="story-heading">
     <div class="container-page grid items-center gap-10 md:grid-cols-2 md:gap-16">
       <Photo slot="rukaiya" alt="Sr. Rukaiya Ahmed" class="aspect-[4/3] shadow-card" />
       <div>
-        <p class="eyebrow">Rukaiya’s story</p>
-        <h2 id="story-heading" class="display-md mt-2 sm:text-[2.4rem]">From a summer garden to the board.</h2>
-        <Divider class="mt-4" />
+        <span aria-hidden="true" class="numeral">04</span>
+        <p class="label mt-3">Rukaiya’s story</p>
+        <h2 id="story-heading" class="display-lg mt-3">From a summer garden to the board.</h2>
+        <Divider class="mt-6" />
         <p class="mt-5 text-[17px] leading-[1.85] text-ink-soft">
           Rukaiya first joined Sabeel in high school through our Summer Garden program. She then continued her journey
           as a Sabeel student through the three-year Classical Islamic Knowledge program. Today, she serves as a member
           of Sabeel’s board. Her story shows what becomes possible when a young woman has a pathway to learn, belong,
           and lead.
         </p>
-        <ol class="mt-6 grid overflow-hidden rounded-card border border-gold/60 bg-surface text-sm sm:grid-cols-3">
+        <ol class="card-illuminated rise mt-8 grid overflow-hidden rounded-card text-sm sm:grid-cols-3">
           {
             [
               ['High school', 'Summer Garden'],
@@ -180,24 +181,24 @@ const priorities = [
   </section>
 
   <!-- Trust -->
-  <section id="trust" class="scroll-mt-6 border-t border-border bg-sage-mist py-14 md:py-16" aria-labelledby="trust-heading">
+  <section id="trust" class="scroll-mt-6 border-t border-border bg-sage-mist py-20 lg:py-28" aria-labelledby="trust-heading">
     <div class="container-page">
-      <SectionHeading eyebrow="Nonprofit information" title="Give with confidence." id="trust-heading" />
+      <SectionHeading number="05" eyebrow="Nonprofit information" title="Give with confidence." id="trust-heading" />
       <dl class="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-        <div class="rounded-card bg-surface p-6">
-          <dt class="text-sm font-bold tracking-wide text-gold-text uppercase">Not-for-profit</dt>
+        <div class="card-illuminated rise rounded-card p-6">
+          <dt class="label">Not-for-profit</dt>
           <dd class="mt-2 text-ink">Sabeel Institute is a not-for-profit Islamic educational institution based in Houston, Texas.</dd>
         </div>
-        <div class="rounded-card bg-surface p-6">
-          <dt class="text-sm font-bold tracking-wide text-gold-text uppercase">Tax-deductible</dt>
+        <div class="card-illuminated rise rounded-card p-6">
+          <dt class="label">Tax-deductible</dt>
           <dd class="mt-2 text-ink">Donations are tax-deductible. Our tax ID is <span class="font-semibold">{site.taxId}</span>.</dd>
         </div>
-        <div class="rounded-card bg-surface p-6">
-          <dt class="text-sm font-bold tracking-wide text-gold-text uppercase">Secure payment</dt>
+        <div class="card-illuminated rise rounded-card p-6">
+          <dt class="label">Secure payment</dt>
           <dd class="mt-2 text-ink">Online gifts are completed on our secure donation form. Zelle is also available.</dd>
         </div>
-        <div class="rounded-card bg-surface p-6">
-          <dt class="text-sm font-bold tracking-wide text-gold-text uppercase">Questions</dt>
+        <div class="card-illuminated rise rounded-card p-6">
+          <dt class="label">Questions</dt>
           <dd class="mt-2 text-ink">
             Email <a href={`mailto:${site.email}`} class="font-medium text-raspberry underline decoration-gold underline-offset-4">{site.email}</a> about any gift.
           </dd>

@@ -29,8 +29,8 @@ const field =
       Choose the reason for your message so it reaches the right person. For course dates and fees, check the
       <a href="/programs/" class="text-raspberry underline decoration-gold underline-offset-4">program page</a> first.
     </p>
-    <div slot="media" class="rounded-card border border-gold/70 border-t-4 border-t-gold bg-surface p-7 shadow-card sm:p-9">
-      <h2 class="text-2xl font-semibold text-ink">Contact Sabeel</h2>
+    <div slot="media" class="card-illuminated rise rounded-card p-7 shadow-card sm:p-9">
+      <h2 class="display-md">Contact Sabeel</h2>
       <ul class="mt-5 space-y-4 text-ink">
         <li class="flex items-center gap-3">
           <Icon name="map-pin" class="size-5 text-gold-text" />{site.location}
@@ -52,20 +52,20 @@ const field =
     </div>
   </PageHero>
 
-  <section class="py-12 md:py-14">
-    <ul class="container-page grid gap-5 md:grid-cols-3">
+  <section class="py-16 lg:py-20">
+    <ul class="container-page grid gap-6 md:grid-cols-3">
       {
         reasons.map((r) => (
           <li>
             <a
               href={`?inquiry=${r.id}#message`}
               data-inquiry={r.id}
-              class="flex h-full flex-col rounded-card border border-gold/60 bg-surface p-7 transition-shadow hover:shadow-card"
+              class="card-illuminated rise card-lift flex h-full flex-col rounded-card p-7"
             >
               <span class="flex size-12 items-center justify-center rounded-full bg-canvas text-gold-text">
                 <Icon name={r.icon} class="size-6" />
               </span>
-              <span class="mt-4 text-xl font-semibold text-ink">{r.title}</span>
+              <span class="display-md mt-5 text-[1.5rem]">{r.title}</span>
               <span class="mt-2 leading-relaxed text-ink-soft">{r.text}</span>
             </a>
           </li>
@@ -74,9 +74,9 @@ const field =
     </ul>
   </section>
 
-  <section id="message" class="scroll-mt-6 border-t border-border py-14 md:py-16" aria-labelledby="message-heading">
+  <section id="message" class="scroll-mt-6 border-t border-border py-20 lg:py-28" aria-labelledby="message-heading">
     <div class="container-page grid gap-10 lg:grid-cols-[1fr_1.3fr] lg:gap-14">
-      <SectionHeading eyebrow="Send a message" title="Tell us what you need." id="message-heading" />
+      <SectionHeading number="01" eyebrow="Send a message" title="Tell us what you need." id="message-heading" />
       <form class="grid gap-4" data-contact-form data-to={site.email}>
         <div class="grid gap-4 sm:grid-cols-2">
           <label class="grid gap-1.5 text-[15px] font-medium text-ink">

@@ -1,15 +1,21 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Divider from '../components/Divider.astro';
+import Headpiece from '../components/illumination/Headpiece.astro';
+import Lattice from '../components/illumination/Lattice.astro';
+import Shamsa from '../components/illumination/Shamsa.astro';
 ---
 
 <BaseLayout title="Page not found">
-  <section class="py-20 md:py-28">
-    <div class="container-page max-w-[40rem] text-center">
+  <section class="relative overflow-clip py-20 md:py-28">
+    <Lattice class="text-gold opacity-[0.09]" fade />
+    <Shamsa class="turn absolute top-1/2 left-1/2 w-[44rem] max-w-none -translate-x-1/2 -translate-y-1/2 text-gold opacity-[0.07]" />
+    <div class="container-page relative max-w-[40rem] text-center">
+      <Headpiece class="mx-auto mb-7 w-full max-w-[26rem] text-gold" />
       <p class="eyebrow">Page not found</p>
-      <h1 class="display-xl mt-3">This path leads elsewhere.</h1>
+      <h1 class="display-hero enter mt-6">This path leads elsewhere.</h1>
       <Divider align="center" class="mt-5" />
-      <p class="mt-6 text-lg text-ink-soft">
+      <p class="lead mt-7">
         The page you are looking for may have moved. Try one of these instead.
       </p>
       <div class="mt-8 flex flex-wrap justify-center gap-3">

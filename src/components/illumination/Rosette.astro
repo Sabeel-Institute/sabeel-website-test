@@ -1,0 +1,9 @@
+---
+/** A small eight-point rosette, filled with the current colour. */
+interface Props {
+  class?: string;
+}
+const { class: className = 'size-3.5 text-gold' } = Astro.props;
+---
+
+<svg aria-hidden="true" focusable="false" class:list={['pointer-events-none shrink-0', className]}><use href="#rosette"></use></svg>

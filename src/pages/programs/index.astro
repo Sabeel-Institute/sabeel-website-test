@@ -51,29 +51,29 @@ const notJoinable = [
   </PageHero>
 
   <!-- Now enrolling -->
-  <section class="py-14 md:py-16" aria-labelledby="enrolling-heading">
+  <section class="py-20 lg:py-28" aria-labelledby="enrolling-heading">
     <div class="container-page">
-      <SectionHeading eyebrow="Now enrolling" title="Open for registration" id="enrolling-heading">
+      <SectionHeading number="01" eyebrow="Now enrolling" title="Open for registration" id="enrolling-heading">
         <p>Grouped by where they meet: online, on site in Houston, or both. Registration links, dates, and fees are on each program’s page.</p>
       </SectionHeading>
       {
         current.length > 0 ? (
           <CurrentPrograms programs={current} />
         ) : (
-          <p class="mt-10 rounded-card bg-surface p-7 text-ink-soft">
+          <p class="card-illuminated rise mt-10 rounded-card p-7 text-ink-soft">
             No programs are open for registration right now. Join the interest list to hear when the next ones open.
           </p>
         )
       }
       {
         notJoinable.map((l) => (
-          <div class="mt-8 rounded-card border border-gold/60 bg-surface p-6">
-            <p class="text-[13px] font-bold tracking-[0.06em] text-gold-text uppercase">{l.label}</p>
+          <div class="card-illuminated rise mt-12 rounded-card p-7">
+            <p class="label">{l.label}</p>
             <ul class="mt-3 divide-y divide-border">
               {l.programs.map((p) => (
                 <li class="flex flex-wrap items-center justify-between gap-3 py-3">
                   <span>
-                    <span class="font-display text-xl font-bold text-raspberry">{p.data.title}</span>
+                    <span class="font-display text-[1.45rem] font-semibold text-raspberry">{p.data.title}</span>
                     <span class="text-ink-soft">
                       {areas[p.data.area].label !== p.data.title && ` · ${areas[p.data.area].label}`} · {l.detail(p)}
                     </span>
@@ -91,21 +91,21 @@ const notJoinable = [
   </section>
 
   <!-- Program areas -->
-  <section class="border-t border-border py-14 md:py-16" aria-labelledby="areas-heading">
+  <section class="border-t border-border py-20 lg:py-28" aria-labelledby="areas-heading">
     <div class="container-page">
-      <SectionHeading eyebrow="How our programs are organized" title="Explore our program areas." id="areas-heading" />
-      <div class="mt-10">
+      <SectionHeading number="02" eyebrow="How our programs are organized" title="Explore our program areas." id="areas-heading" />
+      <div class="mt-14">
         <AreaCards />
       </div>
     </div>
   </section>
 
   <!-- Interest list -->
-  <section class="border-t border-border py-12">
+  <section class="border-t border-border py-16 lg:py-20">
     <div class="container-page grid items-center gap-6 md:grid-cols-[1.1fr_1fr] md:gap-12">
       <div>
-        <h2 class="font-display text-[2rem] leading-tight font-bold text-raspberry">Not seeing the right program?</h2>
-        <p class="mt-2 text-ink-soft">Join the interest list to hear about upcoming programs for your learner group.</p>
+        <h2 class="display-md">Not seeing the right program?</h2>
+        <p class="mt-3 text-ink-soft">Join the interest list to hear about upcoming programs for your learner group.</p>
       </div>
       <div class="flex flex-wrap gap-3 md:justify-end">
         <a href="/contact/?inquiry=interest-list" data-interest class="btn btn-primary px-6 text-base">Join the Interest List</a>

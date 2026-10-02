@@ -4,6 +4,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import PageHero from '../../components/PageHero.astro';
 import SectionHeading from '../../components/SectionHeading.astro';
 import Divider from '../../components/Divider.astro';
+import Shamsa from '../../components/illumination/Shamsa.astro';
 import Icon from '../../components/Icon.astro';
 import Photo from '../../components/Photo.astro';
 import TeamCard from '../../components/TeamCard.astro';
@@ -49,15 +50,18 @@ const serviceAreas = [
   </PageHero>
 
   <!-- Founder -->
-  <section id="founder" class="scroll-mt-6 bg-sage-mist py-14 md:py-16" aria-labelledby="founder-heading">
-    <div class="container-page grid items-center gap-10 md:grid-cols-2 md:gap-16">
-      <Photo slot="founder" alt="Ustadhah Sameera Shah teaching" class="aspect-[4/3] shadow-card max-md:order-last" />
+  <section id="founder" class="relative scroll-mt-6 overflow-clip bg-sage-mist py-20 lg:py-28" aria-labelledby="founder-heading">
+    <div class="container-page relative grid items-center gap-14 md:grid-cols-[minmax(0,24rem)_1fr] md:gap-16 lg:grid-cols-[minmax(0,28rem)_1fr] lg:gap-24">
+      <div class="relative mx-auto w-full max-w-[22rem] md:max-w-none max-md:order-last">
+        <Shamsa class="turn absolute top-1/2 left-1/2 w-[125%] max-w-none -translate-x-1/2 -translate-y-1/2 text-gold opacity-[0.18]" />
+        <Photo slot="founder" alt="Ustadhah Sameera Shah teaching" shape="arch" class="relative aspect-[5/6]" sizes="(min-width: 1024px) 28rem, (min-width: 768px) 24rem, 100vw" />
+      </div>
       <div>
-        <p class="eyebrow">{founder.data.role}</p>
-        {founder.data.sub && <p class="mt-1 text-sm font-medium text-ink">{founder.data.sub}</p>}
-        <h2 id="founder-heading" class="display-md mt-2 sm:text-[2.4rem]">Meet {displayName(founder)}.</h2>
-        <Divider class="mt-4" />
-        <p class="mt-5 text-[17px] leading-[1.85] text-ink">
+        <p class="label">{founder.data.role}</p>
+        {founder.data.sub && <p class="mt-2 text-[15px] font-medium text-ink">{founder.data.sub}</p>}
+        <h2 id="founder-heading" class="display-lg mt-3">Meet {displayName(founder)}.</h2>
+        <Divider class="mt-6" />
+        <p class="mt-7 max-w-[38rem] text-[17px] leading-[1.85] text-ink">
           Sameera Shah leads Sabeel’s educational vision. She earned a B.Sc. (Honors) in
           Economics from LUMS, completed her ‘Alimiyyah credential through Wifaq ul Madaris in 2009, and later
           completed certification in Advanced Qur’an Study and Tafsir and in Advanced Islamic Jurisprudence through
@@ -71,10 +75,10 @@ const serviceAreas = [
   </section>
 
   <!-- Board -->
-  <section id="board" class="scroll-mt-6 py-14 md:py-16" aria-labelledby="board-heading">
+  <section id="board" class="scroll-mt-6 py-20 lg:py-28" aria-labelledby="board-heading">
     <div class="container-page">
-      <SectionHeading eyebrow="Board & leadership" title="Guiding Sabeel’s work" id="board-heading" />
-      <ul class="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+      <SectionHeading number="01" eyebrow="Board & leadership" title="Guiding Sabeel’s work" id="board-heading" />
+      <ul class="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {
           board.map((m) => (
             <li>
@@ -87,10 +91,10 @@ const serviceAreas = [
   </section>
 
   <!-- Teaching team -->
-  <section id="teachers" class="scroll-mt-6 border-t border-border py-14 md:py-16" aria-labelledby="teachers-heading">
+  <section id="teachers" class="scroll-mt-6 border-t border-border py-20 lg:py-28" aria-labelledby="teachers-heading">
     <div class="container-page">
-      <SectionHeading eyebrow="Teaching team" title="Our ‘Alimiyyah-Qualified Teachers" id="teachers-heading" />
-      <ul class="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      <SectionHeading number="02" eyebrow="Teaching team" title="Our ‘Alimiyyah-Qualified Teachers" id="teachers-heading" />
+      <ul class="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {
           teachers.slice(0, 3).map((m) => (
             <li>
@@ -102,7 +106,7 @@ const serviceAreas = [
       {
         teachers.length > 3 && (
           <>
-            <ul id="more-teachers" class="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3" hidden>
+            <ul id="more-teachers" class="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-3" hidden>
               {teachers.slice(3).map((m) => (
                 <li>
                   <TeamCard member={m} />
@@ -117,9 +121,9 @@ const serviceAreas = [
           </>
         )
       }
-      <details class="group mt-8 rounded-r-card border-l-4 border-raspberry bg-sage-mist">
+      <details class="group mt-12 rounded-r-card border-l-4 border-raspberry bg-sage-mist">
         <summary class="flex min-h-14 cursor-pointer list-none items-center justify-between gap-4 px-6 py-4 [&::-webkit-details-marker]:hidden">
-          <span class="text-lg font-medium text-ink">What is ‘Alimiyyah?</span>
+          <span class="font-display text-[1.45rem] font-semibold text-ink">What is ‘Alimiyyah?</span>
           <span class="shrink-0 font-medium text-raspberry">
             <span class="group-open:hidden">Read explanation</span>
             <span class="hidden group-open:inline">Hide explanation</span>
@@ -137,12 +141,13 @@ const serviceAreas = [
 
   <!-- Sacred Service Team -->
   <section id="serve" class="scroll-mt-6 border-t border-border" aria-labelledby="serve-heading">
-    <div class="container-page py-14 md:py-16">
+    <div class="container-page py-20 lg:py-28">
       <div class="max-w-3xl">
-        <p class="eyebrow">Our Sacred Service Team</p>
-        <h2 id="serve-heading" class="display-md mt-1 tracking-[0.08em] uppercase sm:text-[2.35rem]">Learn. Reflect. Serve.</h2>
-        <Divider class="mt-4" />
-        <div class="mt-5 space-y-4 text-[17px] leading-[1.85] text-ink">
+        <span aria-hidden="true" class="numeral">03</span>
+        <p class="label mt-3">Our Sacred Service Team</p>
+        <h2 id="serve-heading" class="display-lg mt-3 tracking-[0.06em] uppercase">Learn. Reflect. Serve.</h2>
+        <Divider class="mt-6" />
+        <div class="mt-7 space-y-4 text-[17px] leading-[1.85] text-ink">
           <p>
             The bonds nurtured through learning and suhbah endure at Sabeel: students who studied with us over a decade
             ago still serve alongside us. Our Sacred Service Team brings together more than 30 graduates, students, and
@@ -156,21 +161,21 @@ const serviceAreas = [
         </div>
       </div>
     </div>
-    <div class="bg-sage-mist py-14 md:py-16">
-      <ul class="container-page grid gap-5 md:grid-cols-3">
+    <div class="bg-sage-mist py-16 lg:py-20">
+      <ul class="container-page grid gap-6 md:grid-cols-3">
         {
           serviceAreas.map((area) => (
-            <li class="rounded-card border border-gold/60 border-t-4 border-t-gold bg-surface p-6">
-              <h3 class="text-xl font-semibold text-ink">{area.title}</h3>
+            <li class="card-illuminated rise rounded-card p-6">
+              <h3 class="display-md text-[1.5rem]">{area.title}</h3>
               <p class="mt-2 text-[15px] leading-relaxed text-ink-soft">{area.text}</p>
             </li>
           ))
         }
       </ul>
     </div>
-    <div class="container-page py-12 text-center md:py-14">
+    <div class="container-page py-16 text-center lg:py-20">
       <Divider align="center" />
-      <p class="mt-5 font-display text-2xl text-raspberry sm:text-[1.9rem]">
+      <p class="lead mx-auto mt-7 max-w-[34rem] text-raspberry italic sm:text-[1.9rem]">
         May Allah accept their service and reward them abundantly.
       </p>
     </div>

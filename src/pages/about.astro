@@ -5,6 +5,22 @@ import Divider from '../components/Divider.astro';
 import Icon from '../components/Icon.astro';
 import Photo from '../components/Photo.astro';
 import SabeelDifference from '../components/SabeelDifference.astro';
+import Shamsa from '../components/illumination/Shamsa.astro';
+
+const statements = [
+  {
+    number: '01',
+    label: 'Mission',
+    title: 'Sound knowledge for faithful lives.',
+    text: 'Sabeel equips women and families through structured, in-person study rooted in the Qur’an, Sunnah, and scholarly tradition — nurturing sound knowledge, faithful practice, and service.',
+  },
+  {
+    number: '02',
+    label: 'Vision',
+    title: 'Knowledge that multiplies into service.',
+    text: 'We envision generations of learners whose knowledge strengthens their homes, masjids, and communities.',
+  },
+];
 ---
 
 <BaseLayout
@@ -25,44 +41,56 @@ import SabeelDifference from '../components/SabeelDifference.astro';
   </PageHero>
 
   <!-- Mission and vision -->
-  <section class="py-14 md:py-20">
-    <div class="container-page grid gap-12 md:grid-cols-2 md:gap-16">
-      <div>
-        <p class="eyebrow text-base font-bold tracking-[0.08em] text-gold-text uppercase md:text-lg">Mission</p>
-        <h2 class="display-lg mt-2 sm:text-[2.6rem]">Sound knowledge for faithful lives.</h2>
-        <Divider class="mt-4" />
-        <p class="mt-4 text-base leading-[1.8] text-ink-soft md:text-[17px]">
-          Sabeel equips women and families through structured, in-person study rooted in the Qur’an, Sunnah, and
-          scholarly tradition — nurturing sound knowledge, faithful practice, and service.
-        </p>
-      </div>
-      <div>
-        <p class="eyebrow text-base font-bold tracking-[0.08em] text-gold-text uppercase md:text-lg">Vision</p>
-        <h2 class="display-lg mt-2 sm:text-[2.6rem]">Knowledge that multiplies into service.</h2>
-        <Divider class="mt-4" />
-        <p class="mt-4 text-base leading-[1.8] text-ink-soft md:text-[17px]">
-          We envision generations of learners whose knowledge strengthens their homes, masjids, and communities.
-        </p>
+  <section class="py-20 lg:py-28">
+    <div class="container-page">
+      <span aria-hidden="true" class="gilt-rule block"></span>
+      <div class="mt-12 grid gap-16 md:grid-cols-2 md:gap-14 lg:gap-20">
+        {
+          statements.map((s) => (
+            <div class="rise grid gap-6 sm:grid-cols-[minmax(4rem,auto)_1fr]">
+              <span aria-hidden="true" class="numeral">
+                {s.number}
+              </span>
+              <div>
+                <p class="label">{s.label}</p>
+                <h2 class="display-lg mt-3">{s.title}</h2>
+                <Divider class="mt-6" />
+                <p class="lead mt-6 text-[1.3rem] sm:text-[1.4rem]">{s.text}</p>
+              </div>
+            </div>
+          ))
+        }
       </div>
     </div>
   </section>
 
   <!-- Our story -->
-  <section class="border-t border-border py-14 md:py-20" aria-labelledby="story-heading">
-    <div class="container-page grid items-center gap-10 md:grid-cols-2 md:gap-16">
-      <Photo slot="about-story" alt="Sabeel’s community praying together in a park beside a Sabeel tent" icon="book-open" class="aspect-[5/4] shadow-card" />
+  <section class="overflow-x-clip border-t border-border py-20 lg:py-28" aria-labelledby="story-heading">
+    <div class="container-page grid items-center gap-16 md:grid-cols-[minmax(0,24rem)_1fr] md:gap-16 lg:grid-cols-[minmax(0,28rem)_1fr] lg:gap-24">
+      <div class="relative mx-auto w-full max-w-[22rem] md:max-w-none">
+        <Shamsa class="turn absolute top-1/2 left-1/2 w-[125%] max-w-none -translate-x-1/2 -translate-y-1/2 text-gold opacity-[0.16]" />
+        <Photo
+          slot="about-story"
+          alt="Sabeel’s community praying together in a park beside a Sabeel tent"
+          icon="book-open"
+          shape="arch"
+          class="relative aspect-[5/6]"
+          sizes="(min-width: 1024px) 28rem, (min-width: 768px) 24rem, 100vw"
+        />
+      </div>
       <div>
-        <p class="eyebrow text-base font-bold tracking-[0.08em] text-gold-text uppercase md:text-lg">Our story</p>
-        <h2 id="story-heading" class="display-lg mt-2 sm:text-[2.6rem]">Built by women, growing across generations.</h2>
-        <Divider class="mt-4" />
-        <p class="mt-4 text-base leading-[1.8] text-ink-soft md:text-[17px]">
+        <span aria-hidden="true" class="numeral">03</span>
+        <p class="label mt-3">Our story</p>
+        <h2 id="story-heading" class="display-lg mt-3">Built by women, growing across generations.</h2>
+        <Divider class="mt-6" />
+        <p class="mt-7 max-w-[40rem] text-[17px] leading-[1.85] text-ink-soft">
           Since 2009, Sabeel has grown from one teacher offering classes to university students and adult women in
           masjids across southwest Houston into a teaching faculty of seven ‘Alimaat. Graduates of Sabeel’s own
           programs continue their studies and now serve in teaching, administration, and program support. What began
           with adult classes now includes learning for children and teens — forming an intergenerational community
           rooted in knowledge, suhbah, and service.
         </p>
-        <a href="/teachers-and-team/#teachers" class="link-arrow mt-6 text-lg">Meet Our Teachers <Icon name="arrow-right" class="size-5" /></a>
+        <a href="/teachers-and-team/#teachers" class="link-arrow mt-7 text-lg">Meet Our Teachers <Icon name="arrow-right" class="size-5" /></a>
       </div>
     </div>
   </section>

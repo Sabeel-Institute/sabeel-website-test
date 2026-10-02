@@ -1,0 +1,24 @@
+---
+/**
+ * A faint girih lattice over a section's background. Colour and opacity come
+ * from the class (`text-gold opacity-10`); `fade` clears the middle so text
+ * sits on plain ground.
+ */
+interface Props {
+  class?: string;
+  fade?: boolean;
+}
+const { class: className = 'text-gold opacity-10', fade = false } = Astro.props;
+---
+
+<svg
+  aria-hidden="true"
+  focusable="false"
+  class:list={[
+    'pointer-events-none absolute inset-0 size-full',
+    fade && '[mask-image:radial-gradient(ellipse_at_center,transparent_30%,black_100%)]',
+    className,
+  ]}
+>
+  <rect width="100%" height="100%" fill="url(#girih)"></rect>
+</svg>

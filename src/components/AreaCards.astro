@@ -1,27 +1,24 @@
 ---
-/** The program-area cards on Programs, each linking to its area's page; areas without a page are left out. */
+/** The program areas on Programs, each an arch linking to its area's page; areas without a page are left out. */
 import Icon from './Icon.astro';
+import ArchRim from './illumination/ArchRim.astro';
 import { areas, type AreaId } from '../site.config';
 
 const entries = (Object.entries(areas) as [AreaId, (typeof areas)[AreaId]][]).filter(([, area]) => area.href);
 ---
 
-<ul class:list={['grid gap-5', entries.length === 3 ? 'md:grid-cols-3' : 'md:grid-cols-2']}>
+<ul class:list={['mx-auto grid max-w-[22rem] gap-10 md:max-w-none md:gap-8 lg:gap-12', entries.length === 3 ? 'md:grid-cols-3' : 'md:grid-cols-2']}>
   {
     entries.map(([, area]) => (
-      <li>
-        <article class="group relative flex h-full flex-col rounded-card border border-gold/60 border-t-4 border-t-gold bg-surface p-7 transition-shadow hover:shadow-card">
-          <span class="flex size-12 items-center justify-center rounded-full bg-canvas text-gold-text">
-            <Icon name={area.icon} class="size-6" />
+      <li class="arch-panel rise group card-lift">
+        <ArchRim />
+        <article class="relative flex h-full flex-col items-center px-7 pt-[32%] pb-12 text-center">
+          <span class="flex size-[76px] items-center justify-center rounded-full border border-gold/80 bg-canvas text-gold-text ring-1 ring-gold/50 ring-offset-4 ring-offset-surface">
+            <Icon name={area.icon} class="size-8" />
           </span>
-          <h3 class="mt-4 text-xl font-semibold text-ink">{area.label}</h3>
-          <p class="mt-2 text-[15px] leading-relaxed text-ink-soft">
-            {area.description}
-          </p>
-          <a
-            href={area.href!}
-            class="link-arrow mt-auto pt-5 text-[15px] after:absolute after:inset-0 after:content-['']"
-          >
+          <h3 class="display-md mt-7">{area.label}</h3>
+          <p class="mt-4 max-w-[20rem] leading-[1.75] text-ink-soft">{area.description}</p>
+          <a href={area.href!} class="link-arrow mt-auto pt-6 text-[15px] after:absolute after:inset-0 after:content-['']">
             Explore {area.label}
             <Icon name="arrow-right" class="size-4" />
           </a>

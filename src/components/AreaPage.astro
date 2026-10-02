@@ -27,14 +27,14 @@ const notJoinable = [
     <p>{intro}</p>
   </PageHero>
 
-  <section class="py-14 md:py-16" aria-labelledby="current-heading">
+  <section class="py-20 lg:py-28" aria-labelledby="current-heading">
     <div class="container-page">
-      <SectionHeading eyebrow="Now enrolling" title={`Current ${area.label.toLowerCase()} programs`} id="current-heading" />
+      <SectionHeading number="01" eyebrow="Now enrolling" title={`Current ${area.label.toLowerCase()} programs`} id="current-heading" />
       {
         current.length > 0 ? (
           <CurrentPrograms programs={current} />
         ) : (
-          <p class="mt-10 rounded-card bg-surface p-7 text-ink-soft">
+          <p class="card-illuminated mt-10 rounded-card p-7 text-ink-soft">
             Nothing is open in this area right now.
             <a href="/contact/?inquiry=interest-list" data-interest class="font-medium text-raspberry underline decoration-gold underline-offset-4">
               Join the interest list
@@ -45,9 +45,9 @@ const notJoinable = [
       }
       {
         notJoinable.map((l) => (
-          <div class="mt-12">
-            <h3 class="border-b border-gold/60 pb-3 font-display text-[1.75rem] font-bold text-raspberry">{l.title}</h3>
-            <ul class="card-grid mt-6">
+          <div class="mt-16">
+            <h3 class="display-md border-b border-gold/60 pb-4">{l.title}</h3>
+            <ul class="entry-list">
               {l.programs.map((p) => (
                 <li>
                   <ProgramCard program={p} headingLevel="h4" />

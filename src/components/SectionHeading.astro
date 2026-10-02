@@ -1,29 +1,48 @@
 ---
-/** Eyebrow, serif heading, and gold divider; optional aside text on the right. */
-import Divider from './Divider.astro';
+/**
+ * A chapter opening: a gilt rule across the page, then the chapter numeral,
+ * the running label, and the title; the default slot is aside text on the
+ * right. Without a numeral, a rosette takes its place.
+ */
+import Rosette from './illumination/Rosette.astro';
 
 interface Props {
   eyebrow?: string;
   title: string;
+  /** The chapter numeral, e.g. "01". */
+  number?: string;
   id?: string;
   align?: 'start' | 'center';
   level?: 'h2' | 'h3';
   class?: string;
 }
-const { eyebrow, title, id, align = 'start', level: Tag = 'h2', class: className = '' } = Astro.props;
+const { eyebrow, title, number, id, align = 'start', level: Tag = 'h2', class: className = '' } = Astro.props;
 const hasAside = Astro.slots.has('default');
 ---
 
-<div
-  class:list={[
-    align === 'center' ? 'text-center' : hasAside && 'grid gap-4 md:grid-cols-2 md:items-end md:gap-12',
-    className,
-  ]}
->
-  <div>
-    {eyebrow && <p class="eyebrow">{eyebrow}</p>}
-    <Tag id={id} class="display-md mt-1 sm:text-[2.35rem]">{title}</Tag>
-    <Divider align={align} class="mt-4" />
+<div class:list={['rise', align === 'center' && 'text-center', className]}>
+  <span aria-hidden="true" class="gilt-rule block"></span>
+  <div
+    class:list={[
+      'mt-6 grid gap-x-8 gap-y-4',
+      align === 'center' ? 'justify-items-center' : 'md:grid-cols-[minmax(4rem,auto)_1fr] md:items-start',
+    ]}
+  >
+    {
+      number ? (
+        <span aria-hidden="true" class="numeral">
+          {number}
+        </span>
+      ) : (
+        <Rosette class="mt-2 size-5 text-gold" />
+      )
+    }
+    <div class:list={[!hasAside && 'max-w-[46rem]', hasAside && 'grid gap-5 lg:grid-cols-[1.15fr_1fr] lg:items-end lg:gap-14']}>
+      <div>
+        {eyebrow && <p class="label">{eyebrow}</p>}
+        <Tag id={id} class="display-lg mt-3">{title}</Tag>
+      </div>
+      {hasAside && <div class="max-w-[34rem] text-[17px] leading-[1.75] text-ink-soft lg:pb-2"><slot /></div>}
+    </div>
   </div>
-  {hasAside && <div class="max-w-[36rem] leading-[1.8] text-ink-soft md:pb-1"><slot /></div>}
 </div>
