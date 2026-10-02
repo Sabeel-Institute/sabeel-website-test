@@ -222,4 +222,24 @@ const venues = defineCollection({
   }),
 });
 
-export const collections = { programs, team, testimonials, venues };
+/**
+ * Photos from past programs, shown in a row near the bottom of the home page.
+ * The file's one entry, `photos`, is a list, so the row keeps its order:
+ * entries of a collection come back sorted by id.
+ */
+const gallery = defineCollection({
+  loader: file('src/content/gallery.yaml'),
+  schema: ({ image }) =>
+    z.array(
+      z.object({
+        /** The photo: a WebP file in src/content/gallery/. */
+        image: image(),
+        /** What the photo shows, for people who cannot see it. */
+        alt: z.string().min(1),
+        /** The program the photo is from; its name and year, linked to its page, go under the photo. */
+        program: reference('programs').optional(),
+      }),
+    ),
+});
+
+export const collections = { programs, team, testimonials, venues, gallery };

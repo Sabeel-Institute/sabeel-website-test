@@ -51,6 +51,7 @@ field.
 | Add a testimonial | Testimonials |
 | Add a place where programs meet | Venues |
 | Add a photo to a page | Photos |
+| Photos from past programs on the home page | Gallery |
 | Change contact details, links, or menus | Site settings |
 | Donations, newsletter | Site settings → Donations, Newsletter |
 | Rename or move a page | Pages and components → Moving or removing a page |
@@ -68,6 +69,7 @@ flowchart LR
     T["team/&lt;slug&gt;.md"]
     Q["testimonials.yaml"]
     V["venues.yaml"]
+    G["gallery.yaml"]
   end
   CFG["src/site.config.ts<br/>links, areas, nav"]
   PH["src/assets/photos/"]
@@ -87,6 +89,7 @@ flowchart LR
 | `src/content/team/` | One Markdown file per person |
 | `src/content/testimonials.yaml` | Student quotes |
 | `src/content/venues.yaml` | Places programs meet, with their addresses |
+| `src/content/gallery.yaml` | Photos from past programs for the home page; the files are in `src/content/gallery/` |
 | `src/content.config.ts` | Schemas: every field each content file may have, with comments |
 | `src/site.config.ts` | Contact email, social and form links, program areas, navigation |
 | `src/lib/content.ts` | Collection queries and shared helpers (use these; do not re-query ad hoc) |
@@ -406,6 +409,48 @@ organisation will supply, and show the geometric panel until then: `team-hero`
 and `founder` on the Teachers & Team page, and `rukaiya` beside Rukaiya's story
 on Support.
 
+### Gallery (`src/content/gallery.yaml`)
+
+The home page ends with a row of photos from past programs, just above the
+newsletter sign-up. People swipe through it on a phone or use its arrows on a
+larger screen; it never moves by itself. It shows the photos in
+`gallery.yaml` in the order listed, and is left out while the list is empty.
+Keep it to a few photos, four to eight, and replace them as programs happen.
+
+| Field | Meaning | Example |
+|---|---|---|
+| `image` | The photo, a WebP file in `src/content/gallery/` | `./gallery/womens-class.webp` |
+| `alt` | What the photo shows, for people who cannot see it | `Women studying at low tables in a Sabeel class` |
+| `program` | Optional: the program the photo is from, by folder name. Its name and year go under the photo, linked to its page | `summer-garden-2025` |
+
+Each photo keeps its own shape at one height, so portrait and landscape photos
+both work. Use only photos the organisation approves for the website. Its
+photo consent says that faces are blurred and that children’s names are never
+shared without separate permission, so use photos with faces blurred or turned
+away, and never name a child in `alt`.
+
+To add a photo, convert it to WebP from the repository root. This also turns
+it upright, scales it to at most 1600 px on its longest side, and removes the
+camera’s details, including where the photo was taken:
+
+```bash
+node -e "require('sharp')(process.argv[1]).rotate().resize({ width: 1600, height: 1600, fit: 'inside', withoutEnlargement: true }).webp({ quality: 85 }).toFile(process.argv[2])" photo.jpg src/content/gallery/<name>.webp
+```
+
+Then add it to the list, where it should appear:
+
+```yaml
+photos:
+  - image: ./gallery/<name>.webp
+    alt: What the photo shows
+    program: <program folder>
+```
+
+To replace a photo, add the new file, point its entry at it, rewrite `alt` and
+`program`, and delete the old file. To remove one, delete its entry and its
+file. The build stops, naming the photo, if it is not WebP or if its `program`
+is not a program on the site.
+
 ### Site settings (`src/site.config.ts`)
 
 Contact email, location, social links, financial-aid form, the Zeffy donation
@@ -462,6 +507,7 @@ Routes: `/`, `/about/`, `/programs/`, `/programs/<slug>/`,
 | `TeamCard` | A person |
 | `Photo` | A photo slot (`slot=`) or a specific image (`image=`), with the pattern fallback (never for people; see Photos) |
 | `Collage` | Three photo slots with captions |
+| `Gallery` | The row of photos from past programs on the home page (see Gallery) |
 | `MailingListForm`, `InterestDialog` | Newsletter and interest-list sign-up. Any link with `data-interest` opens the dialog |
 | `ZeffyDialog` | A Zeffy form in a dialog: the donation form on Support, a program's payment form on its page. A link with `data-zeffy="<id>"` opens the dialog with that `id` |
 | `Lightbox` | Enlarging flyers: links with `data-lightbox="<group>"` |
@@ -471,8 +517,8 @@ Routes: `/`, `/about/`, `/programs/`, `/programs/<slug>/`,
 Queries and helpers in `src/lib/content.ts`: `getCurrentPrograms(area?)`,
 `getUpcomingPrograms(area?)`, `getClosedPrograms(area?)`,
 `getCompletedPrograms(area?)`, `programHref`, `STATUS_LABEL`, `startLabel`,
-`programYear`, `resolveInstructors`, `getTeamGroup`, `displayName`,
-`teamHasPage`, `excerpt`.
+`programYear`, `resolveInstructors`, `getGalleryPhotos`, `getTeamGroup`,
+`displayName`, `teamHasPage`, `excerpt`.
 
 **A new page** is a file in `src/pages/` wrapped in `BaseLayout`, opening with
 `PageHero`, with sections that open with `SectionHeading`, and ending with a
