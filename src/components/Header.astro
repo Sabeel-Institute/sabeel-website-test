@@ -11,7 +11,7 @@ const isActive = (item: (typeof nav)[number]) =>
 ---
 
 <header class="relative z-40 bg-canvas">
-  <div class="container-page flex h-20 items-center justify-between gap-6 lg:h-24">
+  <div class="container-page flex h-20 items-center justify-between gap-3 sm:gap-6 lg:h-24">
     <a href="/" class="shrink-0" aria-label="Sabeel Institute home">
       <Image
         src={logo}
@@ -49,7 +49,7 @@ const isActive = (item: (typeof nav)[number]) =>
     </nav>
 
     <div class="flex items-center gap-2">
-      <a href="/support/" class="btn btn-primary hidden px-5 text-base sm:inline-flex lg:px-6 lg:text-[16px]">
+      <a href="/support/" class="btn btn-primary px-4 text-sm whitespace-nowrap sm:px-5 sm:text-base lg:px-6 lg:text-[16px]">
         Support Our Work
       </a>
       <button
@@ -85,9 +85,6 @@ const isActive = (item: (typeof nav)[number]) =>
           </li>
         ))
       }
-      <li class="pt-4 pb-2">
-        <a href="/support/" class="btn btn-primary w-full text-base">Support Our Work</a>
-      </li>
     </ul>
   </nav>
 </header>
