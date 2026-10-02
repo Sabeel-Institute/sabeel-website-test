@@ -387,7 +387,6 @@ at least 1500 × 1200 px.
 
 | Page | Slots |
 |---|---|
-| Home | `home-hero` |
 | About | `about-hero`; `about-story` (5:4) |
 | Programs | `programs-women`, `programs-teens`, `programs-children` (collage) |
 | Women’s Learning, Youth & Children | `area-womens-learning`, `area-youth-children` |
@@ -400,11 +399,14 @@ A new slot on a page gets a row here. Use only real, approved Sabeel photos.
 `hikam-hero` holds an illustration, not a photo of Sabeel; replace it with an
 approved photo when available.
 
+Link previews (WhatsApp, Instagram, email) of pages without an image of their
+own show `src/assets/images/link-preview.webp`, a landscape photo at least
+1200 × 630 px.
+
 Team cards and bio pages are text only: do not add a photo slot, an initials
-badge, or any other stand-in picture for a person. Three slots hold pictures the
-organisation will supply, and show the geometric panel until then: `team-hero`
-and `founder` on the Teachers & Team page, and `rukaiya` beside Rukaiya's story
-on Support.
+badge, or any other stand-in picture for a person. Two slots hold pictures the
+organisation will supply, and show the geometric panel until then: `founder` on
+the Teachers & Team page, and `rukaiya` beside Rukaiya's story on Support.
 
 ### Site settings (`src/site.config.ts`)
 
