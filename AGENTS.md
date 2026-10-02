@@ -46,6 +46,7 @@ field.
 | Add a program | Programs → Recipes → Add a program |
 | New session of a monthly gathering | Programs → Recipes → Recurring gathering |
 | Images from the program's designers | Programs → Program images |
+| Let people pay a program's fee online | Programs → Online payment |
 | Add, rename, or hide a person | Team |
 | Add a testimonial | Testimonials |
 | Add a place where programs meet | Venues |
@@ -140,8 +141,8 @@ stateDiagram-v2
 
 | `status` | Use when | Shown as | Listed on | Its page offers |
 |---|---|---|---|---|
-| `open` | Registration is open | Registration open | Home, Programs, its area page | Register buttons (`registerUrl`) |
-| `ongoing` | A series has begun and people can still join | Ongoing series | Same places, after open programs | Register buttons |
+| `open` | Registration is open | Registration open | Home, Programs, its area page | Register buttons (`registerUrl`); Pay buttons (`zeffyTicketing`) |
+| `ongoing` | A series has begun and people can still join | Ongoing series | Same places, after open programs | Register and Pay buttons |
 | `closed` | Registration has closed; the program is still running | Registration closed | “Registration closed” on Programs and its area page | Join the Interest List |
 | `upcoming` | Announced; registration is not open yet | Coming soon | “Coming soon” on Programs and its area page | Join the Interest List |
 | `completed` | The program has ended | Program completed | Past Programs | Join the Interest List; kept as a record |
@@ -238,6 +239,7 @@ Required for `open` and `ongoing`: `title`, `summary`, `area`, `date`,
 | `venue`, `room`, `platform` | Where it meets; see Format | `masjid-istiqlal`, `Sabeel Classroom`, `Zoom` |
 | `fee` | Price text | `$150`, `Free` |
 | `registerUrl` | Registration form, copied exactly | `https://forms.gle/…` |
+| `zeffyTicketing` | Zeffy form for paying online: the name after `/ticketing/` in its links (see Online payment) | `anchored-hearts-sisters-circle` |
 | `deadline` | Registration deadline text | |
 | `prerequisites` | Materials or prerequisites | |
 | `outcomes` | Three to five things students will learn (list) | |
@@ -278,6 +280,18 @@ run this from the repository root:
 node -e "require('sharp')(process.argv[1]).webp({ quality: 90 }).toFile(process.argv[2])" flyer.png src/content/programs/<name>/flyer.webp
 ```
 
+### Online payment
+
+People pay a program's fee online through a ticketing form on Zeffy (the
+organisation's Zeffy account), with a ticket for each price. Set
+`zeffyTicketing` to the name after `/ticketing/` in the form's links: for
+`https://www.zeffy.com/embed/ticketing/anchored-hearts-sisters-circle?modal=true`
+it is `anchored-hearts-sisters-circle`. The name is all the site needs; do not
+add Zeffy's embed code (its `zeffy-form-link` attribute and script) to a page.
+While the program is `open` or `ongoing`, its page has a Pay button beside
+each Register button, which opens the form in a dialog. Ticket names and
+prices are set on zeffy.com; keep `fee` the same as them.
+
 ### Recipes
 
 **Add a program.**
@@ -305,8 +319,9 @@ still running, change only `status` to `closed`.
 program. Everything else about it stays as it is.
 
 **Recurring gathering** (for example Anchored Hearts): edit the same folder
-each cycle: `date`, `starts`, `registerUrl`, instructors, and the “This
-month” text. Replace `flyer.webp` with the new flyer under the same name, and
+each cycle: `date`, `starts`, `registerUrl`, `zeffyTicketing` (when the
+session has its own Zeffy form), instructors, and the “This month” text.
+Replace `flyer.webp` with the new flyer under the same name, and
 `image.webp` too if the artwork changed. The folder always describes the next
 session; earlier sessions are not kept.
 
@@ -447,7 +462,7 @@ Routes: `/`, `/about/`, `/programs/`, `/programs/<slug>/`,
 | `Photo` | A photo slot (`slot=`) or a specific image (`image=`), with the pattern fallback (never for people; see Photos) |
 | `Collage` | Three photo slots with captions |
 | `MailingListForm`, `InterestDialog` | Newsletter and interest-list sign-up. Any link with `data-interest` opens the dialog |
-| `DonationDialog` | The Zeffy donation form, on the Support page. Any link with `data-donate` opens it |
+| `ZeffyDialog` | A Zeffy form in a dialog: the donation form on Support, a program's payment form on its page. A link with `data-zeffy="<id>"` opens the dialog with that `id` |
 | `Lightbox` | Enlarging flyers: links with `data-lightbox="<group>"` |
 | `SabeelDifference` | The three-column band on Home and About |
 | `Divider`, `Icon` | Gold diamond divider; inline icons (add new ones to `Icon.astro` using Lucide paths) |

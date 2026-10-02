@@ -33,8 +33,10 @@
 - `Photo.astro` resolves named slots from `src/assets/photos/` with
   `import.meta.glob`; a missing file renders the geometric fallback, so slots
   never break the build.
-- `DonationDialog` shows Zeffy's plain embed (`/embed/donation-form/<name>`)
-  in the site's own `<dialog>` and loads it on first open. Zeffy's pop-up
+- `ZeffyDialog` shows Zeffy's plain embed (`/embed/donation-form/<name>`,
+  or `/embed/ticketing/<name>` for a program's `zeffyTicketing`) in the
+  site's own `<dialog>` and loads it on first open; `zeffyForm` in
+  `src/site.config.ts` builds a form's page and embed links. Zeffy's pop-up
   script (`embed-form-script.min.js`) is not used: it loads the form in a
   hidden frame on every page view, and its pop-up has no dialog role or
   focus handling. The plain embed scrolls inside a fixed-height frame. Its
