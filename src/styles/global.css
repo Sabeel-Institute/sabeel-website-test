@@ -39,6 +39,9 @@
 
   --color-gold: #c6a15b;
   --color-gold-text: #795e2a;
+  /* The light and shadow of gilding, mixed from gold. Decoration only. */
+  --color-gold-light: color-mix(in oklab, #c6a15b 48%, #fbf6f0);
+  --color-gold-deep: color-mix(in oklab, #c6a15b 70%, #795e2a);
   --color-border: #dfd1c1;
   --color-border-strong: #c9b7a7;
   --color-success: #4e7a43;
@@ -88,19 +91,66 @@
     @apply mx-auto w-full max-w-[1320px] px-4 sm:px-6 lg:px-12;
   }
 
-  /* Small uppercase label above headings. */
+  /*
+   * Small uppercase label above headings, set in a cartouche: a gold rule
+   * above and below, with a diamond finial at each end.
+   */
   .eyebrow {
-    @apply font-label text-[15px] font-bold tracking-[0.04em] text-gold-text uppercase sm:text-base;
+    @apply relative inline-block font-label text-[14px] font-bold tracking-[0.08em] text-gold-text uppercase sm:text-[15px];
+    padding: 0.3em 0.9em;
+    border-block: 1px solid color-mix(in oklab, var(--color-gold) 70%, transparent);
+    &::before,
+    &::after {
+      content: '';
+      @apply absolute top-1/2 size-[7px] -translate-y-1/2 rotate-45 bg-gold;
+    }
+    &::before {
+      @apply -left-1;
+    }
+    &::after {
+      @apply -right-1;
+    }
   }
 
   .display-xl {
     @apply font-display text-[2.6rem] leading-[1.05] font-bold text-raspberry sm:text-[3.25rem] lg:text-[3.6rem];
+    text-wrap: balance;
   }
   .display-lg {
     @apply font-display text-[2.2rem] leading-[1.1] font-bold text-raspberry sm:text-5xl;
+    text-wrap: balance;
   }
   .display-md {
     @apply font-display text-[1.9rem] leading-tight font-bold text-raspberry;
+    text-wrap: balance;
+  }
+
+  /* A gilt hairline that catches the light at its centre and fades at its ends. */
+  .gilt-rule {
+    @apply h-px w-full;
+    background-image: linear-gradient(
+      90deg,
+      transparent,
+      var(--color-gold-deep) 12%,
+      var(--color-gold-light) 50%,
+      var(--color-gold-deep) 88%,
+      transparent
+    );
+  }
+  /* The same rule drawn twice, the lower one fainter. */
+  .gilt-rule-double {
+    @apply h-1;
+    background-image:
+      linear-gradient(90deg, transparent, var(--color-gold-deep) 12%, var(--color-gold-light) 50%, var(--color-gold-deep) 88%, transparent),
+      linear-gradient(90deg, transparent, var(--color-gold) 20%, var(--color-gold) 80%, transparent);
+    background-size:
+      100% 1px,
+      100% 1px;
+    background-position:
+      top,
+      bottom;
+    background-repeat: no-repeat;
+    opacity: 0.9;
   }
   .heading-sans {
     @apply font-sans text-[1.75rem] leading-tight font-semibold text-raspberry sm:text-[2rem];
@@ -109,12 +159,64 @@
   .btn {
     @apply inline-flex min-h-11 items-center justify-center gap-2 rounded-lg px-6 py-3 text-[15px] leading-none font-medium transition-colors duration-200;
   }
-  /* Use together with .btn: class="btn btn-primary". */
+  /* Use together with .btn: class="btn btn-primary". Raspberry with a gilt edge. */
   .btn-primary {
-    @apply bg-raspberry text-on-raspberry shadow-card hover:bg-raspberry-deep;
+    @apply bg-raspberry text-on-raspberry transition-[filter,box-shadow];
+    background-image: linear-gradient(180deg, var(--color-raspberry), var(--color-raspberry-deep));
+    box-shadow:
+      inset 0 0 0 1px color-mix(in oklab, var(--color-gold) 50%, transparent),
+      var(--shadow-card);
+    &:hover {
+      filter: brightness(0.92);
+      box-shadow:
+        inset 0 0 0 1px color-mix(in oklab, var(--color-gold) 85%, transparent),
+        var(--shadow-card);
+    }
   }
   .btn-outline {
     @apply border border-raspberry/60 bg-transparent text-raspberry hover:bg-raspberry hover:text-on-raspberry;
+  }
+
+  /*
+   * A panel as an illuminated page: a gilt band along the top with a rosette
+   * at its centre, and a hairline frame inset from the edge. Add rounded
+   * corners and padding as the panel needs; the pseudo-elements are absolute,
+   * so grid and flex panels keep their layout.
+   */
+  .card-illuminated {
+    @apply relative border border-gold/60 bg-surface;
+    &::before {
+      content: '';
+      @apply pointer-events-none absolute inset-0;
+      border-radius: inherit;
+      background-image: linear-gradient(90deg, var(--color-gold-deep), var(--color-gold-light) 50%, var(--color-gold-deep));
+      mask-image:
+        linear-gradient(#000, #000),
+        url("data:image/svg+xml,<svg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'><path%20d='M12%201L13.91%207.38L19.78%204.22L16.62%2010.09L23%2012L16.62%2013.91L19.78%2019.78L13.91%2016.62L12%2023L10.09%2016.62L4.22%2019.78L7.38%2013.91L1%2012L7.38%2010.09L4.22%204.22L10.09%207.38Z'/></svg>");
+      mask-size:
+        100% 3px,
+        14px 14px;
+      mask-position:
+        center top,
+        center 1px;
+      mask-repeat: no-repeat;
+    }
+    &::after {
+      content: '';
+      @apply pointer-events-none absolute inset-[5px] z-10 rounded-[5px] border border-gold/30;
+    }
+  }
+  /* Cards that lift when pointed at. */
+  .card-lift {
+    @apply transition-[transform,box-shadow] duration-200;
+    &:hover {
+      box-shadow:
+        var(--shadow-card),
+        0 14px 34px -16px color-mix(in oklab, var(--color-gold) 70%, transparent);
+      @media (prefers-reduced-motion: no-preference) {
+        transform: translateY(-2px);
+      }
+    }
   }
 
   .link-arrow {
@@ -138,8 +240,16 @@
   /* Long-form text from Markdown (course details, bios, posts). */
   .prose-sabeel {
     @apply text-ink;
+    text-wrap: pretty;
     & > * + * {
       margin-top: 1em;
+    }
+    /* An illuminated initial opens the text. */
+    & > p:first-child::first-letter {
+      @apply float-left font-display font-bold text-raspberry;
+      font-size: 3.4em;
+      line-height: 0.78;
+      padding: 0.08em 0.12em 0 0;
     }
     & h2 {
       @apply mt-10 font-display text-3xl font-bold text-raspberry;

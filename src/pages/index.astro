@@ -9,6 +9,7 @@ import ProgramCard from '../components/ProgramCard.astro';
 import MailingListForm from '../components/MailingListForm.astro';
 import SabeelDifference from '../components/SabeelDifference.astro';
 import Gallery from '../components/Gallery.astro';
+import Lattice from '../components/illumination/Lattice.astro';
 import teacherIcon from '../assets/images/icon-teacher.png';
 import serviceIcon from '../assets/images/icon-service.png';
 import { getCurrentPrograms, getGalleryPhotos } from '../lib/content';
@@ -79,7 +80,7 @@ const gallery = await getGalleryPhotos();
             href: '/teachers-and-team/#serve',
           },
         ].map((card) => (
-          <article class="flex flex-col gap-6 rounded-card border-2 border-gold/25 bg-surface p-7 sm:flex-row sm:items-center sm:gap-8 sm:p-10">
+          <article class="card-illuminated card-lift flex flex-col gap-6 rounded-card p-7 sm:flex-row sm:items-center sm:gap-8 sm:p-10">
             <Image src={card.icon} alt="" width={140} class="size-28 shrink-0 sm:size-[132px]" />
             <div>
               <h2 class="font-display text-[2rem] leading-tight font-bold text-raspberry">{card.title}</h2>
@@ -97,8 +98,9 @@ const gallery = await getGalleryPhotos();
   {gallery.length > 0 && <Gallery photos={gallery} />}
 
   <!-- Stay connected -->
-  <section class="bg-raspberry py-10 text-on-raspberry" aria-labelledby="stay-heading">
-    <div class="container-page grid items-center gap-6 md:grid-cols-[1fr_minmax(0,30rem)] md:gap-12">
+  <section class="relative overflow-hidden bg-raspberry py-12 text-on-raspberry" aria-labelledby="stay-heading">
+    <Lattice class="text-gold opacity-[0.14]" />
+    <div class="container-page relative grid items-center gap-6 md:grid-cols-[1fr_minmax(0,30rem)] md:gap-12">
       <div>
         <h2 id="stay-heading" class="font-display text-[1.9rem] font-bold tracking-wide text-gold uppercase">Stay connected</h2>
         <Divider width="sm" class="mt-2" />

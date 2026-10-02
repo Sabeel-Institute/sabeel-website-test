@@ -5,6 +5,7 @@ import { getImage } from 'astro:assets';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import InterestDialog from '../components/InterestDialog.astro';
+import Defs from '../components/illumination/Defs.astro';
 import linkPreview from '../assets/images/link-preview.webp';
 import { site } from '../site.config';
 
@@ -48,6 +49,7 @@ const shareUrl = new URL(share.src, Astro.site);
     <meta name="twitter:card" content="summary_large_image" />
   </head>
   <body class="flex min-h-screen flex-col">
+    <Defs />
     <a
       href="#main"
       class="sr-only z-50 rounded-lg bg-raspberry px-4 py-2 text-on-raspberry focus:not-sr-only focus:fixed focus:top-3 focus:left-3"

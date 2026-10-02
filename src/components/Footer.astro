@@ -3,13 +3,23 @@ import { Image } from 'astro:assets';
 import logo from '../assets/images/logo.png';
 import sprig from '../assets/decor/sprig-gold.png';
 import Icon from './Icon.astro';
+import Lattice from './illumination/Lattice.astro';
+import Rosette from './illumination/Rosette.astro';
 import { site, footerNav } from '../site.config';
 
 const year = new Date().getFullYear();
 ---
 
-<footer class="border-t border-gold/50 bg-canvas">
-  <div class="container-page grid gap-10 py-12 md:grid-cols-[1.3fr_1fr_1fr] md:gap-0">
+<footer class="relative bg-canvas">
+  <!-- A gilt rule with a medallion at its centre marks the top of the footer. -->
+  <span aria-hidden="true" class="gilt-rule-double absolute inset-x-0 top-0"></span>
+  <span
+    aria-hidden="true"
+    class="absolute top-0 left-1/2 flex size-12 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border border-gold/70 bg-canvas"
+  >
+    <Rosette class="size-5 text-gold" />
+  </span>
+  <div class="container-page grid gap-10 py-14 md:grid-cols-[1.3fr_1fr_1fr] md:gap-0">
     <div class="md:pr-10">
       <Image src={logo} alt="Sabeel Institute" width={160} class="h-auto w-[160px]" />
       <p class="mt-4 max-w-[20rem] text-base leading-[1.75] text-ink-soft">{site.tagline}</p>
@@ -59,8 +69,9 @@ const year = new Date().getFullYear();
     }
   </div>
 
-  <div class="bg-raspberry text-on-raspberry">
-    <div class="container-page flex flex-col items-center gap-3 py-5 text-center md:flex-row md:justify-between md:text-left">
+  <div class="relative overflow-hidden bg-raspberry text-on-raspberry">
+    <Lattice class="text-gold opacity-[0.14]" />
+    <div class="container-page relative flex flex-col items-center gap-3 py-5 text-center md:flex-row md:justify-between md:text-left">
       <Image src={sprig} alt="" width={96} class="hidden h-auto w-[80px] md:block" />
       <p class="text-[15px] leading-relaxed">“And say, My Lord, increase me in knowledge.” (Qur'an 20:114)</p>
       <p class="text-sm font-medium">© {year} Sabeel Institute</p>

@@ -12,7 +12,7 @@ const shown = facts.filter((f) => f.value);
 
 <dl
   class:list={[
-    'grid overflow-hidden rounded-card border border-gold/70 bg-surface sm:grid-cols-2',
+    'card-illuminated grid overflow-hidden rounded-card sm:grid-cols-2',
     shown.length >= 4 ? 'lg:grid-cols-4' : shown.length === 3 ? 'lg:grid-cols-3' : '',
     className,
   ]}

@@ -1,0 +1,21 @@
+---
+/**
+ * A ruled frame (jadwal) around a section: double hairlines with a rosette at
+ * each corner. Absolutely positioned inside a `relative` parent; on phones only
+ * the top and bottom rules show, so the frame never crowds the text.
+ */
+interface Props {
+  class?: string;
+}
+const { class: className = 'inset-2 sm:inset-3 lg:inset-5' } = Astro.props;
+const corner = 'absolute size-5 text-gold';
+---
+
+<div aria-hidden="true" class:list={['pointer-events-none absolute', className]}>
+  <span class="absolute inset-0 border-y border-gold/60 sm:border"></span>
+  <span class="absolute inset-[3px] border-y border-gold/30 sm:border"></span>
+  <svg class:list={[corner, '-top-2.5 -left-2.5']}><use href="#corner"></use></svg>
+  <svg class:list={[corner, '-top-2.5 -right-2.5']}><use href="#corner"></use></svg>
+  <svg class:list={[corner, '-bottom-2.5 -left-2.5']}><use href="#corner"></use></svg>
+  <svg class:list={[corner, '-right-2.5 -bottom-2.5']}><use href="#corner"></use></svg>
+</div>

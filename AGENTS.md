@@ -386,7 +386,9 @@ Pages have named photo slots. Drop a file named after the slot (`.jpg`,
 `.png`, or `.webp`) to fill it; until then the slot shows a geometric panel.
 Photos are cropped to fill their frame, so use landscape photos with the
 subject near the centre, at least 1600 × 1200 px (4:3); `about-story` is 5:4,
-at least 1500 × 1200 px.
+at least 1500 × 1200 px. A page's opening photo (`PageHero`) is shown in a
+pointed arch, taller than it is wide, so only the middle of a landscape photo
+shows there: keep the subject in the centre third.
 
 | Page | Slots |
 |---|---|
@@ -506,14 +508,15 @@ Routes: `/`, `/about/`, `/programs/`, `/programs/<slug>/`,
 | `FlyerArchive` | Completed programs' flyers, one tab per year; the page also includes `Lightbox` |
 | `AreaPage` | A whole program-area page |
 | `TeamCard` | A person |
-| `Photo` | A photo slot (`slot=`) or a specific image (`image=`), with the pattern fallback (never for people; see Photos) |
+| `Photo` | A photo slot (`slot=`) or a specific image (`image=`), with the pattern fallback (never for people; see Photos). In a gilt frame, or a pointed arch with `shape="arch"` |
 | `Collage` | Three photo slots with captions |
 | `Gallery` | The row of photos from past programs on the home page (see Gallery) |
 | `MailingListForm`, `InterestDialog` | Newsletter and interest-list sign-up. Any link with `data-interest` opens the dialog |
 | `ZeffyDialog` | A Zeffy form in a dialog: the donation form on Support, a program's payment form on its page. A link with `data-zeffy="<id>"` opens the dialog with that `id` |
 | `Lightbox` | Enlarging flyers: links with `data-lightbox="<group>"` |
 | `SabeelDifference` | The three-column band on Home and About |
-| `Divider`, `Icon` | Gold diamond divider; inline icons (add new ones to `Icon.astro` using Lucide paths) |
+| `Divider`, `Icon` | Gilt rule with a rosette; inline icons (add new ones to `Icon.astro` using Lucide paths) |
+| `illumination/Frame`, `Headpiece`, `Lattice`, `Shamsa`, `Rosette`, `Defs` | The ornaments (see Illumination in Design rules) |
 
 Queries and helpers in `src/lib/content.ts`: `getCurrentPrograms(area?)`,
 `getUpcomingPrograms(area?)`, `getClosedPrograms(area?)`,
@@ -553,10 +556,23 @@ belongs in a menu.
   `display-md` (or `heading-sans` where the home page uses it); small labels
   `eyebrow`; long Markdown text in `prose-sabeel`.
 - **Layout.** Wrap content in `container-page`. Sections use
-  `py-14 md:py-16`. Cards use `rounded-card` with gold borders
-  (`border border-gold/60`, often `border-t-4 border-t-gold`) on `bg-surface`.
-  Lists of program cards use `card-grid`: up to three to a row, with a short
-  last row centred.
+  `py-14 md:py-16`. Cards and panels use `card-illuminated` with
+  `rounded-card` and their own padding: a gilt band with a rosette along the
+  top and a hairline frame inset from the edge, on `bg-surface`. Cards that
+  are links add `card-lift`. Lists of program cards use `card-grid`: up to
+  three to a row, with a short last row centred.
+- **Illumination.** The site is ornamented like an illuminated manuscript,
+  with the pieces in `src/components/illumination/`: every page opening
+  (`PageHero`, the program and bio pages, the 404 page) has a `Frame` around
+  the section, a `Headpiece` above the eyebrow, a faint `Lattice` behind, and
+  a `Shamsa` sunburst in the margin or behind the photo; `CtaBand` and the
+  raspberry bands have a `Lattice`; dividers and card bands carry the
+  `Rosette`. `Defs` (in `BaseLayout`) holds the shared drawings once. Keep
+  ornaments in gold at the opacities the components use (lattice at most
+  0.14, sunburst at most 0.16) so text keeps its contrast, keep them
+  `aria-hidden`, and never put one between a person and the text or a button.
+  A new ornament is drawn in SVG with `currentColor` or the gold tokens, never
+  as a raster image, and goes in the same folder.
 - **Section backgrounds.** Sections sit on ivory, the page background, with no
   background class; where two ivory sections meet, the lower one has
   `border-t border-border`. Light sage (`bg-sage-mist`) marks an occasional

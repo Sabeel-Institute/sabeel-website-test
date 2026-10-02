@@ -11,6 +11,7 @@ const isActive = (item: (typeof nav)[number]) =>
 ---
 
 <header class="relative z-40 bg-canvas">
+  <span aria-hidden="true" class="gilt-rule-double absolute inset-x-0 bottom-0"></span>
   <div class="container-page flex h-20 items-center justify-between gap-3 sm:gap-6 lg:h-24">
     <a href="/" class="shrink-0" aria-label="Sabeel Institute home">
       <Image
@@ -37,7 +38,7 @@ const isActive = (item: (typeof nav)[number]) =>
                 <span
                   aria-hidden="true"
                   class:list={[
-                    'absolute inset-x-2 -bottom-1 h-px bg-gold transition-opacity',
+                    'gilt-rule absolute inset-x-2 -bottom-1 w-auto transition-opacity',
                     isActive(item) ? 'opacity-100' : 'opacity-0',
                   ]}
                 />

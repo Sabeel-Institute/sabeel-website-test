@@ -10,8 +10,8 @@ const entries = (Object.entries(areas) as [AreaId, (typeof areas)[AreaId]][]).fi
   {
     entries.map(([, area]) => (
       <li>
-        <article class="group relative flex h-full flex-col rounded-card border border-gold/60 border-t-4 border-t-gold bg-surface p-7 transition-shadow hover:shadow-card">
-          <span class="flex size-12 items-center justify-center rounded-full bg-canvas text-gold-text">
+        <article class="card-illuminated card-lift group flex h-full flex-col rounded-card p-7">
+          <span class="flex size-12 items-center justify-center rounded-full border border-gold/60 bg-canvas text-gold-text">
             <Icon name={area.icon} class="size-6" />
           </span>
           <h3 class="mt-4 text-xl font-semibold text-ink">{area.label}</h3>

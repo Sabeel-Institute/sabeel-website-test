@@ -14,6 +14,10 @@ import FactsBar from '../../components/FactsBar.astro';
 import CtaBand from '../../components/CtaBand.astro';
 import Lightbox from '../../components/Lightbox.astro';
 import ZeffyDialog from '../../components/ZeffyDialog.astro';
+import Lattice from '../../components/illumination/Lattice.astro';
+import Frame from '../../components/illumination/Frame.astro';
+import Headpiece from '../../components/illumination/Headpiece.astro';
+import Shamsa from '../../components/illumination/Shamsa.astro';
 import { areas, zeffyForm } from '../../site.config';
 import {
   STATUS_LABEL,
@@ -78,8 +82,10 @@ const cards = [
 
 <BaseLayout title={d.title} description={d.summary ?? d.subtitle ?? d.title} shareImage={d.image ?? d.flyer}>
   <!-- Hero -->
-  <section class="border-b border-border bg-linear-to-br from-surface via-canvas to-canvas">
-    <div class="container-page pt-6 pb-12 md:pb-16">
+  <section class="relative overflow-hidden border-b border-border bg-linear-to-br from-surface via-canvas to-canvas">
+    <Lattice class="text-gold opacity-[0.09]" fade />
+    <Frame />
+    <div class="container-page relative pt-8 pb-14 md:pb-20">
       <nav aria-label="Breadcrumb" class="text-[15px] text-ink-soft">
         <ol class="flex flex-wrap items-center gap-2">
           <li><a href={completed ? '/past-programs/' : '/programs/'} class="hover:text-raspberry">{completed ? 'Past Programs' : 'Programs'}</a></li>
@@ -87,11 +93,12 @@ const cards = [
           <li>{area.href ? <a href={area.href} class="hover:text-raspberry">{area.label}</a> : area.label}</li>
         </ol>
       </nav>
-      <div class="mt-8 grid items-center gap-10 md:grid-cols-[1.05fr_1fr] md:gap-12">
+      <div class="mt-8 grid items-center gap-12 md:grid-cols-[1.05fr_1fr] md:gap-12">
         <div>
+          <Headpiece class="mb-7 w-full max-w-[30rem] text-gold" />
           <p class="eyebrow">{STATUS_LABEL[d.status]} · {area.label}</p>
-          <Divider width="sm" class="mt-3" />
           <h1 class="display-lg mt-5 lg:text-[3.1rem]">{d.title}</h1>
+          <Divider width="sm" class="mt-5" />
           {d.subtitle && <p class="mt-3 font-display text-2xl leading-snug text-ink-soft italic">{d.subtitle}</p>}
           {d.summary && <p class="mt-5 max-w-[36rem] text-lg leading-relaxed text-ink-soft">{d.summary}</p>}
           <div class="mt-8 flex flex-wrap gap-3">
@@ -118,14 +125,17 @@ const cards = [
             </a>
           </div>
         </div>
-        <Photo
-          image={d.image}
-          alt={d.imageAlt ?? ''}
-          icon={area.icon}
-          class="aspect-video shadow-card"
-          sizes="(min-width: 768px) 48vw, 100vw"
-          eager
-        />
+        <div class="relative">
+          <Shamsa class="absolute top-1/2 left-1/2 w-[110%] max-w-none -translate-x-1/2 -translate-y-1/2 text-gold opacity-[0.16]" />
+          <Photo
+            image={d.image}
+            alt={d.imageAlt ?? ''}
+            icon={area.icon}
+            class="relative aspect-video"
+            sizes="(min-width: 768px) 48vw, 100vw"
+            eager
+          />
+        </div>
       </div>
     </div>
   </section>
@@ -190,7 +200,7 @@ const cards = [
       </div>
 
       {showGlance && (
-      <aside class="self-start rounded-card border border-gold/70 border-t-4 border-t-gold bg-surface p-6 sm:p-8" aria-labelledby="glance-heading">
+      <aside class="card-illuminated self-start rounded-card p-6 sm:p-8" aria-labelledby="glance-heading">
         <h2 id="glance-heading" class="font-display text-2xl font-bold text-raspberry">At a glance</h2>
         <dl class="mt-4 divide-y divide-border text-[15px]">
           {
@@ -234,7 +244,7 @@ const cards = [
       <section class="py-12 md:py-14">
         <div class:list={['container-page grid gap-5', cards.length === 3 ? 'lg:grid-cols-3' : cards.length === 2 ? 'md:grid-cols-2' : '']}>
           {instructors.length > 0 && (
-            <div class="rounded-card border border-gold/60 bg-surface p-7">
+            <div class="card-illuminated rounded-card p-7">
               <h2 class="text-xl font-semibold text-ink">{instructors.length > 1 ? 'Instructors' : 'Instructor'}</h2>
               <ul class="mt-4 space-y-4">
                 {instructors.map((i) => (
@@ -250,13 +260,13 @@ const cards = [
             </div>
           )}
           {d.expect && (
-            <div class="rounded-card border border-gold/60 bg-surface p-7">
+            <div class="card-illuminated rounded-card p-7">
               <h2 class="text-xl font-semibold text-ink">What to expect</h2>
               <p class="mt-3 leading-[1.75] text-ink-soft">{d.expect}</p>
             </div>
           )}
           {d.policies && (
-            <div class="rounded-card border border-gold/60 bg-surface p-7">
+            <div class="card-illuminated rounded-card p-7">
               <h2 class="text-xl font-semibold text-ink">Policies</h2>
               <p class="mt-3 leading-[1.75] text-ink-soft">{d.policies}</p>
             </div>

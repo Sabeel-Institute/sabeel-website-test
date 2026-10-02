@@ -29,7 +29,7 @@ const field =
       Choose the reason for your message so it reaches the right person. For course dates and fees, check the
       <a href="/programs/" class="text-raspberry underline decoration-gold underline-offset-4">program page</a> first.
     </p>
-    <div slot="media" class="rounded-card border border-gold/70 border-t-4 border-t-gold bg-surface p-7 shadow-card sm:p-9">
+    <div slot="media" class="card-illuminated rounded-card p-7 shadow-card sm:p-9">
       <h2 class="text-2xl font-semibold text-ink">Contact Sabeel</h2>
       <ul class="mt-5 space-y-4 text-ink">
         <li class="flex items-center gap-3">
@@ -60,7 +60,7 @@ const field =
             <a
               href={`?inquiry=${r.id}#message`}
               data-inquiry={r.id}
-              class="flex h-full flex-col rounded-card border border-gold/60 bg-surface p-7 transition-shadow hover:shadow-card"
+              class="card-illuminated card-lift flex h-full flex-col rounded-card p-7"
             >
               <span class="flex size-12 items-center justify-center rounded-full bg-canvas text-gold-text">
                 <Icon name={r.icon} class="size-6" />

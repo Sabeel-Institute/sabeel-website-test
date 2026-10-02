@@ -33,6 +33,35 @@
 - `Photo.astro` resolves named slots from `src/assets/photos/` with
   `import.meta.glob`; a missing file renders the geometric fallback, so slots
   never break the build.
+- The ornaments are drawn once in `illumination/Defs.astro` and referenced by
+  id. Inside `<pattern>` and `<linearGradient>`, `currentColor` resolves at
+  the definition, not where the pattern is used, so their strokes and stops
+  use `style="stroke: var(--color-gold)"` and the like; the tokens reach them
+  because Tailwind puts the theme on `:root`. `Lattice` sets its colour with
+  `opacity` for that reason. `Shamsa` and `Headpiece` carry their own paths
+  and use `vector-effect="non-scaling-stroke"`, so hairlines stay 1 px at
+  any size. The geometry is generated, not hand-drawn:
+  `scripts/illumination/generate.py` computes the stars, the lattice tile,
+  and the crest, and writes the components, the arch path in `Photo.astro`,
+  and the rosette mask in `global.css`. Change a shape there and run
+  `uv run scripts/illumination/generate.py`, never by editing path data.
+- The arch (`Photo shape="arch"`) is a `clipPath` in object-bounding-box
+  units, applied to the image's wrapper with `clip-path: url(#arch)`. The
+  gilt rim is the same path in a `viewBox="0 0 1 1"` SVG with
+  `preserveAspectRatio="none"`, so clip and rim stretch to the frame
+  identically whatever its aspect ratio, and non-scaling strokes keep the rim
+  crisp.
+- `.card-illuminated` draws its band and inset frame with absolutely
+  positioned pseudo-elements, so it works on grid and flex panels (`FactsBar`
+  is a grid) without adding items. The band is a gilt gradient seen through a
+  CSS mask of two layers, a 3 px bar and the rosette; the inset hairline is
+  `::after` at `z-10` so it shows over a card's image. `.eyebrow` is a
+  cartouche made of `border-block` rules and two pseudo-element diamonds,
+  which still works when the label wraps.
+- Ornament opacities are chosen so text contrast is unchanged in practice:
+  gold at 14% over ivory, sage, or plum shifts the background's luminance by
+  well under a contrast step. Nothing animates continuously: the visual
+  comparison needs repeatable captures, and the ornaments read better still.
 - `gallery.yaml` has one entry, `photos`, whose value is the whole list:
   Astro returns a collection's entries sorted by id, so one entry per photo
   would lose the order editors set. `getGalleryPhotos` (`src/lib/content.ts`)

@@ -1,8 +1,12 @@
 ---
 /**
  * Closing call-to-action band: heading and text on the left, buttons on the
- * right. The only section in the stronger sage (see Design rules in AGENTS.md).
+ * right. The only section in the stronger sage (see Design rules in AGENTS.md),
+ * ruled like an illuminated page.
  */
+import Lattice from './illumination/Lattice.astro';
+import Frame from './illumination/Frame.astro';
+
 interface Props {
   title: string;
   eyebrow?: string;
@@ -10,8 +14,10 @@ interface Props {
 const { title, eyebrow } = Astro.props;
 ---
 
-<section class="border-t border-border bg-sage-wash py-12 md:py-14">
-  <div class="container-page grid items-center gap-6 md:grid-cols-[1.1fr_1fr] md:gap-12">
+<section class="relative overflow-hidden border-t border-border bg-sage-wash py-14 md:py-16">
+  <Lattice class="text-gold opacity-[0.14]" />
+  <Frame />
+  <div class="container-page relative grid items-center gap-6 md:grid-cols-[1.1fr_1fr] md:gap-12">
     <div>
       {eyebrow && <p class="text-[15px] font-bold tracking-[0.04em] text-raspberry uppercase">{eyebrow}</p>}
       <h2 class="font-display text-[2rem] leading-tight font-bold text-raspberry sm:text-[2.3rem]">{title}</h2>

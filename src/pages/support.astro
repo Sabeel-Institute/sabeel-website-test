@@ -40,7 +40,7 @@ const priorities = [
       available. We are ready for the next chapter: a permanent home where learning, teaching, suhbah, youth programs,
       and service can grow together.
     </p>
-    <dl class="mt-6 grid grid-cols-2 overflow-hidden rounded-card border border-gold/60 bg-surface text-sm sm:grid-cols-4">
+    <dl class="card-illuminated mt-6 grid grid-cols-2 overflow-hidden rounded-card text-sm sm:grid-cols-4">
       {
         [
           ['For 15+ years', 'Borrowed and shared spaces'],
@@ -74,7 +74,7 @@ const priorities = [
       <ul class="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
         {
           possible.map((p) => (
-            <li class="rounded-card border border-gold/60 border-t-4 border-t-gold bg-surface p-6">
+            <li class="card-illuminated rounded-card p-6">
               <span class="flex size-12 items-center justify-center rounded-full bg-canvas text-gold-text">
                 <Icon name={p.icon} class="size-6" />
               </span>
@@ -94,7 +94,7 @@ const priorities = [
       <ul class="mt-8 grid gap-4 sm:grid-cols-3">
         {
           priorities.map((d) => (
-            <li class="rounded-card border border-gold/60 bg-surface p-6">
+            <li class="card-illuminated rounded-card p-6">
               <h3 class="text-xl font-semibold text-ink">{d.title}</h3>
               <p class="mt-2 text-[15px] leading-relaxed text-ink-soft">{d.text}</p>
             </li>
@@ -109,8 +109,8 @@ const priorities = [
     <div class="container-page">
       <SectionHeading eyebrow="How to give" title="Give online or with Zelle." id="give-heading" />
       <div class="mt-8 grid gap-5 md:grid-cols-2">
-        <article class="flex flex-col rounded-card border border-gold/70 border-t-4 border-t-gold bg-surface p-6 shadow-card sm:p-8">
-          <span class="flex size-12 items-center justify-center rounded-full bg-canvas text-gold-text">
+        <article class="card-illuminated flex flex-col rounded-card p-6 shadow-card sm:p-8">
+          <span class="flex size-12 items-center justify-center rounded-full border border-gold/60 bg-canvas text-gold-text">
             <Icon name="credit-card" class="size-6" />
           </span>
           <h3 class="mt-4 text-2xl font-semibold text-ink">Donate online</h3>
@@ -126,8 +126,8 @@ const priorities = [
             </p>
           </div>
         </article>
-        <article class="flex flex-col rounded-card border border-gold/70 border-t-4 border-t-gold bg-surface p-6 shadow-card sm:p-8">
-          <span class="flex size-12 items-center justify-center rounded-full bg-canvas text-gold-text">
+        <article class="card-illuminated flex flex-col rounded-card p-6 shadow-card sm:p-8">
+          <span class="flex size-12 items-center justify-center rounded-full border border-gold/60 bg-canvas text-gold-text">
             <Icon name="landmark" class="size-6" />
           </span>
           <h3 class="mt-4 text-2xl font-semibold text-ink">Donate with Zelle</h3>
