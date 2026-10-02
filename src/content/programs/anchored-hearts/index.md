@@ -13,6 +13,7 @@ venue: Masjid Istiqlal
 duration: Monthly gathering
 fee: "Halaqa $5 · Halaqa and optional activity $15"
 registerUrl: https://docs.google.com/forms/d/e/1FAIpQLSeBJEQ-oACUCoeQbQnPD8JMoPvrknjB7D3EciGytteB1c_fpA/viewform
+zeffyTicketing: anchored-hearts-sisters-circle
 deadline: Optional activity — register by Wednesday, October 7
 instructors:
   - name: Dr. Sabeen Najam

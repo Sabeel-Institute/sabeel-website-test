@@ -31,8 +31,10 @@
   Sabeel's own), used at the organisation's request; their license is
   unconfirmed. They are cropped to their frames (4:3 and 5:4) and upscaled
   2x from small originals, so replace them first when Sabeel has its own.
-- `DonationDialog` shows Zeffy's plain embed (`/embed/donation-form/<name>`)
-  in the site's own `<dialog>` and loads it on first open. Zeffy's pop-up
+- `ZeffyDialog` shows Zeffy's plain embed (`/embed/donation-form/<name>`,
+  or `/embed/ticketing/<name>` for a program's `zeffyTicketing`) in the
+  site's own `<dialog>` and loads it on first open; `zeffyForm` in
+  `src/site.config.ts` builds a form's page and embed links. Zeffy's pop-up
   script (`embed-form-script.min.js`) is not used: it loads the form in a
   hidden frame on every page view, and its pop-up has no dialog role or
   focus handling. The plain embed scrolls inside a fixed-height frame. Its

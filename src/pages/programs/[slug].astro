@@ -13,7 +13,8 @@ import Photo from '../../components/Photo.astro';
 import FactsBar from '../../components/FactsBar.astro';
 import CtaBand from '../../components/CtaBand.astro';
 import Lightbox from '../../components/Lightbox.astro';
-import { areas } from '../../site.config';
+import ZeffyDialog from '../../components/ZeffyDialog.astro';
+import { areas, zeffyForm } from '../../site.config';
 import {
   STATUS_LABEL,
   assertBespokePages,
@@ -40,6 +41,8 @@ const area = areas[d.area];
 const registering = d.status === 'open' || d.status === 'ongoing';
 const completed = d.status === 'completed';
 const closed = d.status === 'closed';
+/** The Zeffy form for paying the fee, offered while registration is open. */
+const payment = registering && d.zeffyTicketing ? zeffyForm('ticketing', d.zeffyTicketing) : undefined;
 /** Closing text for pages that no longer take registrations. */
 const laterNote = completed
   ? 'This page is kept as a record of the program. Join the interest list to hear when similar programs open.'
@@ -96,6 +99,13 @@ const cards = [
               ) : (
                 <a href="/contact/?inquiry=interest-list" data-interest class="btn btn-primary px-7 text-base">
                   Join the Interest List
+                </a>
+              )
+            }
+            {
+              payment && (
+                <a href={payment.page} target="_blank" rel="noopener" data-zeffy="pay-dialog" class="btn btn-outline px-6 text-base">
+                  Pay
                 </a>
               )
             }
@@ -197,6 +207,11 @@ const cards = [
               <a href={d.registerUrl} class="btn btn-primary mt-5 w-full text-base" target="_blank" rel="noopener">
                 Register <Icon name="external" class="size-4" />
               </a>
+              {payment && (
+                <a href={payment.page} target="_blank" rel="noopener" data-zeffy="pay-dialog" class="btn btn-outline mt-3 w-full text-base">
+                  Pay
+                </a>
+              )}
               <p class="mt-3 text-center text-sm text-ink-soft">
                 Need help with the fee?{' '}
                 <a href="/financial-aid/" class="text-raspberry underline decoration-gold underline-offset-4">Financial aid</a>
@@ -292,6 +307,11 @@ const cards = [
           <a href={d.registerUrl} class="btn btn-primary px-7 text-base" target="_blank" rel="noopener">
             Register Now <Icon name="external" class="size-4" />
           </a>
+          {payment && (
+            <a href={payment.page} target="_blank" rel="noopener" data-zeffy="pay-dialog" class="btn btn-outline bg-surface/60 px-6 text-base">
+              Pay Now
+            </a>
+          )}
           <a href="/financial-aid/" class="btn btn-outline bg-surface/60 px-6 text-base">Financial Aid</a>
         </Fragment>
       </CtaBand>
@@ -317,4 +337,5 @@ const cards = [
   }
 
   <Lightbox />
+  {payment && <ZeffyDialog id="pay-dialog" title={`Pay for ${d.title}`} label="Payment form" form={payment} />}
 </BaseLayout>

@@ -69,6 +69,14 @@ const programs = defineCollection({
       duration: z.string().min(1),
       fee: z.string().min(1),
       registerUrl: z.url(),
+      /**
+       * The Zeffy ticketing form for paying the fee: the name after /ticketing/
+       * in its links. While registration is open, Pay buttons open it in a dialog.
+       */
+      zeffyTicketing: z
+        .string()
+        .regex(slugPattern, 'zeffyTicketing must be the name after /ticketing/ in the Zeffy form links, e.g. "anchored-hearts-sisters-circle"')
+        .optional(),
       /** Registration deadline as people should read it. */
       deadline: z.string().min(1).optional(),
       /** Materials or prerequisites. */

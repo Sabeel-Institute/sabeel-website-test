@@ -7,6 +7,15 @@ import type { PROGRAM_AREAS } from './content.config';
 /** The Zeffy donation campaign: the name at the end of its links. */
 const zeffyCampaign = 'website-donation-form-8';
 
+/** A Zeffy form: its page on Zeffy's site, and its plain embed, which the site shows in a dialog. */
+export type ZeffyForm = { page: string; embed: string };
+
+/** The Zeffy donation or ticketing form whose links end in `name`. */
+export const zeffyForm = (type: 'donation-form' | 'ticketing', name: string): ZeffyForm => ({
+  page: `https://www.zeffy.com/en-US/${type}/${name}`,
+  embed: `https://www.zeffy.com/embed/${type}/${name}`,
+});
+
 export const site = {
   name: 'Sabeel Institute',
   tagline: 'Structured, in-person Islamic learning for women in Houston.',
@@ -27,10 +36,7 @@ export const site = {
    * (`page`) without JavaScript. Donors choose the amount and how often to give
    * in Zeffy's form.
    */
-  donation: {
-    page: `https://www.zeffy.com/en-US/donation-form/${zeffyCampaign}`,
-    embed: `https://www.zeffy.com/embed/donation-form/${zeffyCampaign}`,
-  },
+  donation: zeffyForm('donation-form', zeffyCampaign),
   /**
    * The action URL of the Mailchimp embedded form for the newsletter
    * (https://<account>.<dc>.list-manage.com/subscribe/post?u=...&id=...&f_id=...),
