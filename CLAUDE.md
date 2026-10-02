@@ -92,3 +92,9 @@
   from it except the five whole-number counts in `summary.json`, which must
   be the file's only JSON value. Adding a count means changing the key list
   in `preview.yml` in the same pull request.
+- Every run of a pull request's report is published at the same preview
+  address, and Firebase lets browsers keep files for an hour unless told
+  otherwise. So `publish` in `run.mjs` names each report image after a hash of
+  its content, and `firebase.json` serves `/_visual-diff/**` with
+  `Cache-Control: no-cache`; without them, a reopened report can show an
+  earlier run's image under another page's heading.

@@ -19,6 +19,7 @@
 // against the same quota as the live site. It therefore shows screenshots for
 // at most MAX_SHOWN pages, and only for the screens on which a page changed.
 
+import { createHash } from 'node:crypto';
 import { createReadStream } from 'node:fs';
 import fs from 'node:fs/promises';
 import { createServer } from 'node:http';
@@ -400,14 +401,19 @@ async function publishImages(page, index, out) {
 }
 
 // Returns the screenshot's own size, which the summary lays images out by,
-// even when the published image is scaled down.
+// even when the published image is scaled down. The file name ends in a hash
+// of its content: every run of a pull request is published at the same
+// address, and a browser that cached an earlier run's image under the same
+// name would otherwise show it under another page.
 async function publish(source, target) {
   const { width, height } = await sharp(source).metadata();
   const webp = width <= WEBP_MAX && height <= WEBP_MAX;
-  const file = `${target}.${webp ? 'webp' : 'jpg'}`;
   let image = sharp(source).flatten({ background: '#ffffff' });
   if (height > JPEG_MAX) image = image.resize({ height: JPEG_MAX });
-  await (webp ? image.webp({ quality: 80 }) : image.jpeg({ quality: 80, mozjpeg: true })).toFile(file);
+  const data = await (webp ? image.webp({ quality: 80 }) : image.jpeg({ quality: 80, mozjpeg: true })).toBuffer();
+  const hash = createHash('sha256').update(data).digest('hex').slice(0, 12);
+  const file = `${target}-${hash}.${webp ? 'webp' : 'jpg'}`;
+  await fs.writeFile(file, data);
   return { src: `images/${path.basename(file)}`, width, height };
 }
 
