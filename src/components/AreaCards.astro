@@ -1,12 +1,12 @@
 ---
-/** The three program-area cards on Programs, each linking to its area. */
+/** The program-area cards on Programs, each linking to its area's page; areas without a page are left out. */
 import Icon from './Icon.astro';
 import { areas, type AreaId } from '../site.config';
 
-const entries = Object.entries(areas) as [AreaId, (typeof areas)[AreaId]][];
+const entries = (Object.entries(areas) as [AreaId, (typeof areas)[AreaId]][]).filter(([, area]) => area.href);
 ---
 
-<ul class="grid gap-5 md:grid-cols-3">
+<ul class:list={['grid gap-5', entries.length === 3 ? 'md:grid-cols-3' : 'md:grid-cols-2']}>
   {
     entries.map(([, area]) => (
       <li>
@@ -19,7 +19,7 @@ const entries = Object.entries(areas) as [AreaId, (typeof areas)[AreaId]][];
             {area.description}
           </p>
           <a
-            href={area.href}
+            href={area.href!}
             class="link-arrow mt-auto pt-5 text-[15px] after:absolute after:inset-0 after:content-['']"
           >
             Explore {area.label}

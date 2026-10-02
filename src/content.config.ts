@@ -92,6 +92,8 @@ const programs = defineCollection({
        * Bespoke page path (e.g. "/hikam-foundations/"). When set, listings link
        * there and the standard template does not render this program.
        */
+      /** true keeps the program in the repository but off the site: no page and no listing. */
+      draft: z.boolean().optional(),
       page: z
         .string()
         .regex(/^\/[a-z0-9-]+(?:\/[a-z0-9-]+)*\/$/, 'page must look like "/hikam-foundations/"')

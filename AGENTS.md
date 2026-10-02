@@ -42,6 +42,7 @@ field.
 | Task | What to do |
 |---|---|
 | Announce, open, close, or end a program | Set its `status` (see Status). Listings update themselves |
+| Keep a program off the site for now | Programs → Recipes → Keep a program off the site |
 | Add a program | Programs → Recipes → Add a program |
 | New session of a monthly gathering | Programs → Recipes → Recurring gathering |
 | Images from the program's designers | Programs → Program images |
@@ -107,11 +108,13 @@ reserved for the area pages.
 ### Areas
 
 Every program belongs to one area (`area:`). The labels, descriptions, and
-page links live in `areas` in `src/site.config.ts`.
+page links live in `areas` in `src/site.config.ts`. An area whose `href` is
+`null` has no page on the site, so it gets no card on Programs, no links, and
+no interest-list option.
 
 | `area` | Label | Page |
 |---|---|---|
-| `hikam-foundations` | Hikam Foundations | `/hikam-foundations/` (bespoke) |
+| `hikam-foundations` | Hikam Foundations | None: its bespoke page is a draft |
 | `womens-learning` | Women’s Learning | `/programs/womens-learning/` |
 | `youth-children` | Youth & Children | `/programs/youth-children/` |
 
@@ -175,9 +178,16 @@ Every program gets a page in one of two ways:
 
 To make a standard program bespoke: create `src/pages/<name>.astro` from the
 components and conventions below, then add `page: /<name>/` to the program.
-To go back, delete the page file and the `page` field. The Hikam Foundations
-page is the only bespoke page, and its content and design are not final: do
-not copy it as a pattern or take conventions from it.
+To go back, delete the page file and the `page` field.
+
+The only bespoke page, Hikam Foundations, is a draft that is not on the site:
+`src/pages/_hikam-foundations.astro` is not built (Astro builds no page from a
+file whose name starts with `_`), and its program, `hikam-foundations-2026`,
+has `draft: true`. Its content and design are not final: do not copy it as a
+pattern or take conventions from it. To publish it, rename the file without
+the `_`, remove `draft: true`, set the area's `href` in `src/site.config.ts`
+to `/hikam-foundations/`, and add the page to `footerNav` and to the Programs
+item's `match` in `mainNav`.
 
 ### Fields
 
@@ -213,6 +223,7 @@ Required for `open` and `ongoing`: `title`, `summary`, `area`, `date`,
 | `image`, `imageAlt` | The program image, 16:9 (see Program images); alt text required with it | `./image.webp` |
 | `flyer` | Original flyer, US Letter portrait (see Program images) | `./flyer.webp` |
 | `page` | Bespoke page path | `/hikam-foundations/` |
+| `draft` | `true` keeps the program in the repository but off the site: no page, no listing | |
 
 The Markdown body after the front matter is “Program details”. Use `##` and
 `###` headings (never `#`), `-` bullets, `**bold**`, and site-relative links
@@ -266,6 +277,9 @@ still running, change only `status` to `closed`.
 
 **Retire a program.** Change only `status` to `completed`.
 
+**Keep a program off the site.** Add `draft: true`; remove it to publish the
+program. Everything else about it stays as it is.
+
 **Recurring gathering** (for example Anchored Hearts): edit the same folder
 each cycle: `date`, `starts`, `registerUrl`, instructors, and the “This
 month” text. Replace `flyer.webp` with the new flyer under the same name, and
@@ -314,9 +328,9 @@ Refer to people in programs by file name under `instructors`.
 ### Testimonials (`src/content/testimonials.yaml`)
 
 `id` (unique), `program` (the program the quote is about, as the student or
-parent names it), and `quote` (their words, exactly as given). The only page
-that shows testimonials is Hikam Foundations, which picks them in its page
-file; a quote added here appears nowhere else on the site.
+parent names it), and `quote` (their words, exactly as given). Only the
+Hikam Foundations page shows testimonials, and it is a draft, so no quote
+appears on the site.
 
 ### Photos (`src/assets/photos/<slot>.jpg`)
 
@@ -332,7 +346,7 @@ at least 1500 × 1200 px.
 | About | `about-hero`; `about-story` (5:4) |
 | Programs | `programs-women`, `programs-teens`, `programs-children` (collage) |
 | Women’s Learning, Youth & Children | `area-womens-learning`, `area-youth-children` |
-| Hikam Foundations | `hikam-hero` |
+| Hikam Foundations (draft, not on the site) | `hikam-hero` |
 | Past Programs | `past-programs-hero` |
 | Teachers & Team | `team-hero`, `founder` |
 | Support | `support-hero`, `rukaiya` |
@@ -384,9 +398,8 @@ priorities the Support page describes, so do not add a choice of fund.
 
 Routes: `/`, `/about/`, `/programs/`, `/programs/<slug>/`,
 `/programs/womens-learning/`, `/programs/youth-children/`,
-`/past-programs/`, `/hikam-foundations/`, `/teachers-and-team/`,
-`/teachers-and-team/<slug>/`, `/support/`, `/contact/`, `/financial-aid/`,
-and the 404 page.
+`/past-programs/`, `/teachers-and-team/`, `/teachers-and-team/<slug>/`,
+`/support/`, `/contact/`, `/financial-aid/`, and the 404 page.
 
 | Component | Use for |
 |---|---|

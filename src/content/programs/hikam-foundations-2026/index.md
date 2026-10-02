@@ -11,5 +11,6 @@ schedule: Mondays & Thursdays
 format: Online & on-site
 venue: Houston and online
 duration: Two years
+draft: true
 page: /hikam-foundations/
 ---

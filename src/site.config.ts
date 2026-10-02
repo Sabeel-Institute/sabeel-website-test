@@ -48,12 +48,19 @@ export type AreaId = (typeof PROGRAM_AREAS)[number];
 /** Program areas: names, descriptions, and where each area lives. */
 export const areas: Record<
   AreaId,
-  { label: string; description: string; href: string; icon: 'graduation-cap' | 'book-open' | 'leaf' }
+  {
+    label: string;
+    description: string;
+    /** The area's page; null while it has none, which hides its card, links, and interest-list option. */
+    href: string | null;
+    icon: 'graduation-cap' | 'book-open' | 'leaf';
+  }
 > = {
   'hikam-foundations': {
     label: 'Hikam Foundations',
     description: 'A structured two-year grounding in the Islamic sciences for adult women.',
-    href: '/hikam-foundations/',
+    // Its page, src/pages/_hikam-foundations.astro, is a draft (see AGENTS.md).
+    href: null,
     icon: 'graduation-cap',
   },
   'womens-learning': {
@@ -74,7 +81,7 @@ export const areas: Record<
 export type NavItem = { label: string; href: string; match?: string[] };
 
 export const mainNav: NavItem[] = [
-  { label: 'Programs', href: '/programs/', match: ['/past-programs/', '/hikam-foundations/'] },
+  { label: 'Programs', href: '/programs/', match: ['/past-programs/'] },
   { label: 'About', href: '/about/' },
   { label: 'Teachers & Team', href: '/teachers-and-team/' },
 ];
@@ -84,7 +91,6 @@ export const footerNav: { title: string; links: NavItem[] }[] = [
     title: 'Explore',
     links: [
       { label: 'Programs', href: '/programs/' },
-      { label: 'Hikam Foundations', href: '/hikam-foundations/' },
       { label: 'About', href: '/about/' },
       { label: 'Support Our Work', href: '/support/' },
     ],

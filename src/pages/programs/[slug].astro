@@ -24,7 +24,7 @@ import {
 } from '../../lib/content';
 
 export const getStaticPaths = (async () => {
-  const programs = await getCollection('programs');
+  const programs = (await getCollection('programs')).filter((p) => !p.data.draft);
   assertBespokePages(programs);
   assertProgramImages(programs);
   return programs.filter((p) => !p.data.page).map((program) => ({ params: { slug: program.id }, props: { program } }));
@@ -77,7 +77,7 @@ const cards = [
         <ol class="flex flex-wrap items-center gap-2">
           <li><a href={completed ? '/past-programs/' : '/programs/'} class="hover:text-raspberry">{completed ? 'Past Programs' : 'Programs'}</a></li>
           <li aria-hidden="true">/</li>
-          <li><a href={area.href} class="hover:text-raspberry">{area.label}</a></li>
+          <li>{area.href ? <a href={area.href} class="hover:text-raspberry">{area.label}</a> : area.label}</li>
         </ol>
       </nav>
       <div class="mt-8 grid items-center gap-10 md:grid-cols-[1.05fr_1fr] md:gap-12">
