@@ -9,7 +9,8 @@ dateApprox: true
 audience: Women
 schedule: Sat, July 15, 6 PM
 format: On-site
-venue: Masjid Hamza (upstairs in ladies' section)
+venue: masjid-hamza
+room: Upstairs ladies’ section
 instructors:
 - name: Mufti Hussain Kamani
 flyer: ./flyer.webp

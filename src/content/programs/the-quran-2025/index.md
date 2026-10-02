@@ -8,6 +8,6 @@ date: '2025-03-01'
 audience: Women
 schedule: March 1st-20th 2025, Sat/Tues/Thurs, 12:00 PM-1:00 PM CT
 format: Online
-venue: Online via Zoom
+platform: Zoom
 flyer: ./flyer.webp
 ---

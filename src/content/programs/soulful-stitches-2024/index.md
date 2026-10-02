@@ -9,7 +9,7 @@ dateApprox: true
 audience: Women
 schedule: Jan 6 - Feb 10, Every Saturday, 11 AM - 12:30 PM
 format: On-site
-venue: Masjid Hamza (in-person)
+venue: masjid-hamza
 instructors:
 - sameera-shah
 flyer: ./flyer.webp

@@ -1,5 +1,6 @@
 import { getCollection, getEntry, type CollectionEntry } from 'astro:content';
 import type { AreaId } from '../site.config';
+import type { PROGRAM_FREQUENCIES } from '../content.config';
 
 export type Program = CollectionEntry<'programs'>;
 export type TeamMember = CollectionEntry<'team'>;
@@ -53,6 +54,60 @@ export const STATUS_LABEL = {
 } as const;
 
 const longDate = new Intl.DateTimeFormat('en-US', { dateStyle: 'long', timeZone: 'UTC' });
+
+export const FREQUENCY_LABEL: Record<(typeof PROGRAM_FREQUENCIES)[number], string> = {
+  weekly: 'Weekly',
+  'twice-monthly': 'Twice a month',
+  monthly: 'Monthly',
+  daily: 'Daily',
+  once: 'One session',
+};
+
+/** How often and how long: "Weekly · 7 sessions", "Monthly". */
+export function rhythmLabel(program: Program): string | undefined {
+  const { frequency, duration } = program.data;
+  return [frequency && FREQUENCY_LABEL[frequency], duration].filter(Boolean).join(' · ') || undefined;
+}
+
+const MONTHS = ['Jan', 'Feb', 'March', 'April', 'May', 'June', 'July', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'];
+
+/** First to last session, "Sept 14 – Oct 26"; nothing without an end date. */
+export function dateRange(program: Program): string | undefined {
+  const { date, endDate } = program.data;
+  if (!endDate) return undefined;
+  const withYear = date.getUTCFullYear() !== endDate.getUTCFullYear();
+  const show = (d: Date) => `${MONTHS[d.getUTCMonth()]} ${d.getUTCDate()}${withYear ? `, ${d.getUTCFullYear()}` : ''}`;
+  return `${show(date)} – ${show(endDate)}`;
+}
+
+/** A venue address to link to a map; `label` names the venue too when the program meets at several. */
+export type Place = { label: string; map: string };
+
+/**
+ * Where a program meets, as its page says it ("Sabeel Classroom at Masjid
+ * Istiqlal", "Masjid Istiqlal or online via Zoom"), and the venue addresses to
+ * link to a map.
+ */
+export async function resolveLocation(program: Program): Promise<{ text: string; places: Place[] } | undefined> {
+  const { venue, room, platform, format } = program.data;
+  const venues = await Promise.all([venue ?? []].flat().map(async (ref) => (await getEntry(ref))!.data));
+  const onSite = room && venues.length === 1 ? `${room} at ${venues[0]!.name}` : venues.map((v) => v.name).join(' and ');
+  const isOnline = format ? format !== 'On-site' : Boolean(platform);
+  const online = isOnline ? (platform ? `online via ${platform}` : 'online') : '';
+  const text = onSite && online ? `${onSite} or ${online}` : onSite || online.charAt(0).toUpperCase() + online.slice(1);
+  if (!text) return undefined;
+  const places = venues.flatMap((v) =>
+    v.address
+      ? [
+          {
+            label: venues.length > 1 ? `${v.name}, ${v.address}` : v.address,
+            map: `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${v.name}, ${v.address}`)}`,
+          },
+        ]
+      : [],
+  );
+  return { text, places };
+}
 
 /** The start as people should read it. */
 export function startLabel(program: Program): string {

@@ -9,6 +9,6 @@ dateApprox: true
 audience: Children
 schedule: Fridays, 4:30-5:15 PM CT, Oct 24th-Dec 5th
 format: Online
-venue: Online via Zoom
+platform: Zoom
 flyer: ./flyer.webp
 ---

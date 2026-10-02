@@ -9,8 +9,7 @@ starts: Fall 2026
 audience: Adult women
 schedule: Mondays & Thursdays
 format: Online & on-site
-venue: Houston and online
-duration: Two years
+duration: 2 years
 draft: true
 page: /hikam-foundations/
 ---

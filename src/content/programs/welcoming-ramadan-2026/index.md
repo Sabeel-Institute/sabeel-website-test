@@ -8,7 +8,7 @@ dateApprox: true
 audience: Women
 schedule: Saturday, February 7th, 11 AM-1 PM
 format: On-site
-venue: Maryam Islamic Center
+venue: maryam-islamic-center
 instructors:
 - sameera-shah
 flyer: ./flyer.webp

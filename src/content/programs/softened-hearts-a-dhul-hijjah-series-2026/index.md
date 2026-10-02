@@ -9,6 +9,6 @@ dateApprox: true
 audience: Women
 schedule: May 18th - May 26th, every day of the week, 12:00 PM-1:00 PM CST
 format: Online
-venue: Online via Zoom
+platform: Zoom
 flyer: ./flyer.webp
 ---

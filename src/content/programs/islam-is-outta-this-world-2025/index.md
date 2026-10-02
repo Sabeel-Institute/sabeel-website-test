@@ -7,6 +7,6 @@ date: '2025-02-23'
 audience: Children
 schedule: Sundays, 11:00 AM-12:30 PM CT, Feb 23rd-March 23rd 2025
 format: Online
-venue: Online via Zoom
+platform: Zoom
 flyer: ./flyer.webp
 ---

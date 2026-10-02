@@ -8,6 +8,6 @@ dateApprox: true
 audience: Girls
 schedule: Aug 23rd & 24th, 11 AM-1 PM
 format: On-site
-venue: Maryam Masjid
+venue: maryam-islamic-center
 flyer: ./flyer.webp
 ---

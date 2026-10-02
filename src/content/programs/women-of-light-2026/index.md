@@ -9,6 +9,6 @@ dateApprox: true
 audience: Women
 schedule: June 3rd - July 29th, every Wednesday, 12-1:00 PM
 format: Online
-venue: Online via Zoom
+platform: Zoom
 flyer: ./flyer.webp
 ---

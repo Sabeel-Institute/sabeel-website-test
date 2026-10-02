@@ -1,12 +1,13 @@
 ---
 /**
- * Program teaser. Current programs show status, audience, length, format, and
- * a button; completed programs show year, summary, and a record link.
+ * Program teaser. Current programs show their status, then audience, schedule,
+ * how often, and format, one per line in that order, and a button; completed
+ * programs show year, summary, and a record link.
  */
 import { Image } from 'astro:assets';
-import Icon from './Icon.astro';
+import Icon, { type IconName } from './Icon.astro';
 import { areas } from '../site.config';
-import { STATUS_LABEL, programHref, programYear, resolveInstructors, type Program } from '../lib/content';
+import { STATUS_LABEL, programHref, programYear, resolveInstructors, rhythmLabel, type Program } from '../lib/content';
 
 interface Props {
   program: Program;
@@ -20,8 +21,12 @@ const area = areas[d.area].label;
 const completed = d.status === 'completed';
 const eyebrow = completed ? `${programYear(program)} · ${area}` : `${STATUS_LABEL[d.status]} · ${area}`;
 const teachers = completed ? (await resolveInstructors(d.instructors)).map((i) => i.name) : [];
-const line1 = [d.audience, d.duration].filter(Boolean).join(' · ');
-const line2 = [d.format, d.venue].filter(Boolean).join(' · ');
+const details: { icon: IconName; label: string; value?: string }[] = [
+  { icon: 'users', label: 'Audience', value: d.audience },
+  { icon: 'clock', label: 'Schedule', value: d.schedule },
+  { icon: 'calendar', label: 'How often', value: rhythmLabel(program) },
+  { icon: d.format === 'Online' ? 'laptop' : 'map-pin', label: 'Format', value: d.format },
+];
 ---
 
 <article
@@ -50,7 +55,7 @@ const line2 = [d.format, d.venue].filter(Boolean).join(' · ');
       <>
         {d.summary && <p class="mt-3 text-[15px] leading-relaxed text-ink-soft">{d.summary}</p>}
         <div class="mt-3 space-y-0.5 text-sm text-ink-soft">
-          {line2 || d.audience ? <p>{[d.audience, d.format].filter(Boolean).join(' · ')}</p> : null}
+          {d.format || d.audience ? <p>{[d.audience, d.format].filter(Boolean).join(' · ')}</p> : null}
           {teachers.length > 0 && <p>{teachers.slice(0, 2).join(', ')}{teachers.length > 2 ? ' and others' : ''}</p>}
         </div>
         <p class="link-arrow mt-auto pt-5 text-[15px]">
@@ -59,10 +64,19 @@ const line2 = [d.format, d.venue].filter(Boolean).join(' · ');
       </>
     ) : (
       <>
-        <div class="mt-3 space-y-1 text-[15px] text-ink-soft">
-          {line1 && <p>{line1}</p>}
-          {line2 && <p>{line2}</p>}
-        </div>
+        <ul class="mt-3 space-y-1.5 text-[15px] text-ink-soft">
+          {details
+            .filter((x) => x.value)
+            .map((x) => (
+              <li class="flex gap-2.5">
+                <Icon name={x.icon} class="mt-[3px] size-4 shrink-0 text-gold-text" />
+                <span>
+                  <span class="sr-only">{x.label}: </span>
+                  {x.value}
+                </span>
+              </li>
+            ))}
+        </ul>
         <p class="mt-auto pt-6">
           <span class="btn btn-primary px-5 text-[15px] group-hover:bg-raspberry-deep">View Details</span>
         </p>

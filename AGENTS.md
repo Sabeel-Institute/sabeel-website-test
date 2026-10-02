@@ -49,6 +49,7 @@ field.
 | Let people pay a program's fee online | Programs → Online payment |
 | Add, rename, or hide a person | Team |
 | Add a testimonial | Testimonials |
+| Add a place where programs meet | Venues |
 | Add a photo to a page | Photos |
 | Change contact details, links, or menus | Site settings |
 | Donations, newsletter | Site settings → Donations, Newsletter |
@@ -66,6 +67,7 @@ flowchart LR
     P["programs/&lt;slug&gt;/index.md"]
     T["team/&lt;slug&gt;.md"]
     Q["testimonials.yaml"]
+    V["venues.yaml"]
   end
   CFG["src/site.config.ts<br/>links, areas, nav"]
   PH["src/assets/photos/"]
@@ -84,6 +86,7 @@ flowchart LR
 | `src/content/programs/` | One folder per program: `index.md` plus its flyer and program image |
 | `src/content/team/` | One Markdown file per person |
 | `src/content/testimonials.yaml` | Student quotes |
+| `src/content/venues.yaml` | Places programs meet, with their addresses |
 | `src/content.config.ts` | Schemas: every field each content file may have, with comments |
 | `src/site.config.ts` | Contact email, social and form links, program areas, navigation |
 | `src/lib/content.ts` | Collection queries and shared helpers (use these; do not re-query ad hoc) |
@@ -153,8 +156,26 @@ stays up, its registration buttons go, and shared links keep working.
 ### Format
 
 `format` is `Online`, `On-site`, or `Online & on-site`. Programs and the area
-pages group current programs under these three headings. `venue` names the
-place (`Masjid Istiqlal`, `Zoom`, `Masjid Istiqlal and Zoom`).
+pages group current programs under these three headings, and each card shows
+it. Where it meets is three fields, and the page words them:
+
+- `venue`: a place from `src/content/venues.yaml` by its id
+  (`masjid-istiqlal`), or a list of them. Needed unless the program is online
+  only.
+- `room`: the room there (`Sabeel Classroom`), shown as “Sabeel Classroom at
+  Masjid Istiqlal”.
+- `platform`: the online platform (`Zoom`), shown as “online via Zoom”.
+
+The page's Location reads, for example, “Masjid Istiqlal or online via Zoom”,
+with each venue's address linked to a map.
+
+### Cards
+
+Every current program's card shows the same lines, in this order: audience,
+schedule, how often (`frequency` and `duration`, “Weekly · 7 sessions”), and
+format. Dates, the venue, and the fee are on the program's page only. Write
+these fields exactly as the Fields table shows, so cards read alike; the
+build stops when a schedule or a length contains dates.
 
 ### Standard and bespoke pages
 
@@ -163,7 +184,7 @@ Every program gets a page in one of two ways:
 - **Standard (default).** `src/pages/programs/[slug].astro` builds the page
   from the fields, in a fixed order: status and area label, title, summary,
   Register and Ask a Question buttons, photo; the Audience · Starts ·
-  Schedule · Format bar; “What students will learn” (`outcomes`) beside an
+  Schedule · Location bar; “What students will learn” (`outcomes`) beside an
   “At a glance” panel; Instructor / What to expect / Policies cards; the
   Markdown body as “Program details”; the original flyer; a closing band
   (“Ready to join?”, “Registration opens soon.”, or “Interested in a future
@@ -193,8 +214,9 @@ item's `match` in `mainNav`.
 ### Fields
 
 Required for `open` and `ongoing`: `title`, `summary`, `area`, `date`,
-`audience`, `schedule`, `format`, `venue`, `duration`, `fee`, `registerUrl`.
-`closed` needs the same except `registerUrl`.
+`audience`, `schedule`, `format`, `frequency`, `fee`, `registerUrl`, and
+`venue` unless the program is online only. `closed` needs the same except
+`registerUrl`.
 `upcoming` needs `title`, `summary`, `area`, `date`, `audience`.
 `completed` needs `title`, `area`, `date`. Everything else is optional.
 
@@ -209,10 +231,12 @@ Required for `open` and `ongoing`: `title`, `summary`, `area`, `date`,
 | `dateApprox` | `true` when only the year is known (shown as the year) | |
 | `starts` | Overrides how the start is shown | `Fall 2026`, `Last Wednesday of each month` |
 | `audience` | Who may attend | `Adult women`, `Boys 12–16 · Girls 13+` |
-| `schedule` | Day · time · zone | `Mondays · 12:00–1:30 PM CT` |
+| `endDate` | Last session, `YYYY-MM-DD`; the page shows the dates from `date` to `endDate` | `2026-10-26` |
+| `schedule` | Days, then the time, without dates or frequency | `Mondays · 12:00–1:30 PM CT`, `Last Wednesday · 10:00–10:30 AM CT` |
+| `frequency` | `weekly`, `twice-monthly`, `monthly`, `daily`, or `once` | `weekly` |
+| `duration` | Length without dates; leave out for open-ended gatherings | `7 sessions`, `10 weeks`, `5 days` |
 | `format` | See Format | `Online & on-site` |
-| `venue` | Where | `Masjid Istiqlal and Zoom` |
-| `duration` | Length | `Seven sessions, Sept 14 – Oct 26` |
+| `venue`, `room`, `platform` | Where it meets; see Format | `masjid-istiqlal`, `Sabeel Classroom`, `Zoom` |
 | `fee` | Price text | `$150`, `Free` |
 | `registerUrl` | Registration form, copied exactly | `https://forms.gle/…` |
 | `zeffyTicketing` | Zeffy form for paying online: the name after `/ticketing/` in its links (see Online payment) | `anchored-hearts-sisters-circle` |
@@ -340,6 +364,12 @@ Refer to people in programs by file name under `instructors`.
   `/teachers-and-team/<old>{,/}` to `/teachers-and-team/<new>/` (see Moving or
   removing a page).
 
+### Venues (`src/content/venues.yaml`)
+
+`id`, `name`, and optional `address`, as the organisation gives it. Programs
+name a venue by its `id` in `venue`; program pages show its name and link the
+address to a map. Add a place here before a program uses it.
+
 ### Testimonials (`src/content/testimonials.yaml`)
 
 `id` (unique), `program` (the program the quote is about, as the student or
@@ -367,9 +397,8 @@ at least 1500 × 1200 px.
 | Support | `support-hero`, `rukaiya` |
 
 A new slot on a page gets a row here. Use only real, approved Sabeel photos.
-`home-hero`, `hikam-hero`, `about-hero`, and `about-story` hold
-illustrations, not photos of Sabeel classes; replace them with approved photos
-when available.
+`hikam-hero` holds an illustration, not a photo of Sabeel; replace it with an
+approved photo when available.
 
 Team cards and bio pages are text only: do not add a photo slot, an initials
 badge, or any other stand-in picture for a person. Three slots hold pictures the
@@ -424,7 +453,7 @@ Routes: `/`, `/about/`, `/programs/`, `/programs/<slug>/`,
 | `SectionHeading` | Section opening: `eyebrow`, `title`, gold divider; the default slot is aside text on the right |
 | `CtaBand` | Closing band: `title`, optional `eyebrow`, text and an `actions` slot |
 | `FactsBar` | Labelled facts row (`facts=[{ label, value }]`) |
-| `ProgramCard` | A program teaser (current or completed) |
+| `ProgramCard` | A program's card: the same lines for every current program (see Cards); completed ones show year and summary |
 | `CurrentPrograms` | Current programs grouped by format |
 | `AreaCards` | The three program-area cards on Programs |
 | `FlyerArchive` | Completed programs' flyers, one tab per year; the page also includes `Lightbox` |

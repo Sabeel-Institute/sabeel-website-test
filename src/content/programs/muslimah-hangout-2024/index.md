@@ -8,6 +8,7 @@ dateApprox: true
 audience: Girls
 schedule: Sept 30th-Dec 9th, Alternating Saturdays, 11:00 AM-12:00 PM CST
 format: On-site
-venue: Brand Lane Islamic Center (Ladies Prayer Hall)
+venue: brand-lane-islamic-center
+room: Ladies Prayer Hall
 flyer: ./flyer.webp
 ---

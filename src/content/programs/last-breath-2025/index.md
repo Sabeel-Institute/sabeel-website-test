@@ -9,7 +9,7 @@ dateApprox: true
 audience: Women
 schedule: Starting Dec 3rd, Wednesdays, 12:00 PM-1:00 PM
 format: On-site
-venue: Masjid Istiqlal
+venue: masjid-istiqlal
 instructors:
 - mariam-sattar
 flyer: ./flyer.webp

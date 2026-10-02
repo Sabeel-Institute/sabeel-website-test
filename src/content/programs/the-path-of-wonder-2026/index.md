@@ -9,7 +9,7 @@ dateApprox: true
 audience: Children
 schedule: June 16-25, Tues/Wed/Thurs, 2:30-4:30 PM
 format: On-site
-venue: RICC (Richmond)
+venue: ricc-richmond
 instructors:
 - sameera-shah
 flyer: ./flyer.webp

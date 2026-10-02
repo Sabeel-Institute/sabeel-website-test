@@ -9,6 +9,7 @@ dateApprox: true
 audience: Women and youth
 schedule: '6 weeks: June 14 - July 20; Sundays 11:30 AM-1:30 PM at Masjid Dar un Noor (in-person & Zoom); Mondays 12-1:00 PM online via Zoom'
 format: Online & on-site
-venue: Masjid Dar un Noor (in-person & Zoom)
+venue: masjid-dar-un-noor
+platform: Zoom
 flyer: ./flyer.webp
 ---

@@ -11,6 +11,13 @@
   generated and fails the build when a `page:` value has no matching file in
   `src/pages/`. Its route list skips files and folders starting with `_`, as
   Astro does, so a published program cannot point at an unbuilt page.
+- The schedule, length, and venue rules for current programs (no dates on
+  card lines, a venue unless online only) are in the programs schema's
+  `superRefine` (`src/content.config.ts`); past programs keep the schedules
+  they announced. `resolveLocation`, `rhythmLabel`, and `dateRange`
+  (`src/lib/content.ts`) word the fields for cards and pages, so the course
+  files hold each fact once. Map links are Google Maps search URLs built from
+  a venue's name and address.
 - `draft: true` programs are left out by `withStatus`, which every listing
   query uses, and by `getStaticPaths` in `programs/[slug].astro`, so they get
   no page and no listing. Drafts skip the bespoke-page and image checks.
@@ -26,11 +33,6 @@
 - `Photo.astro` resolves named slots from `src/assets/photos/` with
   `import.meta.glob`; a missing file renders the geometric fallback, so slots
   never break the build.
-- `about-hero.jpg` and `about-story.jpg` are the WordPress theme's demo
-  images from the Design Rector site (uploaded there in December 2023, not
-  Sabeel's own), used at the organisation's request; their license is
-  unconfirmed. They are cropped to their frames (4:3 and 5:4) and upscaled
-  2x from small originals, so replace them first when Sabeel has its own.
 - `ZeffyDialog` shows Zeffy's plain embed (`/embed/donation-form/<name>`,
   or `/embed/ticketing/<name>` for a program's `zeffyTicketing`) in the
   site's own `<dialog>` and loads it on first open; `zeffyForm` in

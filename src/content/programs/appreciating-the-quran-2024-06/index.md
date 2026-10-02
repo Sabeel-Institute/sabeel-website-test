@@ -9,6 +9,7 @@ dateApprox: true
 audience: Women
 schedule: June 1 - August 31, Thursdays 4:30-6 PM (online & on-site @ Masjid Arafat), Saturdays 10-11:30 AM online via Zoom
 format: Online & on-site
-venue: Masjid Arafat / Online via Zoom
+venue: masjid-arafat
+platform: Zoom
 flyer: ./flyer.webp
 ---

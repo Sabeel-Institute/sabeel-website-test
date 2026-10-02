@@ -9,7 +9,8 @@ dateApprox: true
 audience: Women
 schedule: Saturdays, starting Sept 7, 11 AM-1 PM
 format: On-site
-venue: Maryam Islamic Center, Upstairs Boys Hall
+venue: maryam-islamic-center
+room: Upstairs Boys Hall
 instructors:
 - sameera-shah
 flyer: ./flyer.webp

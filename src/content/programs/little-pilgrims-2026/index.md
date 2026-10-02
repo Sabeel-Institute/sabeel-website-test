@@ -9,6 +9,6 @@ dateApprox: true
 audience: Children
 schedule: Saturday, May 16, 2:30-4:30 PM
 format: On-site
-venue: Masjid Arafat
+venue: masjid-arafat
 flyer: ./flyer.webp
 ---

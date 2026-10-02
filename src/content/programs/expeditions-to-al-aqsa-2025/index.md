@@ -9,6 +9,6 @@ dateApprox: true
 audience: Children
 schedule: Saturdays, 3-4 PM CT, March 16-April 6
 format: Online
-venue: Online via Zoom
+platform: Zoom
 flyer: ./flyer.webp
 ---

@@ -7,7 +7,8 @@ date: '2021-06-26'
 audience: Girls
 schedule: Sat June 26th-Wed June 30th, 11 AM-2 PM
 format: On-site
-venue: Bear Creek Islamic Center community hall (on-site)
+venue: bear-creek-islamic-center
+room: Community hall
 instructors:
 - sameera-shah
 flyer: ./flyer.webp

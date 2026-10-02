@@ -9,6 +9,6 @@ dateApprox: true
 audience: Women
 schedule: '21st-29th Night (March 30 - April 7): Nightly Reflections 11:45 PM CT, Activities & Games 2:00 AM CT, Nasheeds & Duas 4:20 AM CT'
 format: Online
-venue: Online via Zoom
+platform: Zoom
 flyer: ./flyer.webp
 ---

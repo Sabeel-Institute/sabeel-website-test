@@ -8,6 +8,6 @@ date: '2021-07-05'
 audience: Children
 schedule: Monday-Friday, July 5-16, 11 AM-2 PM CST
 format: On-site
-venue: Everest Academy (on-site)
+venue: everest-academy
 flyer: ./flyer.webp
 ---

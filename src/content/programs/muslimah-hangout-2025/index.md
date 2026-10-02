@@ -9,6 +9,7 @@ dateApprox: true
 audience: Girls
 schedule: Alternating Saturdays, Feb 17th-April 27th, 12:00-1:00 PM CST
 format: On-site
-venue: Brand Lane Islamic Center (Ladies Prayer Hall)
+venue: brand-lane-islamic-center
+room: Ladies Prayer Hall
 flyer: ./flyer.webp
 ---

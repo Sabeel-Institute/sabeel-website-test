@@ -8,6 +8,6 @@ dateApprox: true
 audience: Children
 schedule: Fridays, May 26th-July 21st, 4-5 PM CST
 format: Online
-venue: Online via Zoom
+platform: Zoom
 flyer: ./flyer.webp
 ---
