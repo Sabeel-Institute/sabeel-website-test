@@ -10,7 +10,7 @@ import MailingListForm from '../components/MailingListForm.astro';
 import SabeelDifference from '../components/SabeelDifference.astro';
 import Gallery from '../components/Gallery.astro';
 import teacherPhoto from '../assets/photos/team-hero.webp';
-import servicePhoto from '../content/gallery/womens-class.webp';
+import servicePhoto from '../assets/photos/about-hero.webp';
 import { getCurrentPrograms, getGalleryPhotos } from '../lib/content';
 
 const featured = (await getCurrentPrograms()).slice(0, 3);
@@ -66,7 +66,7 @@ const gallery = await getGalleryPhotos();
         [
           {
             image: teacherPhoto,
-            alt: 'Sabeel teachers and team members in study',
+            alt: 'Women standing arm in arm in a masjid hall',
             title: 'Meet the teachers',
             text: 'Learn from ‘Alimiyyah graduates who pair rigorous training in the Islamic sciences with clarity, care, and an understanding of the questions women are carrying today.',
             link: 'Meet the teaching team',

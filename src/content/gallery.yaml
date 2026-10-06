@@ -2,11 +2,13 @@
 # this order. Each photo is a WebP file in gallery/. How to add, replace, or
 # remove one: Gallery in AGENTS.md.
 photos:
-  - image: ./gallery/community-in-the-park.webp
-    alt: Sabeel’s community praying together in a park beside a Sabeel tent
-  - image: ./gallery/womens-class.webp
-    alt: Women studying at low tables in a Sabeel class
-  - image: ./gallery/teen-boys-class.webp
-    alt: Teen boys in a Sabeel class
-  - image: ./gallery/women-arm-in-arm.webp
-    alt: Women standing arm in arm in a Sabeel classroom
+  - image: ./gallery/teen-boys-hall.webp
+    alt: Teen boys at long tables in a masjid hall, one with his hand raised
+  - image: ./gallery/nature-walk.webp
+    alt: Women walking together along a wooded trail
+  - image: ./gallery/girls-crafts.webp
+    alt: Girls making collages around a table, seen from above
+  - image: ./gallery/girls-class.webp
+    alt: Girls in a class, watching a slide on a screen
+  - image: ./gallery/tea-party.webp
+    alt: A Sabeel tea party table with sandwiches, samosas, and sliders

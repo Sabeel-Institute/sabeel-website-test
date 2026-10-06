@@ -406,9 +406,9 @@ own show `src/assets/images/link-preview.webp`, a landscape photo at least
 1200 × 630 px.
 
 Team cards and bio pages are text only: do not add a photo slot, an initials
-badge, or any other stand-in picture for a person. Two slots hold pictures the
-organisation will supply, and show the geometric panel until then: `founder` on
-the Teachers & Team page, and `rukaiya` beside Rukaiya's story on Support.
+badge, or any other stand-in picture for a person. The `founder` slot on the
+Teachers & Team page holds a picture of Sameera Shah that the organisation will
+supply, and shows the geometric panel until then.
 
 ### Gallery (`src/content/gallery.yaml`)
 
@@ -420,8 +420,8 @@ Keep it to a few photos, four to eight, and replace them as programs happen.
 
 | Field | Meaning | Example |
 |---|---|---|
-| `image` | The photo, a WebP file in `src/content/gallery/` | `./gallery/womens-class.webp` |
-| `alt` | What the photo shows, for people who cannot see it | `Women studying at low tables in a Sabeel class` |
+| `image` | The photo, a WebP file in `src/content/gallery/` | `./gallery/nature-walk.webp` |
+| `alt` | What the photo shows, for people who cannot see it | `Women walking together along a wooded trail` |
 | `program` | Optional: the program the photo is from, by folder name. Its name and year go under the photo, linked to its page | `summer-garden-2025` |
 
 Each photo keeps its own shape at one height, so portrait and landscape photos
