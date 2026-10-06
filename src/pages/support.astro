@@ -5,98 +5,87 @@ import SectionHeading from '../components/SectionHeading.astro';
 import ZeffyDialog from '../components/ZeffyDialog.astro';
 import Divider from '../components/Divider.astro';
 import Icon from '../components/Icon.astro';
-import Photo from '../components/Photo.astro';
 import { site } from '../site.config';
 
-const possible = [
-  { icon: 'book-open', title: 'Learn together', text: 'Reliable rooms for women’s classes, youth programs, teachers, curriculum, and sustained study.' },
-  { icon: 'sparkle', title: 'Gather for dhikr', text: 'A welcoming place to remember Allah together, deepen suhbah, and build spiritual rhythms beyond class.' },
-  { icon: 'users', title: 'Share life', text: 'Space to socialize, share meals, organize meal trains, and show up for births, weddings, and life’s milestones.' },
-  { icon: 'heart', title: 'Belong beyond class', text: 'Extend the care already lived by students and team members so the whole student body can feel connected.' },
-] as const;
-
-// What gifts support.
-const priorities = [
-  { title: 'A permanent home', text: 'A home of Sabeel’s own in Houston, with room to learn, gather, and serve.' },
-  { title: 'Programs today', text: 'Teachers, curriculum, and youth programming for the classes running now.' },
-  { title: 'Scholarships', text: 'Financial aid, so cost never keeps a student from learning.' },
+const possibilities = [
+  {
+    title: 'Teachers and a core team',
+    text: 'Hire people with the time to teach, plan programs, and support the families taking part.',
+  },
+  {
+    title: 'Programs and financial aid',
+    text: 'Continue learning for women, teens, and children while helping learners for whom cost is a barrier.',
+  },
+  {
+    title: 'Suitable space',
+    text: 'Be ready for a rental or masjid partnership that gives Sabeel more reliable room for classes and gatherings.',
+  },
 ] as const;
 ---
 
 <BaseLayout
-  title="Support Our Work"
-  description="Help Sabeel Institute move toward a permanent home for women’s and youth Islamic learning in Houston. Donations are tax-deductible."
+  title="Make Room for More Learning"
+  description="Your gift helps Sabeel offer learning and community to more women and young people in Houston. Donations are tax-deductible."
 >
   <PageHero
-    eyebrow="15+ years of learning in shared spaces"
-    title="Help Sabeel move toward a permanent home."
-    photo="support-hero"
-    photoAlt="Sabeel classes in borrowed and rented rooms over the years"
+    eyebrow="Support Sabeel"
+    title="Make room for more learning at Sabeel"
+    photo="rukaiya"
+    photoAlt="Sr. Rukaiya Ahmed, Sabeel board member and teacher"
     photoIcon="hand-heart"
   >
     <p>
-      For more than fifteen years, Sabeel has taught in borrowed and shared spaces, grateful to every masjid and
-      community venue that welcomed us. Today, we continue to rent small rooms and shape our programs around the space
-      available. We are ready for the next chapter: a permanent home where learning, teaching, suhbah, youth programs,
-      and service can grow together.
+      Rukaiya Ahmed first joined Sabeel through Summer Garden while she was in high school. She later completed Sabeel’s
+      three-year Classical Islamic Knowledge program. Today, she serves on Sabeel’s board and teaches young girls about Islam.
     </p>
-    <dl class="mt-6 grid grid-cols-2 overflow-hidden rounded-card border border-gold/60 bg-surface text-sm sm:grid-cols-4">
-      {
-        [
-          ['For 15+ years', 'Borrowed and shared spaces'],
-          ['With gratitude', 'Masajid and venues welcomed us'],
-          ['Today', 'Small rented rooms shape capacity'],
-          ['Next chapter', 'A permanent home for Sabeel'],
-        ].map(([k, v]) => (
-          <div class="border-gold/40 p-3 not-last:border-r max-sm:[&:nth-child(2)]:border-r-0 max-sm:[&:nth-child(-n+2)]:border-b">
-            <dt class="text-ink-soft">{k}</dt>
-            <dd class="mt-0.5 leading-snug font-semibold text-ink">{v}</dd>
-          </div>
-        ))
-      }
-    </dl>
+    <p>
+      Her journey shows what can happen when a learner has teachers and a community she can return to. Your gift helps
+      Sabeel offer that opportunity to more women and young people in Houston.
+    </p>
     <Fragment slot="actions">
-      <a href={site.donation.page} target="_blank" rel="noopener" data-zeffy="donate-dialog" class="btn btn-primary px-6 text-base">Donate online</a>
+      <a href={site.donation.page} target="_blank" rel="noopener" data-zeffy="donate-dialog" class="btn btn-primary px-6 text-base">
+        Support Sabeel
+      </a>
       <a href="#give" class="btn btn-outline px-6 text-base">Ways to give</a>
     </Fragment>
   </PageHero>
 
-  <!-- What a home makes possible -->
-  <section class="py-14 md:py-16" aria-labelledby="possible-heading">
+  <!-- The demand is already here -->
+  <section class="py-14 md:py-16" aria-labelledby="demand-heading">
     <div class="container-page">
-      <SectionHeading eyebrow="What a permanent home could make possible" title="A place for learning — and for life together." id="possible-heading">
-        <p>
-          Among Sabeel’s students and team, community is already taking shape: they organize meal trains and show up for
-          one another at births and weddings. A permanent home would help extend that same care and belonging to the
-          whole student body — with room to learn, gather for dhikr, socialize, and serve.
-        </p>
-      </SectionHeading>
-      <ul class="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-        {
-          possible.map((p) => (
-            <li class="rounded-card border border-gold/60 border-t-4 border-t-gold bg-surface p-6">
-              <span class="flex size-12 items-center justify-center rounded-full bg-canvas text-gold-text">
-                <Icon name={p.icon} class="size-6" />
-              </span>
-              <h3 class="mt-4 text-xl font-semibold text-ink">{p.title}</h3>
-              <p class="mt-2 text-[15px] leading-relaxed text-ink-soft">{p.text}</p>
-            </li>
-          ))
-        }
-      </ul>
+      <SectionHeading eyebrow="Growing demand" title="The demand is already here" id="demand-heading" />
+      <div class="mt-10 grid gap-8 lg:grid-cols-[1fr_1.3fr] lg:items-center lg:gap-12">
+        <div class="rounded-card border border-gold/70 border-t-4 border-t-gold bg-surface p-8 shadow-card">
+          <p class="display-lg text-raspberry">608</p>
+          <p class="mt-1 text-xl font-semibold text-ink">program registrations</p>
+          <p class="mt-2 text-sm font-semibold tracking-wide text-gold-text uppercase">Sept 2025–2026</p>
+          <Divider class="my-4" width="sm" />
+          <p class="text-[15px] leading-relaxed text-ink-soft">
+            Learners registered for Sabeel’s summer and Ramadan programs, youth workshops, women’s classes, and Qur’an study.
+            This figure counts registrations, including people who joined more than one program.
+          </p>
+        </div>
+        <div class="flex flex-col justify-center">
+          <p class="text-lg leading-relaxed text-ink-soft md:text-xl md:leading-relaxed">
+            For more than fifteen years, Sabeel’s volunteer-run Sacred Service Team has helped make this work possible.
+            Growing demand now calls for more teachers, a core team, and reliable places to learn.
+          </p>
+        </div>
+      </div>
     </div>
   </section>
 
-  <!-- What gifts support -->
-  <section class="border-t border-border py-14 md:py-16" aria-labelledby="gift-heading">
+  <!-- What your gift helps make possible -->
+  <section class="border-t border-border py-14 md:py-16" aria-labelledby="possible-heading">
     <div class="container-page">
-      <SectionHeading eyebrow="Where your gift goes" title="A permanent home, and the work happening now." id="gift-heading" />
-      <ul class="mt-8 grid gap-4 sm:grid-cols-3">
+      <SectionHeading eyebrow="Impact" title="What your gift helps make possible" id="possible-heading" />
+      <ul class="mt-10 grid gap-6 sm:grid-cols-3">
         {
-          priorities.map((d) => (
-            <li class="rounded-card border border-gold/60 bg-surface p-6">
-              <h3 class="text-xl font-semibold text-ink">{d.title}</h3>
-              <p class="mt-2 text-[15px] leading-relaxed text-ink-soft">{d.text}</p>
+          possibilities.map((item) => (
+            <li class="rounded-card border border-gold/60 border-t-4 border-t-gold bg-surface p-6 sm:p-8">
+              <h3 class="text-xl font-semibold text-ink">
+                {item.title}.<span class="block mt-2 font-normal text-[15px] text-ink-soft">{item.text}</span>
+              </h3>
             </li>
           ))
         }
@@ -106,117 +95,50 @@ const priorities = [
 
   <!-- How to give -->
   <section id="give" class="scroll-mt-6 border-y border-border bg-sage-mist py-14 md:py-16" aria-labelledby="give-heading">
-    <div class="container-page">
-      <SectionHeading eyebrow="How to give" title="Give online or with Zelle." id="give-heading" />
-      <div class="mt-8 grid gap-5 md:grid-cols-2">
-        <article class="flex flex-col rounded-card border border-gold/70 border-t-4 border-t-gold bg-surface p-6 shadow-card sm:p-8">
+    <div class="container-page max-w-4xl">
+      <div class="text-center">
+        <p class="eyebrow">Support Sabeel</p>
+        <h2 id="give-heading" class="display-md mt-2">
+          Give once or monthly to help Sabeel respond to these needs as they grow.
+        </h2>
+        <Divider align="center" class="mt-4" />
+      </div>
+
+      <div class="mt-10 rounded-card border border-gold/70 border-t-4 border-t-gold bg-surface p-6 shadow-card sm:p-10">
+        <div class="flex flex-col items-center text-center">
           <span class="flex size-12 items-center justify-center rounded-full bg-canvas text-gold-text">
-            <Icon name="credit-card" class="size-6" />
+            <Icon name="heart" class="size-6" />
           </span>
-          <h3 class="mt-4 text-2xl font-semibold text-ink">Donate online</h3>
-          <p class="mt-3 text-[15px] leading-relaxed text-ink-soft">
-            On our secure donation form, choose your amount and how often to give. Your tax receipt arrives by email.
-          </p>
-          <div class="mt-auto pt-6">
-            <a href={site.donation.page} target="_blank" rel="noopener" data-zeffy="donate-dialog" class="btn btn-primary w-full py-4 text-base">
+          <h3 class="mt-4 text-2xl font-semibold text-ink">Give online</h3>
+          <p class="mt-1 text-sm font-medium text-ink-soft">Zeffy</p>
+          <div class="mt-6 w-full max-w-sm">
+            <a
+              href={site.donation.page}
+              target="_blank"
+              rel="noopener"
+              data-zeffy="donate-dialog"
+              class="btn btn-primary w-full py-4 text-base"
+            >
               Donate online
             </a>
             <p class="mt-3 flex items-center justify-center gap-2 text-sm text-ink-soft">
               <Icon name="lock" class="size-4 text-success" /> Secure donation · Tax-deductible
             </p>
           </div>
-        </article>
-        <article class="flex flex-col rounded-card border border-gold/70 border-t-4 border-t-gold bg-surface p-6 shadow-card sm:p-8">
-          <span class="flex size-12 items-center justify-center rounded-full bg-canvas text-gold-text">
-            <Icon name="landmark" class="size-6" />
-          </span>
-          <h3 class="mt-4 text-2xl font-semibold text-ink">Donate with Zelle</h3>
-          <p class="mt-3 text-[15px] leading-relaxed text-ink-soft">Send your gift with Zelle from your bank’s app to:</p>
-          <p class="mt-2 text-lg font-semibold break-all text-ink">{site.zelle}</p>
-          <div class="mt-auto pt-6">
-            <button type="button" data-copy={site.zelle} aria-live="polite" hidden class="btn btn-outline w-full py-4 text-base">
-              Copy address
-            </button>
-            <p class="mt-3 text-center text-sm text-ink-soft">Tax-deductible</p>
-          </div>
-        </article>
+          <p class="mt-8 text-[15px] leading-relaxed text-ink-soft max-w-2xl border-t border-border pt-6">
+            Sabeel Institute is a not-for-profit Islamic educational institution in Houston. Donations are tax-deductible; our tax ID is <span class="font-semibold">{site.taxId}</span>. Online donors receive a tax receipt by email.
+          </p>
+        </div>
       </div>
+
+      <p class="mt-8 text-center text-[15px] text-ink-soft">
+        Know of a suitable space, or interested in discussing a larger gift? Email{' '}
+        <a href="mailto:finance@oursabeel.com" class="font-medium text-raspberry underline decoration-gold underline-offset-4">
+          finance@oursabeel.com
+        </a>.
+      </p>
     </div>
   </section>
 
-  <!-- Rukaiya's story -->
-  <section class="py-14 md:py-16" aria-labelledby="story-heading">
-    <div class="container-page grid items-center gap-10 md:grid-cols-2 md:gap-16">
-      <Photo slot="rukaiya" alt="Sr. Rukaiya Ahmed" class="aspect-[4/3] shadow-card" />
-      <div>
-        <p class="eyebrow">Rukaiya’s story</p>
-        <h2 id="story-heading" class="display-md mt-2 sm:text-[2.4rem]">From a summer garden to the board.</h2>
-        <Divider class="mt-4" />
-        <p class="mt-5 text-[17px] leading-[1.85] text-ink-soft">
-          Rukaiya first joined Sabeel in high school through our Summer Garden program. She then continued her journey
-          as a Sabeel student through the three-year Classical Islamic Knowledge program. Today, she serves as a member
-          of Sabeel’s board. Her story shows what becomes possible when a young woman has a pathway to learn, belong,
-          and lead.
-        </p>
-        <ol class="mt-6 grid overflow-hidden rounded-card border border-gold/60 bg-surface text-sm sm:grid-cols-3">
-          {
-            [
-              ['High school', 'Summer Garden'],
-              ['Next chapter', 'Classical Islamic Knowledge'],
-              ['Today', 'Sabeel board member'],
-            ].map(([k, v]) => (
-              <li class="border-gold/40 p-4 not-last:border-b sm:not-last:border-r sm:not-last:border-b-0">
-                <p class="text-ink-soft">{k}</p>
-                <p class="mt-0.5 font-semibold text-ink">{v}</p>
-              </li>
-            ))
-          }
-        </ol>
-        <a href="/teachers-and-team/rukaiya-ahmed/" class="link-arrow mt-6">
-          Read Rukaiya’s bio <Icon name="arrow-right" class="size-4" />
-        </a>
-      </div>
-    </div>
-  </section>
-
-  <!-- Trust -->
-  <section id="trust" class="scroll-mt-6 border-t border-border bg-sage-mist py-14 md:py-16" aria-labelledby="trust-heading">
-    <div class="container-page">
-      <SectionHeading eyebrow="Nonprofit information" title="Give with confidence." id="trust-heading" />
-      <dl class="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-        <div class="rounded-card bg-surface p-6">
-          <dt class="text-sm font-bold tracking-wide text-gold-text uppercase">Not-for-profit</dt>
-          <dd class="mt-2 text-ink">Sabeel Institute is a not-for-profit Islamic educational institution based in Houston, Texas.</dd>
-        </div>
-        <div class="rounded-card bg-surface p-6">
-          <dt class="text-sm font-bold tracking-wide text-gold-text uppercase">Tax-deductible</dt>
-          <dd class="mt-2 text-ink">Donations are tax-deductible. Our tax ID is <span class="font-semibold">{site.taxId}</span>.</dd>
-        </div>
-        <div class="rounded-card bg-surface p-6">
-          <dt class="text-sm font-bold tracking-wide text-gold-text uppercase">Secure payment</dt>
-          <dd class="mt-2 text-ink">Online gifts are completed on our secure donation form. Zelle is also available.</dd>
-        </div>
-        <div class="rounded-card bg-surface p-6">
-          <dt class="text-sm font-bold tracking-wide text-gold-text uppercase">Questions</dt>
-          <dd class="mt-2 text-ink">
-            Email <a href={`mailto:${site.email}`} class="font-medium text-raspberry underline decoration-gold underline-offset-4">{site.email}</a> about any gift.
-          </dd>
-        </div>
-      </dl>
-    </div>
-  </section>
   <ZeffyDialog id="donate-dialog" title={`Donate to ${site.name}`} label="Donation form" form={site.donation} />
 </BaseLayout>
-
-<script>
-  // Copy buttons appear only where the browser can copy; the text beside them stays selectable.
-  for (const button of document.querySelectorAll<HTMLButtonElement>('button[data-copy]')) {
-    if (!navigator.clipboard) continue;
-    button.hidden = false;
-    button.addEventListener('click', async () => {
-      await navigator.clipboard.writeText(button.dataset.copy!);
-      button.textContent = 'Copied';
-      setTimeout(() => (button.textContent = 'Copy address'), 2000);
-    });
-  }
-</script>
