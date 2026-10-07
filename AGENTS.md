@@ -133,13 +133,15 @@ the Programs menu, no links, and no interest-list option.
 
 `AreaPage` builds Women’s Learning from its programs. The Youth & Children
 page, `src/pages/programs/youth-children.astro`, shows its programs that are
-not over the same way (`AreaPrograms`), with Teen Sundays photos beside its
-introduction. Under Explore past programs it keeps three series on the page,
-so families see what Sabeel offers: Summer Garden, Camp Futuwwah, and courses
-for young children. Each series in that file has photo slots, its programs by
-folder name, and for Camp Futuwwah a video. When a new edition ends, add its
-folder to its series; the build stops if a folder is not a program on the
-site.
+not over the same way (`AreaPrograms`), below an introduction that links to
+them and to its past programs. Under Explore past programs it keeps three
+series on the page, so families see what Sabeel offers: Summer Garden, Camp
+Futuwwah, and courses for young children. Each series in that file has its
+programs by folder name, photo slots, a description for Summer Garden and
+Camp Futuwwah, and a video for Camp Futuwwah. A description fits every
+edition, so it leaves out what changes from year to year, such as how many
+days the program runs. When a new edition ends, add its folder to its series;
+the build stops if a folder is not a program on the site.
 
 ### Status
 
@@ -417,7 +419,7 @@ at least 1500 × 1200 px.
 | About | `about-hero`; `about-story` (5:4) |
 | Programs | `programs-women`, `programs-teens`, `programs-children` (collage, cropped to 3:4) |
 | Women’s Learning, Youth & Children | `area-womens-learning`, `area-youth-children` |
-| Youth & Children | `youth-teen-sundays-1`, `youth-teen-sundays-2`; `youth-summer-garden-1`, `youth-summer-garden-2`; `youth-camp-futuwwah` (cropped to 9:16 beside the video); `youth-young-children-1`, `youth-young-children-2` |
+| Youth & Children | `youth-summer-garden-1`, `youth-summer-garden-2`; `youth-camp-futuwwah` (cropped to 9:16 beside the video); `youth-young-children-1`, `youth-young-children-2` |
 | Teachers & Team | `team-hero` |
 | Support | `rukaiya` |
 
@@ -451,7 +453,8 @@ Each photo keeps its own shape at one height, so portrait and landscape photos
 both work. Use only photos the organisation approves for the website. Its
 photo consent says that faces are blurred and that children’s names are never
 shared without separate permission, so use photos with faces blurred or turned
-away, and never name a child in `alt`.
+away, unless the people shown (for children, their families) have agreed to
+show them, and never name a child in `alt`.
 
 To add a photo, convert it to WebP from the repository root. This also turns
 it upright, scales it to at most 1600 px on its longest side, and removes the

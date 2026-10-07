@@ -4,10 +4,14 @@
 photos:
   - image: ./gallery/sabeel-slide.webp
     alt: A full room of women seen from behind, watching a slide with the Sabeel logo
+  - image: ./gallery/aquatic-systems-class.webp
+    alt: Children at tables in a masjid hall, facing a teacher beside a slide titled Why Aquatic Systems Matter?
   - image: ./gallery/teen-boys-hall.webp
     alt: Teen boys at long tables in a masjid hall, one with his hand raised
   - image: ./gallery/nature-walk.webp
     alt: Women walking together along a wooded trail
+  - image: ./gallery/robot-boxing.webp
+    alt: Teen boys crowding around a robot boxing game
   - image: ./gallery/girls-crafts.webp
     alt: Girls making collages around a table, seen from above
   - image: ./gallery/girls-class.webp
