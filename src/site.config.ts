@@ -22,8 +22,9 @@ export const site = {
   description:
     'Structured, in-person Islamic learning for women in Houston — from classes and gatherings to sustained study with women trained in the Islamic sciences.',
   email: 'info@oursabeel.com',
+  /** For larger gifts and offers of space, on the Support page. */
+  financeEmail: 'finance@oursabeel.com',
   location: 'Houston, Texas',
-  zelle: 'oursabeel@gmail.com',
   taxId: '93-2752046',
   social: {
     facebook: 'https://www.facebook.com/sameerainstitute',
