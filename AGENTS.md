@@ -393,7 +393,7 @@ at least 1500 × 1200 px.
 | About | `about-hero`; `about-story` (5:4) |
 | Programs | `programs-women`, `programs-teens`, `programs-children` (collage) |
 | Women’s Learning, Youth & Children | `area-womens-learning`, `area-youth-children` |
-| Teachers & Team | `team-hero`, `founder` |
+| Teachers & Team | `team-hero` |
 | Support | `support-hero`, `rukaiya` |
 
 A new slot on a page gets a row here. Use only real, approved Sabeel photos.
@@ -402,10 +402,9 @@ Link previews (WhatsApp, Instagram, email) of pages without an image of their
 own show `src/assets/images/link-preview.webp`, a landscape photo at least
 1200 × 630 px.
 
-Team cards and bio pages are text only: do not add a photo slot, an initials
-badge, or any other stand-in picture for a person. The `founder` slot on the
-Teachers & Team page holds a picture of Sameera Shah that the organisation will
-supply, and shows the geometric panel until then.
+Team cards, the founder's section on Teachers & Team, and bio pages are text
+only: do not add a photo slot, an initials badge, or any other stand-in picture
+for a person.
 
 ### Gallery (`src/content/gallery.yaml`)
 
