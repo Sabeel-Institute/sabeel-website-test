@@ -312,7 +312,7 @@ const cards = [
           <a {...register} class="btn btn-primary px-7 text-base">
             Register Now {free && <Icon name="external" class="size-4" />}
           </a>
-          <a href="/financial-aid/" class="btn btn-outline bg-surface/60 px-6 text-base">Financial Aid</a>
+          {!free && <a href="/financial-aid/" class="btn btn-outline bg-surface/60 px-6 text-base">Financial Aid</a>}
         </Fragment>
       </CtaBand>
     ) : completed || closed ? (
