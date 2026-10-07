@@ -46,7 +46,7 @@ field.
 | Add a program | Programs → Recipes → Add a program |
 | New session of a monthly gathering | Programs → Recipes → Recurring gathering |
 | Images from the program's designers | Programs → Program images |
-| Let people pay a program's fee online | Programs → Online payment |
+| How people register, free or paid | Programs → Registration |
 | Add, rename, or hide a person | Team |
 | Add a testimonial | Testimonials |
 | Add a place where programs meet | Venues |
@@ -160,8 +160,8 @@ stateDiagram-v2
 
 | `status` | Use when | Shown as | Listed on | Its page offers |
 |---|---|---|---|---|
-| `open` | Registration is open | Registration open | Home, Programs, its area page | Register buttons (`registerUrl`); Pay buttons (`zeffyTicketing`) |
-| `ongoing` | A series has begun and people can still join | Ongoing series | Same places, after open programs | Register and Pay buttons |
+| `open` | Registration is open | Registration open | Home, Programs, its area page | Register buttons (see Registration) |
+| `ongoing` | A series has begun and people can still join | Ongoing series | Same places, after open programs | Register buttons |
 | `closed` | Registration has closed; the program is still running | Registration closed | “Registration closed” on Programs and its area page | Join the Interest List |
 | `upcoming` | Announced; registration is not open yet | Coming soon | “Coming soon” on Programs and its area page | Join the Interest List |
 | `completed` | The program has ended | Program completed | Past Programs | Join the Interest List; kept as a record |
@@ -231,9 +231,9 @@ takes its year from that program.
 ### Fields
 
 Required for `open` and `ongoing`: `title`, `summary`, `area`, `date`,
-`audience`, `schedule`, `format`, `frequency`, `fee`, `registerUrl`, and
-`venue` unless the program is online only. `closed` needs the same except
-`registerUrl`.
+`audience`, `schedule`, `format`, `frequency`, `fee`, and `venue` unless the
+program is online only; a free program also needs `registerUrl` (see
+Registration). `closed` needs the same except `registerUrl`.
 `upcoming` needs `title`, `summary`, `area`, `date`, `audience`.
 `completed` needs `title`, `area`, `date`. Everything else is optional.
 
@@ -255,8 +255,8 @@ Required for `open` and `ongoing`: `title`, `summary`, `area`, `date`,
 | `format` | See Format | `Online & on-site` |
 | `venue`, `room`, `platform` | Where it meets; see Format | `masjid-istiqlal`, `Sabeel Classroom`, `Zoom` |
 | `fee` | Price text | `$150`, `Free` |
-| `registerUrl` | Registration form, copied exactly | `https://forms.gle/…` |
-| `zeffyTicketing` | Zeffy form for paying online: the name after `/ticketing/` in its links (see Online payment) | `anchored-hearts-sisters-circle` |
+| `registerUrl` | A free program's registration form, copied exactly; paid programs have none | `https://forms.gle/…` |
+| `zeffyTicketing` | Zeffy form a paid program registers and pays through: the name after `/ticketing/` in its links (see Registration) | `anchored-hearts-sisters-circle` |
 | `deadline` | Registration deadline text | |
 | `prerequisites` | Materials or prerequisites | |
 | `outcomes` | Three to five things students will learn (list) | |
@@ -297,17 +297,26 @@ run this from the repository root:
 node -e "require('sharp')(process.argv[1]).webp({ quality: 90 }).toFile(process.argv[2])" flyer.png src/content/programs/<name>/flyer.webp
 ```
 
-### Online payment
+### Registration
 
-People pay a program's fee online through a ticketing form on Zeffy (the
-organisation's Zeffy account), with a ticket for each price. Set
-`zeffyTicketing` to the name after `/ticketing/` in the form's links: for
-`https://www.zeffy.com/embed/ticketing/anchored-hearts-sisters-circle?modal=true`
-it is `anchored-hearts-sisters-circle`. The name is all the site needs; do not
-add Zeffy's embed code (its `zeffy-form-link` attribute and script) to a page.
-While the program is `open` or `ongoing`, its page has a Pay button beside
-each Register button, which opens the form in a dialog. Ticket names and
-prices are set on zeffy.com; keep `fee` the same as them.
+While a program is `open` or `ongoing`, its page has Register buttons, which
+work by its fee:
+
+- **Paid** (any `fee` but `Free`): people register and pay through a
+  ticketing form on Zeffy (the organisation's Zeffy account), with a ticket
+  for each price; the form asks for their details. Set `zeffyTicketing` to
+  the name after `/ticketing/` in the form's links: for
+  `https://www.zeffy.com/embed/ticketing/anchored-hearts-sisters-circle?modal=true`
+  it is `anchored-hearts-sisters-circle`. Register opens the form in a
+  dialog. Until the form exists, leave `zeffyTicketing` out: Register then
+  opens a dialog saying the registration form is a work in progress. Ticket
+  names and prices are set on zeffy.com; keep `fee` the same as them. A paid
+  program has no `registerUrl`, and the build stops if it does.
+- **Free** (`fee: Free`): Register opens the program's own form,
+  `registerUrl`, in a new tab.
+
+The form's name is all the site needs; do not add Zeffy's embed code (its
+`zeffy-form-link` attribute and script) to a page.
 
 ### Recipes
 
@@ -316,8 +325,8 @@ prices are set on zeffy.com; keep `fee` the same as them.
    naming rule under Programs).
 2. In `index.md`, set `status` (`upcoming` until registration opens, then
    `open`) and every field that status needs (see Fields), copying names,
-   dates, fees, and the registration link exactly as the organisation gives
-   them.
+   dates, fees, and the Zeffy form or registration link (see Registration)
+   exactly as the organisation gives them.
 3. Replace `flyer.webp` with the new flyer and `image.webp` with the new
    program image (see Program images), and rewrite `imageAlt`. Without a
    program image, delete the file and both fields: the card then has no
@@ -336,8 +345,9 @@ still running, change only `status` to `closed`.
 program. Everything else about it stays as it is.
 
 **Recurring gathering** (for example Anchored Hearts): edit the same folder
-each cycle: `date`, `starts`, `registerUrl`, `zeffyTicketing` (when the
-session has its own Zeffy form), instructors, and the “This month” text.
+each cycle: `date`, `starts`, `zeffyTicketing` (when the session has its own
+Zeffy form; `registerUrl` for a free gathering), instructors, and the “This
+month” text.
 Replace `flyer.webp` with the new flyer under the same name, and
 `image.webp` too if the artwork changed. The folder always describes the next
 session; earlier sessions are not kept.
@@ -570,7 +580,7 @@ the 404 page.
 | `Gallery` | The row of photos from past programs on the home page (see Gallery) |
 | `Video` | A 16:9 or portrait video that downloads only when played: its cover, a play button, and its length, then the player with captions on (see Videos) |
 | `MailingListForm`, `InterestDialog` | Newsletter and interest-list sign-up. Any link with `data-interest` opens the dialog; `data-interest="<area>"` opens it with only that area ticked |
-| `ZeffyDialog` | A Zeffy form in a dialog: the donation form on Support, a program's payment form on its page. A link with `data-zeffy="<id>"` opens the dialog with that `id` |
+| `ZeffyDialog` | A Zeffy form in a dialog: the donation form on Support, a paid program's registration form on its page, or a note that the form is a work in progress. A link with `data-zeffy="<id>"` opens the dialog with that `id` |
 | `Lightbox` | Enlarging flyers: links with `data-lightbox="<group>"` |
 | `SabeelDifference` | The three-column band on Home and About |
 | `Divider`, `Icon` | Gold diamond divider; inline icons (add new ones to `Icon.astro` using Lucide paths) |

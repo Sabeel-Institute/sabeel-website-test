@@ -11,7 +11,6 @@ frequency: monthly
 format: On-site
 venue: masjid-istiqlal
 fee: $5
-registerUrl: https://forms.gle/1rrFAvRPa5oRCL9S7
 instructors:
   - mariam-sattar
   - name: Pelin Unal

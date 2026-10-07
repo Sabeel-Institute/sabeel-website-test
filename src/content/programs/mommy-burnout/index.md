@@ -14,7 +14,6 @@ venue: masjid-istiqlal
 platform: Zoom
 duration: 7 sessions
 fee: $150
-registerUrl: https://forms.gle/vsHn6Akc9wreh2118
 outcomes:
   - Recognize what is contributing to your burnout
   - Live and mother with renewed purpose

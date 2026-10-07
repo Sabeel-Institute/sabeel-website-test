@@ -13,7 +13,6 @@ format: On-site
 venue: masjid-istiqlal
 duration: 4 sessions
 fee: $100
-registerUrl: https://forms.gle/6Y4ezUaPhMtX7jLH9
 outcomes:
   - How to stay strong when life feels uncertain
   - Who we are when no one is watching

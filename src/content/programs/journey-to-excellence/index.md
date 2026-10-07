@@ -13,7 +13,6 @@ format: Online
 platform: Zoom
 duration: 8 sessions
 fee: $5 per session, or $35 for the full series
-registerUrl: https://docs.google.com/forms/d/e/1FAIpQLScYIlkoJbmu7mCAZm8vot6qEQ0tUQD8lgMOFiaVRL1UIzKmzw/viewform
 outcomes:
   - The qualities of a believer — tawbah, shukr, sabr, dhikr, taqwa, and more
   - How these qualities help us grow in faith and character

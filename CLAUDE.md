@@ -4,8 +4,9 @@
 
 - Program entries use a discriminated union on `status`
   (`src/content.config.ts`); open, ongoing, and closed programs fail the
-  build if a listing field is missing (`registerUrl` is optional once
-  closed). Folder names are validated in `generateId`, and
+  build if a listing field is missing. While a program is open or ongoing,
+  `superRefine` requires `registerUrl` of a free one (`fee` is `FREE`) and
+  refuses it on a paid one, which registers through Zeffy. Folder names are validated in `generateId`, and
   `womens-learning` / `youth-children` are reserved for the area pages.
 - `assertBespokePages` (`src/lib/content.ts`) runs while program pages are
   generated and fails the build when a `page:` value has no matching file in
@@ -59,7 +60,8 @@
   video needs no other setting.
 - `ZeffyDialog` shows Zeffy's plain embed (`/embed/donation-form/<name>`,
   or `/embed/ticketing/<name>` for a program's `zeffyTicketing`) in the
-  site's own `<dialog>` and loads it on first open; `zeffyForm` in
+  site's own `<dialog>` and loads it on first open; without a form (a paid
+  program whose form is not ready), the same dialog says so; `zeffyForm` in
   `src/site.config.ts` builds a form's page and embed links. Zeffy's pop-up
   script (`embed-form-script.min.js`) is not used: it loads the form in a
   hidden frame on every page view, and its pop-up has no dialog role or
