@@ -454,7 +454,7 @@ is not a program on the site.
 
 ### Site settings (`src/site.config.ts`)
 
-Contact email, location, social links, financial-aid form, the Zeffy donation
+Contact email, financial-aid contact email, location, social links, financial-aid form, the Zeffy donation
 campaign, Zelle address, tax ID, `mailingListAction`, `hikamOverviewPdf`,
 program areas, and the header (`mainNav`) and footer (`footerNav`) menus.
 Change a value here, never by typing it into a page.
