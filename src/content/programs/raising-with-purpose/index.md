@@ -10,7 +10,6 @@ schedule: Sundays · 5:00–7:00 PM CT
 frequency: monthly
 format: On-site
 venue: masjid-istiqlal
-room: Sabeel Classroom
 fee: $5
 registerUrl: https://forms.gle/1rrFAvRPa5oRCL9S7
 instructors:

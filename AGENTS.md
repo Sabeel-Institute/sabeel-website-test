@@ -181,12 +181,14 @@ it. Where it meets is three fields, and the page words them:
 - `venue`: a place from `src/content/venues.yaml` by its id
   (`masjid-istiqlal`), or a list of them. Needed unless the program is online
   only.
-- `room`: the room there (`Sabeel Classroom`), shown as “Sabeel Classroom at
-  Masjid Istiqlal”.
+- `room`: the room at its one venue, only when it is not the venue's usual
+  room. A venue's usual room is in `venues.yaml`: programs at Masjid Istiqlal
+  meet in the Sabeel Classroom, shown as “Sabeel Classroom at Masjid
+  Istiqlal”.
 - `platform`: the online platform (`Zoom`), shown as “online via Zoom”.
 
-The page's Location reads, for example, “Masjid Istiqlal or online via Zoom”,
-with each venue's address linked to a map.
+The page's Location reads, for example, “Sabeel Classroom at Masjid Istiqlal
+or online via Zoom”, with each venue's address linked to a map.
 
 ### Cards
 
@@ -381,8 +383,9 @@ Refer to people in programs by file name under `instructors`.
 
 ### Venues (`src/content/venues.yaml`)
 
-`id`, `name`, and optional `address`, as the organisation gives it. Programs
-name a venue by its `id` in `venue`; program pages show its name and link the
+`id`, `name`, and optional `address`, as the organisation gives it, and
+optional `room`, the room programs meet in there. Programs name a venue by its
+`id` in `venue`; program pages show the room and the venue's name and link the
 address to a map. Add a place here before a program uses it.
 
 ### Testimonials (`src/content/testimonials.yaml`)

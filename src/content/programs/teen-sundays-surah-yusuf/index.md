@@ -22,7 +22,7 @@ outcomes:
   - How to trust Allah while our story is still unfolding
 instructors:
   - sameera-shah
-expect: Meaningful discussion, reflection, snacks, and friendships — twice a month, on-site at Masjid Istiqlal.
+expect: Meaningful discussion, reflection, snacks, and friendships — twice a month, in the Sabeel Classroom at Masjid Istiqlal.
 image: ./image.webp
 imageAlt: "Title artwork: The Qur’an hits different when you see yourself in it"
 flyer: ./flyer.webp
