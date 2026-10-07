@@ -16,12 +16,15 @@ interface Props {
   name: string;
   /** What the video is; read out with the play button. */
   title: string;
-  /** Where the cover leaves room for the play button: its centre, in percent of the cover's width and height. */
-  play?: { x: number; y: number };
+  /**
+   * Where the cover leaves room for the play button: its centre, in percent of the cover's width and height, and
+   * its size, in percent of the cover's width.
+   */
+  play?: { x: number; y: number; size: number };
   sizes?: string;
 }
 
-const { name, title, play = { x: 50, y: 50 }, sizes = '(min-width: 1024px) 50vw, 100vw' } = Astro.props;
+const { name, title, play = { x: 50, y: 50, size: 15 }, sizes = '(min-width: 1024px) 50vw, 100vw' } = Astro.props;
 const dir = '/src/assets/videos/';
 const videos = import.meta.glob<string>('/src/assets/videos/*.mp4', { eager: true, query: '?url', import: 'default' });
 const tracks = import.meta.glob<string>('/src/assets/videos/*.vtt', { eager: true, query: '?url', import: 'default' });
@@ -40,12 +43,13 @@ const unit = (n: number, word: string) => `${n} ${word}${n === 1 ? '' : 's'}`;
 const spoken = [minutes > 0 && unit(minutes, 'minute'), rest > 0 && unit(rest, 'second')].filter(Boolean).join(' ');
 ---
 
-<div class="relative aspect-video rounded-card bg-inset shadow-card" data-video>
+{/* The player takes the cover's shape: 16:9, or portrait for a phone video. */}
+<div class="relative rounded-card bg-inset shadow-card" style={`aspect-ratio: ${cover.width} / ${cover.height}`} data-video>
   <a href={src} class="group @container absolute inset-0 overflow-hidden rounded-card" aria-label={`Play video: ${title}, ${spoken}`}>
-    <Image src={cover} alt="" widths={[640, 960, 1280, 1920]} sizes={sizes} class="size-full object-cover" />
+    <Image src={cover} alt="" widths={[360, 640, 960, 1280, 1920]} sizes={sizes} class="size-full object-cover" />
     <span
-      class="absolute flex aspect-square w-[8.33%] -translate-1/2 items-center justify-center rounded-full bg-raspberry text-on-raspberry shadow-card transition duration-200 group-hover:scale-110 group-hover:bg-raspberry-deep"
-      style={`left: ${play.x}%; top: ${play.y}%`}
+      class="absolute flex aspect-square -translate-1/2 items-center justify-center rounded-full bg-raspberry text-on-raspberry shadow-card transition duration-200 group-hover:scale-110 group-hover:bg-raspberry-deep"
+      style={`left: ${play.x}%; top: ${play.y}%; width: ${play.size}%`}
     >
       <Icon name="play" class="ml-[8%] size-[44%]" />
     </span>

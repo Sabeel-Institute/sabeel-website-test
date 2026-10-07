@@ -55,6 +55,8 @@
   `import.meta.glob`, so `mp4Duration` (`src/lib/video.ts`) can open the MP4
   from `process.cwd()`; it reads the `mvhd` box with `node:fs` (hence
   `@types/node`) and fails the build when `mdat` comes before `moov`.
+  The wrapper's `aspect-ratio` comes from the cover's size, so a portrait
+  video needs no other setting.
 - `ZeffyDialog` shows Zeffy's plain embed (`/embed/donation-form/<name>`,
   or `/embed/ticketing/<name>` for a program's `zeffyTicketing`) in the
   site's own `<dialog>` and loads it on first open; `zeffyForm` in
