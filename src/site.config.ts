@@ -81,11 +81,20 @@ export const areas: Record<
   },
 };
 
-/** `match` lists extra path prefixes that mark the item as the current section. */
-export type NavItem = { label: string; href: string; match?: string[] };
+/** A link in a menu. */
+export type NavLink = { label: string; href: string };
+
+/**
+ * `match` lists extra path prefixes that mark the item as the current section;
+ * `menu` lists the links in its drop-down menu.
+ */
+export type NavItem = NavLink & { match?: string[]; menu?: NavLink[] };
+
+/** The program areas that have a page, for the Programs menu. */
+const areaLinks = Object.values(areas).flatMap((area) => (area.href ? [{ label: area.label, href: area.href }] : []));
 
 export const mainNav: NavItem[] = [
-  { label: 'Programs', href: '/programs/', match: ['/past-programs/'] },
+  { label: 'Programs', href: '/programs/', match: ['/past-programs/'], menu: areaLinks },
   { label: 'Hikam Foundations', href: '/hikam-foundations/' },
   { label: 'About', href: '/about/' },
   { label: 'Teachers & Team', href: '/teachers-and-team/' },

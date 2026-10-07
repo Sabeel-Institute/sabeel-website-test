@@ -26,8 +26,8 @@ const isActive = (item: (typeof nav)[number]) =>
     <nav aria-label="Main" class="hidden lg:block">
       <ul class="flex items-center gap-2 xl:gap-4">
         {
-          nav.map((item) => (
-            <li>
+          nav.map((item, i) => (
+            <li class:list={[item.menu && 'relative flex items-center']} data-dropdown={item.menu && ''}>
               <a
                 href={item.href}
                 aria-current={isActive(item) ? 'page' : undefined}
@@ -42,6 +42,33 @@ const isActive = (item: (typeof nav)[number]) =>
                   ]}
                 />
               </a>
+              {item.menu && (
+                <>
+                  <button
+                    type="button"
+                    aria-expanded="false"
+                    aria-controls={`nav-menu-${i}`}
+                    class="peer -ml-2 inline-flex h-11 w-7 items-center justify-center rounded text-ink transition-colors hover:text-raspberry aria-expanded:text-raspberry aria-expanded:*:rotate-180 xl:-ml-3"
+                  >
+                    <Icon name="chevron-down" class="size-4 transition-transform" label={`${item.label} menu`} />
+                  </button>
+                  <div id={`nav-menu-${i}`} class="absolute top-full -left-2 hidden pt-1 peer-aria-expanded:block">
+                    <ul class="min-w-60 rounded-card border border-gold/60 bg-surface p-2 shadow-card">
+                      {item.menu.map((link) => (
+                        <li>
+                          <a
+                            href={link.href}
+                            aria-current={path === link.href ? 'page' : undefined}
+                            class="flex min-h-11 items-center rounded-lg px-3 text-base text-ink transition-colors hover:bg-canvas hover:text-raspberry aria-[current=page]:font-semibold aria-[current=page]:text-raspberry"
+                          >
+                            {link.label}
+                          </a>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </>
+              )}
             </li>
           ))
         }
@@ -73,15 +100,43 @@ const isActive = (item: (typeof nav)[number]) =>
   >
     <ul class="container-page flex flex-col py-3">
       {
-        nav.map((item) => (
-          <li>
-            <a
-              href={item.href}
-              aria-current={isActive(item) ? 'page' : undefined}
-              class="flex min-h-12 items-center border-b border-border/70 text-lg text-ink aria-[current=page]:font-semibold aria-[current=page]:text-raspberry"
-            >
-              {item.label}
-            </a>
+        nav.map((item, i) => (
+          <li class="border-b border-border/70">
+            <div class="flex items-center">
+              <a
+                href={item.href}
+                aria-current={isActive(item) ? 'page' : undefined}
+                class="flex min-h-12 flex-1 items-center text-lg text-ink aria-[current=page]:font-semibold aria-[current=page]:text-raspberry"
+              >
+                {item.label}
+              </a>
+              {item.menu && (
+                <button
+                  type="button"
+                  aria-expanded="false"
+                  aria-controls={`mobile-nav-menu-${i}`}
+                  class="-mr-3 inline-flex size-12 items-center justify-center text-ink aria-expanded:*:rotate-180"
+                  data-submenu-toggle
+                >
+                  <Icon name="chevron-down" class="size-5 transition-transform" label={`${item.label} menu`} />
+                </button>
+              )}
+            </div>
+            {item.menu && (
+              <ul id={`mobile-nav-menu-${i}`} hidden class="mb-3 ml-1 border-l border-gold/60 pl-4">
+                {item.menu.map((link) => (
+                  <li>
+                    <a
+                      href={link.href}
+                      aria-current={path === link.href ? 'page' : undefined}
+                      class="flex min-h-11 items-center text-base text-ink aria-[current=page]:font-semibold aria-[current=page]:text-raspberry"
+                    >
+                      {link.label}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            )}
           </li>
         ))
       }
@@ -105,6 +160,58 @@ const isActive = (item: (typeof nav)[number]) =>
         setOpen(false);
         toggle.focus();
       }
+    });
+  }
+
+  // In the phone menu, an item's button shows or hides the links under it.
+  for (const button of document.querySelectorAll<HTMLButtonElement>('[data-submenu-toggle]')) {
+    const links = document.getElementById(button.getAttribute('aria-controls')!)!;
+    button.addEventListener('click', () => {
+      links.hidden = !links.hidden;
+      button.setAttribute('aria-expanded', String(!links.hidden));
+    });
+  }
+
+  // On wide screens, a mouse opens an item's drop-down menu while over it. The
+  // item's button opens it for keyboards and touch screens and keeps it open
+  // until the button is pressed again, Escape, or a click or focus elsewhere.
+  for (const item of document.querySelectorAll<HTMLElement>('[data-dropdown]')) {
+    const button = item.querySelector('button')!;
+    const isOpen = () => button.getAttribute('aria-expanded') === 'true';
+    let pinned = false;
+    let timer: number | undefined;
+    const setOpen = (open: boolean) => {
+      clearTimeout(timer);
+      pinned &&= open;
+      button.setAttribute('aria-expanded', String(open));
+    };
+    const setOpenAfter = (open: boolean, ms: number) => {
+      clearTimeout(timer);
+      timer = window.setTimeout(() => setOpen(open), ms);
+    };
+    item.addEventListener('pointerenter', (e) => {
+      if (e.pointerType === 'mouse') setOpenAfter(true, 100);
+    });
+    item.addEventListener('pointerleave', (e) => {
+      if (e.pointerType === 'mouse' && !pinned) setOpenAfter(false, 250);
+    });
+    button.addEventListener('click', () => {
+      const open = !pinned;
+      setOpen(open);
+      pinned = open;
+    });
+    item.addEventListener('focusout', (e) => {
+      const to = e.relatedTarget as Node | null;
+      if (to && !item.contains(to)) setOpen(false);
+    });
+    document.addEventListener('click', (e) => {
+      if (isOpen() && !item.contains(e.target as Node)) setOpen(false);
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key !== 'Escape' || !isOpen()) return;
+      const hadFocus = item.contains(document.activeElement);
+      setOpen(false);
+      if (hadFocus) button.focus();
     });
   }
 </script>
