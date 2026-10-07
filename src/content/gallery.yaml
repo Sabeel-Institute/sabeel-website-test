@@ -2,6 +2,8 @@
 # this order. Each photo is a WebP file in gallery/. How to add, replace, or
 # remove one: Gallery in AGENTS.md.
 photos:
+  - image: ./gallery/sabeel-slide.webp
+    alt: A full room of women seen from behind, watching a slide with the Sabeel logo
   - image: ./gallery/teen-boys-hall.webp
     alt: Teen boys at long tables in a masjid hall, one with his hand raised
   - image: ./gallery/nature-walk.webp
