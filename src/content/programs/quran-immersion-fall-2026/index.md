@@ -25,7 +25,7 @@ imageAlt: "Title artwork: Quran Immersion, Fall Semester"
 flyer: ./flyer.webp
 ---
 
-Ever wanted to understand the Arabic of the Quran or recite with proper tajweed without feeling overwhelmed? Quran Immersion is a 10-week, one-day-a-week course designed to build your foundational skills in classical knowledge and prepare you for Hikam Foundations.
+Ever wanted to understand the Arabic of the Quran or recite with proper tajweed without feeling overwhelmed? Quran Immersion is a 10-week, one-day-a-week course designed to build your foundational skills in classical knowledge and prepare you for [Hikam Foundations](/hikam-foundations/).
 
 ## 1. Arabic Language: Guided Introduction
 

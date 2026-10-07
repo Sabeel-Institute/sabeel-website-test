@@ -51,6 +51,7 @@ field.
 | Add a testimonial | Testimonials |
 | Add a place where programs meet | Venues |
 | Add a photo to a page | Photos |
+| Add a video to a page | Videos |
 | Photos from past programs on the home page | Gallery |
 | Change contact details, links, or menus | Site settings |
 | Donations, newsletter | Site settings → Donations, Newsletter |
@@ -73,6 +74,7 @@ flowchart LR
   end
   CFG["src/site.config.ts<br/>links, areas, nav"]
   PH["src/assets/photos/"]
+  VI["src/assets/videos/"]
   LIB["src/lib/content.ts<br/>queries and helpers"]
   CMP["src/components/<br/>shared building blocks"]
   PG["src/pages/<br/>one file per route"]
@@ -80,6 +82,7 @@ flowchart LR
   CFG --> PG
   CFG --> CMP
   PH --> CMP
+  VI --> CMP
   CMP --> PG
 ```
 
@@ -93,11 +96,12 @@ flowchart LR
 | `src/content.config.ts` | Schemas: every field each content file may have, with comments |
 | `src/site.config.ts` | Contact email, social and form links, program areas, navigation |
 | `src/lib/content.ts` | Collection queries and shared helpers (use these; do not re-query ad hoc) |
+| `src/lib/video.ts` | Reads a video's length while the site builds (for `Video`) |
 | `src/pages/` | Routes. `[slug].astro` files render one page per content entry |
 | `src/components/` | Shared layout pieces (catalogue below) |
 | `src/layouts/BaseLayout.astro` | `<head>`, header, footer, interest-list dialog |
 | `src/styles/global.css` | Design tokens and shared classes |
-| `src/assets/` | Images processed at build time (`photos/`, `images/`, `decor/`) |
+| `src/assets/` | Images processed at build time (`photos/`, `images/`, `decor/`), and videos (`videos/`) |
 | `public/` | Files served as-is (favicons) |
 | `firebase.json` | Hosting settings and redirects for moved pages |
 | `.github/workflows/` | Build and deploy (see docs/deployment.md) |
@@ -121,7 +125,7 @@ no interest-list option.
 
 | `area` | Label | Page |
 |---|---|---|
-| `hikam-foundations` | Hikam Foundations | None: its bespoke page is a draft |
+| `hikam-foundations` | Hikam Foundations | `/hikam-foundations/` |
 | `womens-learning` | Women’s Learning | `/programs/womens-learning/` |
 | `youth-children` | Youth & Children | `/programs/youth-children/` |
 
@@ -205,14 +209,11 @@ To make a standard program bespoke: create `src/pages/<name>.astro` from the
 components and conventions below, then add `page: /<name>/` to the program.
 To go back, delete the page file and the `page` field.
 
-The only bespoke page, Hikam Foundations, is a draft that is not on the site:
-`src/pages/_hikam-foundations.astro` is not built (Astro builds no page from a
-file whose name starts with `_`), and its program, `hikam-foundations-2026`,
-has `draft: true`. Its content and design are not final: do not copy it as a
-pattern or take conventions from it. To publish it, rename the file without
-the `_`, remove `draft: true`, set the area's `href` in `src/site.config.ts`
-to `/hikam-foundations/`, and add the page to `footerNav` and to the Programs
-item's `match` in `mainNav`.
+The Hikam Foundations page, `src/pages/hikam-foundations.astro`, is its
+area's page and the bespoke page of its next intake, `hikam-foundations-2026`.
+That program has `draft: true` until the intake is announced; then publish it
+(see Keep a program off the site) and show its facts on the page with
+`getEntry`.
 
 ### Fields
 
@@ -376,9 +377,8 @@ address to a map. Add a place here before a program uses it.
 ### Testimonials (`src/content/testimonials.yaml`)
 
 `id` (unique), `program` (the program the quote is about, as the student or
-parent names it), and `quote` (their words, exactly as given). Only the
-Hikam Foundations page shows testimonials, and it is a draft, so no quote
-appears on the site.
+parent names it), and `quote` (their words, exactly as given). No page shows
+testimonials at the moment.
 
 ### Photos (`src/assets/photos/<slot>.jpg`)
 
@@ -393,13 +393,10 @@ at least 1500 × 1200 px.
 | About | `about-hero`; `about-story` (5:4) |
 | Programs | `programs-women`, `programs-teens`, `programs-children` (collage) |
 | Women’s Learning, Youth & Children | `area-womens-learning`, `area-youth-children` |
-| Hikam Foundations (draft, not on the site) | `hikam-hero` |
 | Teachers & Team | `team-hero`, `founder` |
 | Support | `support-hero`, `rukaiya` |
 
 A new slot on a page gets a row here. Use only real, approved Sabeel photos.
-`hikam-hero` holds an illustration, not a photo of Sabeel; replace it with an
-approved photo when available.
 
 Link previews (WhatsApp, Instagram, email) of pages without an image of their
 own show `src/assets/images/link-preview.webp`, a landscape photo at least
@@ -452,12 +449,53 @@ To replace a photo, add the new file, point its entry at it, rewrite `alt` and
 file. The build stops, naming the photo, if it is not WebP or if its `program`
 is not a program on the site.
 
+### Videos (`src/assets/videos/`)
+
+A video is three files in `src/assets/videos/` with the same name, shown on a
+page with `<Video name="<name>" title="…" />`:
+
+| File | What it is |
+|---|---|
+| `<name>.mp4` | The video, 16:9, encoded as below |
+| `<name>.vtt` | Its captions (WebVTT), timed to the speech |
+| `<name>.webp` | Its cover, 1920 × 1080 px: the video's first frame |
+
+The page shows the cover with a play button and the video's length, which the
+build reads from the file, and downloads nothing of the video until someone
+presses play. The player then starts with captions on; its captions control
+turns them off. `title` says what the video is, for people who cannot see the
+cover. When the cover leaves room for the play button away from its middle,
+pass the centre of that room as `play={{ x, y }}`, in percent of the cover's
+width and height.
+
+Encode the video from the repository root. This makes it 1280 × 720 at 30
+frames a second with mono sound, and removes the camera's details, including
+where it was filmed:
+
+```bash
+ffmpeg -i original.mp4 -vf "fps=30,scale=1280:720:flags=lanczos,format=yuv420p" -c:v libx264 -preset veryslow -crf 30 -aq-mode 3 -profile:v high -g 120 -maxrate 2000k -bufsize 4000k -colorspace bt709 -color_primaries bt709 -color_trc bt709 -color_range tv -c:a aac -ac 1 -b:a 64k -map_metadata -1 -movflags +faststart src/assets/videos/<name>.mp4
+```
+
+`-movflags +faststart` puts the file's index at its start, so the video plays
+before it has finished downloading; the build stops if it is missing. Make the
+cover from the original's first frame:
+
+```bash
+ffmpeg -i original.mp4 -frames:v 1 cover.png
+node -e "require('sharp')(process.argv[1]).webp({ quality: 90 }).toFile(process.argv[2])" cover.png src/assets/videos/<name>.webp
+```
+
+Captions give every spoken word, in cues of at most two lines of up to 42
+characters, with Arabic words in their usual English spelling (`Qur’an`,
+`nahw`, `i‘jaz`). Use only videos the organisation approves for the website,
+with permission from the people in them, and from the parents of children.
+
 ### Site settings (`src/site.config.ts`)
 
 Contact email, location, social links, financial-aid form, the Zeffy donation
-campaign, Zelle address, tax ID, `mailingListAction`, `hikamOverviewPdf`,
-program areas, and the header (`mainNav`) and footer (`footerNav`) menus.
-Change a value here, never by typing it into a page.
+campaign, Zelle address, tax ID, `mailingListAction`, program areas, and the
+header (`mainNav`) and footer (`footerNav`) menus. Change a value here, never
+by typing it into a page.
 
 #### Newsletter
 
@@ -489,8 +527,9 @@ often to give.
 
 Routes: `/`, `/about/`, `/programs/`, `/programs/<slug>/`,
 `/programs/womens-learning/`, `/programs/youth-children/`,
-`/past-programs/`, `/teachers-and-team/`, `/teachers-and-team/<slug>/`,
-`/support/`, `/contact/`, `/financial-aid/`, and the 404 page.
+`/hikam-foundations/`, `/past-programs/`, `/teachers-and-team/`,
+`/teachers-and-team/<slug>/`, `/support/`, `/contact/`, `/financial-aid/`, and
+the 404 page.
 
 | Component | Use for |
 |---|---|
@@ -509,6 +548,7 @@ Routes: `/`, `/about/`, `/programs/`, `/programs/<slug>/`,
 | `Photo` | A photo slot (`slot=`) or a specific image (`image=`), with the pattern fallback (never for people; see Photos) |
 | `Collage` | Three photo slots with captions |
 | `Gallery` | The row of photos from past programs on the home page (see Gallery) |
+| `Video` | A video that downloads only when played: its cover, a play button, and its length, then the player with captions on (see Videos) |
 | `MailingListForm`, `InterestDialog` | Newsletter and interest-list sign-up. Any link with `data-interest` opens the dialog |
 | `ZeffyDialog` | A Zeffy form in a dialog: the donation form on Support, a program's payment form on its page. A link with `data-zeffy="<id>"` opens the dialog with that `id` |
 | `Lightbox` | Enlarging flyers: links with `data-lightbox="<group>"` |
