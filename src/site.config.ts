@@ -85,7 +85,8 @@ export const areas: Record<
 export type NavItem = { label: string; href: string; match?: string[] };
 
 export const mainNav: NavItem[] = [
-  { label: 'Programs', href: '/programs/', match: ['/past-programs/', '/hikam-foundations/'] },
+  { label: 'Programs', href: '/programs/', match: ['/past-programs/'] },
+  { label: 'Hikam Foundations', href: '/hikam-foundations/' },
   { label: 'About', href: '/about/' },
   { label: 'Teachers & Team', href: '/teachers-and-team/' },
 ];
