@@ -568,7 +568,7 @@ the 404 page.
 |---|---|
 | `BaseLayout` | Every page. Props: `title`, `description`, `shareImage` |
 | `Header`, `Footer` | The logo and menus on every page; the menus come from `mainNav` and `footerNav`. A header item with a `menu` opens a drop-down menu on wide screens, by hover or its arrow, and a list under it in the phone menu |
-| `PageHero` | Page opening: `eyebrow`, `title`, lead text (default slot), `actions` slot, and optionally a photo slot or `media` slot beside the text |
+| `PageHero` | Page opening: `eyebrow`, `title`, lead text (default slot), `actions` slot, and optionally a photo slot or `media` slot beside the text, or an `aside` slot of further text beside a larger lead |
 | `SectionHeading` | Section opening: `eyebrow`, `title`, gold divider; the default slot is aside text on the right |
 | `CtaBand` | Closing band: `title`, optional `eyebrow`, text and an `actions` slot |
 | `FactsBar` | Labelled facts row (`facts=[{ label, value }]`) |

@@ -1,7 +1,9 @@
 ---
 /**
  * Page opening: eyebrow, serif title, lead text, and actions on the left; a
- * photo slot (or custom media) on the right, if the page has one.
+ * photo slot (or custom media) on the right, if the page has one. A page
+ * without a photo can pass the rest of its opening text in the `aside` slot:
+ * the lead is then set larger, and on wide screens the aside sits beside it.
  */
 import Divider from './Divider.astro';
 import Photo from './Photo.astro';
@@ -20,15 +22,32 @@ interface Props {
 
 const { eyebrow, title, photo, photoAlt = '', photoIcon, large = false } = Astro.props;
 const hasMedia = Astro.slots.has('media') || Boolean(photo);
+const hasAside = Astro.slots.has('aside');
+const text = 'text-base leading-[1.8] text-ink-soft md:text-[17px] [&_p+p]:mt-4';
+// On wide screens, the aside's top padding sets its first line level with the title.
+const asideClass = ['max-w-[40rem] lg:pt-[4.6rem]', text];
 ---
 
 <section class="relative overflow-hidden border-b border-border bg-linear-to-br from-surface via-canvas to-canvas">
-  <div class:list={['container-page py-12 md:py-16 lg:py-20', hasMedia && 'grid items-center gap-10 md:grid-cols-[1.05fr_1fr] md:gap-12']}>
+  <div
+    class:list={[
+      'container-page py-12 md:py-16 lg:py-20',
+      hasMedia && 'grid items-center gap-10 md:grid-cols-[1.05fr_1fr] md:gap-12',
+      hasAside && 'grid gap-8 lg:grid-cols-[1fr_1.1fr] lg:gap-14',
+    ]}
+  >
     <div>
       <p class="eyebrow text-base font-bold tracking-[0.08em] text-gold-text uppercase md:text-lg">{eyebrow}</p>
       <Divider width="sm" class="mt-3" />
       <h1 class:list={['mt-5', large ? 'display-xl' : 'display-lg lg:text-[3.1rem]']}>{title}</h1>
-      <div class="mt-6 max-w-[36rem] text-base leading-[1.8] text-ink-soft md:text-[17px] [&_p+p]:mt-4">
+      <div
+        class:list={[
+          'mt-6',
+          hasAside
+            ? 'max-w-[40rem] font-display text-[1.5rem] leading-snug font-semibold text-ink sm:text-[1.75rem] [&_p+p]:mt-4'
+            : ['max-w-[36rem]', text],
+        ]}
+      >
         <slot />
       </div>
       {
@@ -39,6 +58,13 @@ const hasMedia = Astro.slots.has('media') || Boolean(photo);
         )
       }
     </div>
+    {
+      hasAside && (
+        <div class:list={asideClass}>
+          <slot name="aside" />
+        </div>
+      )
+    }
     {
       hasMedia && (
         <div>
