@@ -1,5 +1,5 @@
 ---
-status: ongoing
+status: closed
 title: Teen Sundays
 subtitle: "Surah Yusuf: Trusting Allah When Life Doesn’t Make Sense"
 summary: A twice-monthly Qur’an program where teens explore Surah Yusuf and what it teaches about resilience, patience, identity, forgiveness, and trust in Allah’s plan.
