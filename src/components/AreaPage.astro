@@ -3,11 +3,10 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import PageHero from './PageHero.astro';
 import SectionHeading from './SectionHeading.astro';
-import ProgramCard from './ProgramCard.astro';
 import CtaBand from './CtaBand.astro';
-import CurrentPrograms from './CurrentPrograms.astro';
+import AreaPrograms from './AreaPrograms.astro';
 import { areas, type AreaId } from '../site.config';
-import { STATUS_LABEL, getClosedPrograms, getCurrentPrograms, getUpcomingPrograms } from '../lib/content';
+import { getClosedPrograms, getCurrentPrograms, getUpcomingPrograms } from '../lib/content';
 
 interface Props {
   area: AreaId;
@@ -16,10 +15,8 @@ interface Props {
 const { area: id, intro } = Astro.props;
 const area = areas[id];
 const current = await getCurrentPrograms(id);
-const notJoinable = [
-  { title: STATUS_LABEL.upcoming, programs: await getUpcomingPrograms(id) },
-  { title: STATUS_LABEL.closed, programs: await getClosedPrograms(id) },
-].filter((l) => l.programs.length > 0);
+const upcoming = await getUpcomingPrograms(id);
+const closed = await getClosedPrograms(id);
 ---
 
 <BaseLayout title={area.label} description={area.description}>
@@ -31,9 +28,7 @@ const notJoinable = [
     <div class="container-page">
       <SectionHeading eyebrow="Now enrolling" title={`Current ${area.label.toLowerCase()} programs`} id="current-heading" />
       {
-        current.length > 0 ? (
-          <CurrentPrograms programs={current} />
-        ) : (
+        current.length === 0 && (
           <p class="mt-10 rounded-card bg-surface p-7 text-ink-soft">
             Nothing is open in this area right now.
             <a href="/contact/?inquiry=interest-list" data-interest class="font-medium text-raspberry underline decoration-gold underline-offset-4">
@@ -43,20 +38,7 @@ const notJoinable = [
           </p>
         )
       }
-      {
-        notJoinable.map((l) => (
-          <div class="mt-12">
-            <h3 class="border-b border-gold/60 pb-3 font-display text-[1.75rem] font-bold text-raspberry">{l.title}</h3>
-            <ul class="card-grid mt-6">
-              {l.programs.map((p) => (
-                <li>
-                  <ProgramCard program={p} headingLevel="h4" />
-                </li>
-              ))}
-            </ul>
-          </div>
-        ))
-      }
+      <AreaPrograms current={current} upcoming={upcoming} closed={closed} />
     </div>
   </section>
 

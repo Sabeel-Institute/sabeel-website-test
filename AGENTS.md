@@ -53,13 +53,15 @@ field.
 | Add a photo to a page | Photos |
 | Add a video to a page | Videos |
 | Photos from past programs on the home page | Gallery |
+| A Summer Garden, Camp Futuwwah, or young children's course has ended | Programs → Areas |
 | Change contact details, links, or menus | Site settings |
 | Donations, newsletter | Site settings → Donations, Newsletter |
 | Rename or move a page | Pages and components → Moving or removing a page |
 
 The home page, Programs, the area pages, and Past Programs list programs from
 each program's `status`. Never edit those pages to add, move, or remove a
-program.
+program; the one exception is the series of past programs on Youth & Children
+(see Areas).
 
 ## How the site is put together
 
@@ -128,6 +130,16 @@ no interest-list option.
 | `hikam-foundations` | Hikam Foundations | `/hikam-foundations/` |
 | `womens-learning` | Women’s Learning | `/programs/womens-learning/` |
 | `youth-children` | Youth & Children | `/programs/youth-children/` |
+
+`AreaPage` builds Women’s Learning from its programs. The Youth & Children
+page, `src/pages/programs/youth-children.astro`, shows its programs that are
+not over the same way (`AreaPrograms`), with Teen Sundays photos beside its
+introduction. Under Explore past programs it keeps three series on the page,
+so families see what Sabeel offers: Summer Garden, Camp Futuwwah, and courses
+for young children. Each series in that file has photo slots, its programs by
+folder name, and for Camp Futuwwah a video. When a new edition ends, add its
+folder to its series; the build stops if a folder is not a program on the
+site.
 
 ### Status
 
@@ -392,10 +404,13 @@ at least 1500 × 1200 px.
 | About | `about-hero`; `about-story` (5:4) |
 | Programs | `programs-women`, `programs-teens`, `programs-children` (collage, cropped to 3:4) |
 | Women’s Learning, Youth & Children | `area-womens-learning`, `area-youth-children` |
+| Youth & Children | `youth-teen-sundays-1`, `youth-teen-sundays-2`; `youth-summer-garden-1`, `youth-summer-garden-2`; `youth-camp-futuwwah` (cropped to 9:16 beside the video); `youth-young-children-1`, `youth-young-children-2` |
 | Teachers & Team | `team-hero` |
 | Support | `rukaiya` |
 
 A new slot on a page gets a row here. Use only real, approved Sabeel photos.
+Children's faces are blurred or turned away unless their families have agreed
+to show them.
 
 Link previews (WhatsApp, Instagram, email) of pages without an image of their
 own show `src/assets/images/link-preview.webp`, a landscape photo at least
@@ -454,21 +469,23 @@ page with `<Video name="<name>" title="…" />`:
 
 | File | What it is |
 |---|---|
-| `<name>.mp4` | The video, 16:9, encoded as below |
+| `<name>.mp4` | The video, 16:9 or portrait (9:16), encoded as below |
 | `<name>.vtt` | Its captions (WebVTT), timed to the speech |
-| `<name>.webp` | Its cover, 1920 × 1080 px: the video's first frame |
+| `<name>.webp` | Its cover, 1920 × 1080 px (1080 × 1920 portrait): the video's first frame |
 
 The page shows the cover with a play button and the video's length, which the
 build reads from the file, and downloads nothing of the video until someone
 presses play. The player then starts with captions on; its captions control
-turns them off. `title` says what the video is, for people who cannot see the
-cover. When the cover leaves room for the play button away from its middle,
-pass the centre of that room as `play={{ x, y }}`, in percent of the cover's
-width and height.
+turns them off. The player takes the cover's shape. `title` says what the
+video is, for people who cannot see the cover. The play button sits in the
+middle of the cover at 15% of its width; when the cover leaves room for it
+elsewhere, pass `play={{ x, y, size }}`: the centre of that room in percent of
+the cover's width and height, and the button's size in percent of its width.
 
 Encode the video from the repository root. This makes it 1280 × 720 at 30
 frames a second with mono sound, and removes the camera's details, including
-where it was filmed:
+where it was filmed. For a portrait video, use `scale=720:1280`. When the sound
+is music, keep it in stereo: replace `-ac 1 -b:a 64k` with `-b:a 96k`.
 
 ```bash
 ffmpeg -i original.mp4 -vf "fps=30,scale=1280:720:flags=lanczos,format=yuv420p" -c:v libx264 -preset veryslow -crf 30 -aq-mode 3 -profile:v high -g 120 -maxrate 2000k -bufsize 4000k -colorspace bt709 -color_primaries bt709 -color_trc bt709 -color_range tv -c:a aac -ac 1 -b:a 64k -map_metadata -1 -movflags +faststart src/assets/videos/<name>.mp4
@@ -480,12 +497,13 @@ cover from the original's first frame:
 
 ```bash
 ffmpeg -i original.mp4 -frames:v 1 cover.png
-node -e "require('sharp')(process.argv[1]).webp({ quality: 90 }).toFile(process.argv[2])" cover.png src/assets/videos/<name>.webp
+node -e "require('sharp')(process.argv[1]).resize({ width: 1920, height: 1920, fit: 'inside', withoutEnlargement: true }).webp({ quality: 90 }).toFile(process.argv[2])" cover.png src/assets/videos/<name>.webp
 ```
 
 Captions give every spoken word, in cues of at most two lines of up to 42
 characters, with Arabic words in their usual English spelling (`Qur’an`,
-`nahw`, `i‘jaz`). Use only videos the organisation approves for the website,
+`nahw`, `i‘jaz`). A video whose sound is only music has one cue that names it,
+such as `♪ Nasheed in Arabic ♪`. Use only videos the organisation approves for the website,
 with permission from the people in them, and from the parents of children.
 
 ### Site settings (`src/site.config.ts`)
@@ -541,12 +559,13 @@ the 404 page.
 | `CurrentPrograms` | Current programs grouped by format |
 | `AreaCards` | The three program-area cards on Programs |
 | `FlyerArchive` | Completed programs' flyers, one tab per year; the page also includes `Lightbox` |
-| `AreaPage` | A whole program-area page |
+| `AreaPage` | A whole program-area page: Women’s Learning |
+| `AreaPrograms` | An area's programs that are not over: open and ongoing ones by format, then Coming soon and Registration closed |
 | `TeamCard` | A person |
 | `Photo` | A photo slot (`slot=`) or a specific image (`image=`), with the pattern fallback (never for people; see Photos) |
 | `Collage` | Three photo slots side by side, the same size, with captions |
 | `Gallery` | The row of photos from past programs on the home page (see Gallery) |
-| `Video` | A video that downloads only when played: its cover, a play button, and its length, then the player with captions on (see Videos) |
+| `Video` | A 16:9 or portrait video that downloads only when played: its cover, a play button, and its length, then the player with captions on (see Videos) |
 | `MailingListForm`, `InterestDialog` | Newsletter and interest-list sign-up. Any link with `data-interest` opens the dialog; `data-interest="<area>"` opens it with only that area ticked |
 | `ZeffyDialog` | A Zeffy form in a dialog: the donation form on Support, a program's payment form on its page. A link with `data-zeffy="<id>"` opens the dialog with that `id` |
 | `Lightbox` | Enlarging flyers: links with `data-lightbox="<group>"` |

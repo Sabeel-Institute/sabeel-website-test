@@ -1,0 +1,36 @@
+---
+/**
+ * An area's programs that are not over: open and ongoing ones grouped by
+ * format, then those coming soon and those running with registration closed.
+ */
+import ProgramCard from './ProgramCard.astro';
+import CurrentPrograms from './CurrentPrograms.astro';
+import { STATUS_LABEL, type Program } from '../lib/content';
+
+interface Props {
+  current: Program[];
+  upcoming: Program[];
+  closed: Program[];
+}
+const { current, upcoming, closed } = Astro.props;
+const notJoinable = [
+  { title: STATUS_LABEL.upcoming, programs: upcoming },
+  { title: STATUS_LABEL.closed, programs: closed },
+].filter((l) => l.programs.length > 0);
+---
+
+{current.length > 0 && <CurrentPrograms programs={current} />}
+{
+  notJoinable.map((l) => (
+    <div class="mt-12">
+      <h3 class="border-b border-gold/60 pb-3 font-display text-[1.75rem] font-bold text-raspberry">{l.title}</h3>
+      <ul class="card-grid mt-6">
+        {l.programs.map((p) => (
+          <li>
+            <ProgramCard program={p} headingLevel="h4" />
+          </li>
+        ))}
+      </ul>
+    </div>
+  ))
+}

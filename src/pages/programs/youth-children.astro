@@ -1,8 +1,193 @@
 ---
-import AreaPage from '../../components/AreaPage.astro';
+import { getEntry } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/PageHero.astro';
+import SectionHeading from '../../components/SectionHeading.astro';
+import AreaPrograms from '../../components/AreaPrograms.astro';
+import CtaBand from '../../components/CtaBand.astro';
+import Divider from '../../components/Divider.astro';
+import Icon from '../../components/Icon.astro';
+import Photo from '../../components/Photo.astro';
+import Video from '../../components/Video.astro';
+import { areas } from '../../site.config';
+import { getClosedPrograms, getCurrentPrograms, getUpcomingPrograms, programHref, programYear } from '../../lib/content';
+
+const area = areas['youth-children'];
+const current = await getCurrentPrograms('youth-children');
+const upcoming = await getUpcomingPrograms('youth-children');
+const closed = await getClosedPrograms('youth-children');
+const hasCurrent = current.length + upcoming.length + closed.length > 0;
+
+/**
+ * The series that show families what Sabeel offers, under Explore past
+ * programs: photo slots, an optional video, and the programs by folder name.
+ * `summary` shows the newest program's summary. Add each new edition here.
+ */
+const series = [
+  {
+    title: 'Summer Garden',
+    summary: true,
+    note: '2026 was our 14th annual Summer Garden.',
+    ids: ['summer-garden-2026', 'summer-garden-2025', 'girls-summer-garden-at-bcic-2021'],
+    photos: [
+      { slot: 'youth-summer-garden-1', alt: 'Girls seated in a circle on the carpet around their teacher' },
+      { slot: 'youth-summer-garden-2', alt: 'Girls at tables facing a slide titled The Scholar’s Awakening' },
+    ],
+  },
+  {
+    title: 'Camp Futuwwah',
+    summary: true,
+    video: 'camp-futuwwah',
+    ids: ['camp-futuwwah-2026', 'camp-futuwwah-2025'],
+    photos: [{ slot: 'youth-camp-futuwwah', alt: 'Boys at long tables in a masjid hall, one with his hand raised' }],
+  },
+  {
+    title: 'Courses for young children',
+    summary: false,
+    ids: ['the-path-of-wonder-2026', 'little-pilgrims-2026', 'kids-ramadan-worship-challenge-2026', 'the-sahaba-2026'],
+    photos: [
+      { slot: 'youth-young-children-1', alt: 'Children bent over crafts along a strip of paper on the masjid carpet' },
+      { slot: 'youth-young-children-2', alt: 'Children holding candle lights inside a tent' },
+    ],
+  },
+];
+
+const shown = await Promise.all(
+  series.map(async (s) => {
+    const programs = await Promise.all(
+      s.ids.map(async (id) => {
+        const program = await getEntry('programs', id);
+        if (!program || program.data.draft) {
+          throw new Error(`The Youth & Children page lists "${id}", which is not a program on the site.`);
+        }
+        return program;
+      }),
+    );
+    programs.sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+    return { ...s, programs };
+  }),
+);
 ---
 
-<AreaPage
-  area="youth-children"
-  intro="Age-appropriate Islamic learning, mentorship, honest conversation, and purposeful activities for children and teens."
-/>
+<BaseLayout title={area.label} description={area.description}>
+  <PageHero eyebrow="Program area" title={area.label} photo="area-youth-children" photoAlt={area.label} photoIcon={area.icon}>
+    <p>
+      Sabeel brings children and teens together for Islamic learning that takes their questions seriously. From
+      seasonal programs to Teen Sundays, young people have opportunities to study, reflect, and build friendships with
+      others their age.
+    </p>
+  </PageHero>
+
+  <!-- Explore -->
+  <section class="py-14 md:py-16" aria-labelledby="explore-heading">
+    <div class="container-page grid items-center gap-10 lg:grid-cols-[1.1fr_1fr] lg:gap-14">
+      <figure class="lg:order-last">
+        <div class="grid grid-cols-2 gap-3 sm:gap-4">
+          <Photo
+            slot="youth-teen-sundays-1"
+            alt="Teen boys crowding around a robot boxing game"
+            class="aspect-[4/3] shadow-card"
+            sizes="(min-width: 1024px) 280px, 50vw"
+          />
+          <Photo
+            slot="youth-teen-sundays-2"
+            alt="Girls and boys seated on either side of a wooden screen in class"
+            class="aspect-[4/3] shadow-card"
+            sizes="(min-width: 1024px) 280px, 50vw"
+          />
+        </div>
+        <figcaption class="mt-3 text-[15px] text-ink-soft">Teen Sundays</figcaption>
+      </figure>
+      <div>
+        <h2 id="explore-heading" class="display-md sm:text-[2.35rem]">Explore Youth & Children</h2>
+        <Divider class="mt-4" />
+        <p class="mt-5 max-w-[36rem] text-base leading-[1.8] text-ink-soft md:text-[17px]">
+          Explore what is open now, see the youth programs Sabeel has offered, and find a starting point for your child.
+          Each program page gives families the age group, schedule, location, teacher, and registration details.
+        </p>
+        <div class="mt-6 flex flex-wrap gap-x-8 gap-y-3">
+          {
+            hasCurrent && (
+              <a href="#current" class="link-arrow">
+                See current programs <Icon name="arrow-right" class="size-4" />
+              </a>
+            )
+          }
+          <a href="#past" class="link-arrow">
+            Explore past programs <Icon name="arrow-right" class="size-4" />
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {
+    hasCurrent && (
+      <section id="current" class="scroll-mt-6 border-t border-border py-14 md:py-16" aria-labelledby="current-heading">
+        <div class="container-page">
+          <SectionHeading title="See current programs" id="current-heading" />
+          <AreaPrograms current={current} upcoming={upcoming} closed={closed} />
+        </div>
+      </section>
+    )
+  }
+
+  <section id="past" class="scroll-mt-6 border-t border-border py-14 md:py-16" aria-labelledby="past-heading">
+    <div class="container-page">
+      <SectionHeading title="Explore past programs" id="past-heading" />
+      <div class="mt-10 space-y-14 md:space-y-16">
+        {
+          shown.map((s, i) => (
+            <article class="grid items-center gap-8 lg:grid-cols-2 lg:gap-14" aria-labelledby={`series-${i}`}>
+              <div class:list={['grid grid-cols-2 gap-3 sm:gap-4', i % 2 === 1 && 'lg:order-last']}>
+                {s.video && (
+                  <Video name={s.video} title={s.title} play={{ x: 50, y: 50, size: 30 }} sizes="(min-width: 1024px) 285px, 50vw" />
+                )}
+                {s.photos.map((photo) => (
+                  <Photo
+                    slot={photo.slot}
+                    alt={photo.alt}
+                    class:list={[s.video ? 'aspect-[9/16]' : 'aspect-[4/3]', 'shadow-card']}
+                    sizes="(min-width: 1024px) 285px, 50vw"
+                  />
+                ))}
+              </div>
+              <div>
+                <h3 id={`series-${i}`} class="display-md sm:text-[2.2rem]">
+                  {s.title}
+                </h3>
+                {(s.summary || s.note) && (
+                  <p class="mt-3 leading-[1.8] text-ink-soft">
+                    {s.summary && s.programs[0].data.summary} {s.note}
+                  </p>
+                )}
+                <ul class="mt-5 divide-y divide-border border-y border-border">
+                  {s.programs.map((p) => (
+                    <li>
+                      <a href={programHref(p)} class="group flex items-baseline gap-4 py-3 text-[15px]">
+                        <span class="w-11 shrink-0 font-semibold text-gold-text">{programYear(p)}</span>
+                        <span class="text-ink group-hover:text-raspberry">
+                          {p.data.title === s.title ? (p.data.subtitle ?? p.data.title) : p.data.title}
+                        </span>
+                        <Icon name="arrow-right" class="ml-auto size-4 shrink-0 self-center text-raspberry" />
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </article>
+          ))
+        }
+      </div>
+      <a href="/past-programs/" class="link-arrow mt-12">
+        See every youth program Sabeel has offered in Past Programs <Icon name="arrow-right" class="size-4" />
+      </a>
+    </div>
+  </section>
+
+  <CtaBand title="Looking for something else?">
+    <p>See everything open for registration across all three program areas, or look back at past programs.</p>
+    <a slot="actions" href="/programs/" class="btn btn-primary px-7 text-base">View All Programs</a>
+    <a slot="actions" href="/past-programs/" class="btn btn-outline px-6 text-base">Past Programs</a>
+  </CtaBand>
+</BaseLayout>
