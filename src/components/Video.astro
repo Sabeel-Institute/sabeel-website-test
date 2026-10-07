@@ -1,0 +1,82 @@
+---
+/**
+ * A video that downloads nothing until someone plays it. Until then it shows
+ * its cover with a play button and its length; playing swaps in the browser's
+ * player, with captions on (its captions button turns them off). Without
+ * JavaScript, the cover links to the video file. See Videos in AGENTS.md.
+ */
+import type { ImageMetadata } from 'astro';
+import { Image } from 'astro:assets';
+import { join } from 'node:path';
+import Icon from './Icon.astro';
+import { mp4Duration } from '../lib/video';
+
+interface Props {
+  /** The files' shared name in src/assets/videos/: <name>.mp4, <name>.vtt (captions), <name>.webp (cover). */
+  name: string;
+  /** What the video is; read out with the play button. */
+  title: string;
+  /** Where the cover leaves room for the play button: its centre, in percent of the cover's width and height. */
+  play?: { x: number; y: number };
+  sizes?: string;
+}
+
+const { name, title, play = { x: 50, y: 50 }, sizes = '(min-width: 1024px) 50vw, 100vw' } = Astro.props;
+const dir = '/src/assets/videos/';
+const videos = import.meta.glob<string>('/src/assets/videos/*.mp4', { eager: true, query: '?url', import: 'default' });
+const tracks = import.meta.glob<string>('/src/assets/videos/*.vtt', { eager: true, query: '?url', import: 'default' });
+const covers = import.meta.glob<ImageMetadata>('/src/assets/videos/*.webp', { eager: true, import: 'default' });
+const src = videos[`${dir}${name}.mp4`];
+const captions = tracks[`${dir}${name}.vtt`];
+const cover = covers[`${dir}${name}.webp`];
+if (!src || !captions || !cover) {
+  throw new Error(`Video "${name}" needs ${name}.mp4, ${name}.vtt, and ${name}.webp in src/assets/videos/ (see Videos in AGENTS.md).`);
+}
+
+const seconds = Math.round(mp4Duration(join(process.cwd(), dir, `${name}.mp4`)));
+const minutes = Math.floor(seconds / 60);
+const rest = seconds % 60;
+const unit = (n: number, word: string) => `${n} ${word}${n === 1 ? '' : 's'}`;
+const spoken = [minutes > 0 && unit(minutes, 'minute'), rest > 0 && unit(rest, 'second')].filter(Boolean).join(' ');
+---
+
+<div class="relative aspect-video rounded-card bg-inset shadow-card" data-video>
+  <a href={src} class="group @container absolute inset-0 overflow-hidden rounded-card" aria-label={`Play video: ${title}, ${spoken}`}>
+    <Image src={cover} alt="" widths={[640, 960, 1280, 1920]} sizes={sizes} class="size-full object-cover" />
+    <span
+      class="absolute flex aspect-square w-[8.33%] -translate-1/2 items-center justify-center rounded-full bg-raspberry text-on-raspberry shadow-card transition duration-200 group-hover:scale-110 group-hover:bg-raspberry-deep"
+      style={`left: ${play.x}%; top: ${play.y}%`}
+    >
+      <Icon name="play" class="ml-[8%] size-[44%]" />
+    </span>
+    <span
+      class="absolute right-[2.5%] bottom-[4%] rounded-full bg-ink/80 px-[0.6em] text-[clamp(11px,1.9cqw,14px)] leading-normal font-semibold text-on-raspberry"
+    >
+      {minutes}:{String(rest).padStart(2, '0')}
+    </span>
+  </a>
+  <template>
+    <video controls playsinline class="size-full rounded-card" aria-label={title}>
+      <source src={src} type="video/mp4" />
+      <track kind="captions" src={captions} srclang="en" label="English" default />
+    </video>
+  </template>
+</div>
+
+<script>
+  for (const box of document.querySelectorAll<HTMLElement>('[data-video]')) {
+    const link = box.querySelector('a')!;
+    link.addEventListener('click', (event) => {
+      event.preventDefault();
+      const video = document.importNode(box.querySelector('template')!.content.firstElementChild!, true) as HTMLVideoElement;
+      // The cover the page already loaded shows until the first frame, which is the same picture.
+      video.poster = link.querySelector('img')!.currentSrc;
+      link.replaceWith(video);
+      // Browsers weigh `default` against the viewer's own caption settings differently; this turns them on in all.
+      video.textTracks[0].mode = 'showing';
+      video.focus();
+      // A browser that blocks playback leaves its own play button to press.
+      video.play().catch(() => {});
+    });
+  }
+</script>

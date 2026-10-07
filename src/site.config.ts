@@ -45,8 +45,6 @@ export const site = {
    */
   mailingListAction:
     'https://sameerainstitute.us5.list-manage.com/subscribe/post?u=6a6627c0893dce014d27d385b&id=6e808d03f1&f_id=00cd47edf0' as string | null,
-  /** Hikam Foundations program overview PDF; the download button hides while null. */
-  hikamOverviewPdf: null as string | null,
 } as const;
 
 export type AreaId = (typeof PROGRAM_AREAS)[number];
@@ -64,9 +62,8 @@ export const areas: Record<
 > = {
   'hikam-foundations': {
     label: 'Hikam Foundations',
-    description: 'A structured two-year grounding in the Islamic sciences for adult women.',
-    // Its page, src/pages/_hikam-foundations.astro, is a draft (see AGENTS.md).
-    href: null,
+    description: 'A structured two-year grounding in the Islamic sciences for women.',
+    href: '/hikam-foundations/',
     icon: 'graduation-cap',
   },
   'womens-learning': {
@@ -87,7 +84,7 @@ export const areas: Record<
 export type NavItem = { label: string; href: string; match?: string[] };
 
 export const mainNav: NavItem[] = [
-  { label: 'Programs', href: '/programs/', match: ['/past-programs/'] },
+  { label: 'Programs', href: '/programs/', match: ['/past-programs/', '/hikam-foundations/'] },
   { label: 'About', href: '/about/' },
   { label: 'Teachers & Team', href: '/teachers-and-team/' },
 ];
@@ -97,6 +94,7 @@ export const footerNav: { title: string; links: NavItem[] }[] = [
     title: 'Explore',
     links: [
       { label: 'Programs', href: '/programs/' },
+      { label: 'Hikam Foundations', href: '/hikam-foundations/' },
       { label: 'About', href: '/about/' },
       { label: 'Support Our Work', href: '/support/' },
     ],
