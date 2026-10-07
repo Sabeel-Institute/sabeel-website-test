@@ -16,6 +16,8 @@ export const PROGRAM_AREAS = ['hikam-foundations', 'womens-learning', 'youth-chi
 export const PROGRAM_FORMATS = ['Online', 'On-site', 'Online & on-site'] as const;
 /** How often a program meets; labels in FREQUENCY_LABEL (src/lib/content.ts). */
 export const PROGRAM_FREQUENCIES = ['weekly', 'twice-monthly', 'monthly', 'daily', 'once'] as const;
+/** The `fee` of a program that charges nothing; any other fee is paid through Zeffy. */
+export const FREE = 'Free';
 
 /** Days, then the time: "Mondays · 12:00–1:30 PM CT", "Last Wednesday · 10:00–10:30 AM CT". */
 const SCHEDULE = /^[^\d·]+ · \d{1,2}:\d{2}(?: [AP]M)?–\d{1,2}:\d{2} [AP]M CT$/;
@@ -91,11 +93,14 @@ const programs = defineCollection({
       room: z.string().min(1).optional(),
       /** The online platform, e.g. "Zoom", shown as "Online via Zoom". */
       platform: z.string().min(1).optional(),
+      /** Price text; exactly "Free" when the program charges nothing. */
       fee: z.string().min(1),
-      registerUrl: z.url(),
+      /** A free program's registration form; paid programs register through Zeffy. */
+      registerUrl: z.url().optional(),
       /**
-       * The Zeffy ticketing form for paying the fee: the name after /ticketing/
-       * in its links. While registration is open, Pay buttons open it in a dialog.
+       * The Zeffy ticketing form a paid program registers and pays through: the
+       * name after /ticketing/ in its links. While registration is open,
+       * Register buttons open it in a dialog.
        */
       zeffyTicketing: z
         .string()
@@ -137,7 +142,7 @@ const programs = defineCollection({
     /** A running series people can still join. */
     const ongoing = z.object({ ...fields, status: z.literal('ongoing') });
     /** Registration has closed; the program is still running. */
-    const closed = z.object({ ...fields, status: z.literal('closed'), registerUrl: fields.registerUrl.optional() });
+    const closed = z.object({ ...fields, status: z.literal('closed') });
     /** Announced; registration not open yet. */
     const upcoming = z.object({
       ...fields,
@@ -146,7 +151,6 @@ const programs = defineCollection({
       format: fields.format.optional(),
       frequency: fields.frequency.optional(),
       fee: fields.fee.optional(),
-      registerUrl: fields.registerUrl.optional(),
     });
     /** Finished; kept as an archive record. */
     const completed = z.object({
@@ -158,7 +162,6 @@ const programs = defineCollection({
       format: fields.format.optional(),
       frequency: fields.frequency.optional(),
       fee: fields.fee.optional(),
-      registerUrl: fields.registerUrl.optional(),
     });
     return z.discriminatedUnion('status', [open, ongoing, closed, upcoming, completed]).superRefine((d, ctx) => {
       if (d.image && !d.imageAlt) {
@@ -176,6 +179,18 @@ const programs = defineCollection({
       }
       if ((d.status === 'open' || d.status === 'ongoing' || d.status === 'closed') && d.format !== 'Online' && !d.venue) {
         ctx.addIssue({ code: 'custom', path: ['venue'], message: 'venue is required unless the program is online only' });
+      }
+      if (d.status === 'open' || d.status === 'ongoing') {
+        if (d.fee === FREE && !d.registerUrl) {
+          ctx.addIssue({ code: 'custom', path: ['registerUrl'], message: 'registerUrl is required for a free program (see Registration in AGENTS.md)' });
+        }
+        if (d.fee !== FREE && d.registerUrl) {
+          ctx.addIssue({
+            code: 'custom',
+            path: ['registerUrl'],
+            message: 'a paid program registers through its Zeffy form: remove registerUrl, and set zeffyTicketing once the form exists (see Registration in AGENTS.md)',
+          });
+        }
       }
       if (d.endDate && d.endDate < d.date) {
         ctx.addIssue({ code: 'custom', path: ['endDate'], message: 'endDate is before date' });

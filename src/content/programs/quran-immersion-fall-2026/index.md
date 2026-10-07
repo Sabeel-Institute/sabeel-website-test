@@ -13,7 +13,6 @@ format: Online & on-site
 venue: masjid-istiqlal
 duration: 10 sessions
 fee: $50 in person · $75 online
-registerUrl: https://docs.google.com/forms/d/e/1FAIpQLSdpKGbEk2z0ulOvDlL3U0HvJA9zw8qO0WtpD5icZtjw_9dLvQ/viewform
 outcomes:
   - Arabic grammar step by step, using the primer 10 Lessons of Arabic (Das Sabaq)
   - The themes of faith, reflection, and resurrection in Surah Qaf
