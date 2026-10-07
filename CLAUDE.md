@@ -44,6 +44,13 @@
   pause control (WCAG 2.2.2), and people choose when to see the next photo.
   Its arrows are disabled, and so hidden, at either end and while every photo
   fits.
+- `Header`'s drop-down menus keep their state in the button's
+  `aria-expanded`, which shows the menu through `peer-aria-expanded`. Hover
+  opens a menu only for a mouse (`pointerType`), so a tap on a touch screen
+  follows the item's link; the button opens it for keyboards and touch
+  screens and keeps it open until it is pressed again, Escape, or a click or
+  focus elsewhere. Escape also closes a menu that hover opened, as WCAG
+  1.4.13 asks of content shown on hover.
 - `Video` shows its cover as a link rather than a `<video>` with `poster` and
   `controls`: the browser's controls would cover the lower part of the cover
   and its middle, and Chrome shows the length as 0:00 until the file loads.

@@ -122,8 +122,8 @@ reserved for the area pages.
 
 Every program belongs to one area (`area:`). The labels, descriptions, and
 page links live in `areas` in `src/site.config.ts`. An area whose `href` is
-`null` has no page on the site, so it gets no card on Programs, no links, and
-no interest-list option.
+`null` has no page on the site, so it gets no card on Programs, no place in
+the Programs menu, no links, and no interest-list option.
 
 | `area` | Label | Page |
 |---|---|---|
@@ -523,8 +523,9 @@ with permission from the people in them, and from the parents of children.
 
 Contact and finance emails, location, social links, financial-aid form, the
 Zeffy donation campaign, tax ID, `mailingListAction`, program areas, and the
-header (`mainNav`) and footer (`footerNav`) menus. Change a value here, never
-by typing it into a page.
+header (`mainNav`) and footer (`footerNav`) menus. A header item's `menu`
+lists the links in its drop-down menu; Programs lists the program areas that
+have a page. Change a value here, never by typing it into a page.
 
 #### Newsletter
 
@@ -563,7 +564,7 @@ the 404 page.
 | Component | Use for |
 |---|---|
 | `BaseLayout` | Every page. Props: `title`, `description`, `shareImage` |
-| `Header`, `Footer` | The logo and menus on every page; the menus come from `mainNav` and `footerNav` |
+| `Header`, `Footer` | The logo and menus on every page; the menus come from `mainNav` and `footerNav`. A header item with a `menu` opens a drop-down menu on wide screens, by hover or its arrow, and a list under it in the phone menu |
 | `PageHero` | Page opening: `eyebrow`, `title`, lead text (default slot), `actions` slot, and optionally a photo slot or `media` slot beside the text |
 | `SectionHeading` | Section opening: `eyebrow`, `title`, gold divider; the default slot is aside text on the right |
 | `CtaBand` | Closing band: `title`, optional `eyebrow`, text and an `actions` slot |
