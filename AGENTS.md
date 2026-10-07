@@ -390,7 +390,7 @@ at least 1500 × 1200 px.
 | Page | Slots |
 |---|---|
 | About | `about-hero`; `about-story` (5:4) |
-| Programs | `programs-women`, `programs-teens`, `programs-children` (collage) |
+| Programs | `programs-women`, `programs-teens`, `programs-children` (collage, cropped to 3:4) |
 | Women’s Learning, Youth & Children | `area-womens-learning`, `area-youth-children` |
 | Teachers & Team | `team-hero` |
 | Support | `support-hero`, `rukaiya` |
@@ -544,7 +544,7 @@ the 404 page.
 | `AreaPage` | A whole program-area page |
 | `TeamCard` | A person |
 | `Photo` | A photo slot (`slot=`) or a specific image (`image=`), with the pattern fallback (never for people; see Photos) |
-| `Collage` | Three photo slots with captions |
+| `Collage` | Three photo slots side by side, the same size, with captions |
 | `Gallery` | The row of photos from past programs on the home page (see Gallery) |
 | `Video` | A video that downloads only when played: its cover, a play button, and its length, then the player with captions on (see Videos) |
 | `MailingListForm`, `InterestDialog` | Newsletter and interest-list sign-up. Any link with `data-interest` opens the dialog; `data-interest="<area>"` opens it with only that area ticked |

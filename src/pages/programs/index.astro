@@ -50,8 +50,18 @@ const notJoinable = [
     />
   </PageHero>
 
+  <!-- Program areas -->
+  <section class="py-14 md:py-16" aria-labelledby="areas-heading">
+    <div class="container-page">
+      <SectionHeading eyebrow="How our programs are organized" title="Explore our program areas." id="areas-heading" />
+      <div class="mt-10">
+        <AreaCards />
+      </div>
+    </div>
+  </section>
+
   <!-- Now enrolling -->
-  <section class="py-14 md:py-16" aria-labelledby="enrolling-heading">
+  <section class="border-t border-border py-14 md:py-16" aria-labelledby="enrolling-heading">
     <div class="container-page">
       <SectionHeading eyebrow="Now enrolling" title="Open for registration" id="enrolling-heading">
         <p>Grouped by where they meet: online, on site in Houston, or both. Registration links, dates, and fees are on each program’s page.</p>
@@ -87,16 +97,6 @@ const notJoinable = [
           </div>
         ))
       }
-    </div>
-  </section>
-
-  <!-- Program areas -->
-  <section class="border-t border-border py-14 md:py-16" aria-labelledby="areas-heading">
-    <div class="container-page">
-      <SectionHeading eyebrow="How our programs are organized" title="Explore our program areas." id="areas-heading" />
-      <div class="mt-10">
-        <AreaCards />
-      </div>
     </div>
   </section>
 
