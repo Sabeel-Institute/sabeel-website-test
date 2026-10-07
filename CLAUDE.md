@@ -43,6 +43,18 @@
   pause control (WCAG 2.2.2), and people choose when to see the next photo.
   Its arrows are disabled, and so hidden, at either end and while every photo
   fits.
+- `Video` shows its cover as a link rather than a `<video>` with `poster` and
+  `controls`: the browser's controls would cover the lower part of the cover
+  and its middle, and Chrome shows the length as 0:00 until the file loads.
+  The player waits in a `<template>` that a click clones, so the page requests
+  neither the video nor its captions before then; the cover's `currentSrc`
+  becomes the poster, and since the cover is the video's first frame, nothing
+  changes on screen when it starts. The click also sets the caption track's
+  mode to `showing`, because browsers weigh `default` against the viewer's own
+  caption settings differently. The files are found with root-relative
+  `import.meta.glob`, so `mp4Duration` (`src/lib/video.ts`) can open the MP4
+  from `process.cwd()`; it reads the `mvhd` box with `node:fs` (hence
+  `@types/node`) and fails the build when `mdat` comes before `moov`.
 - `ZeffyDialog` shows Zeffy's plain embed (`/embed/donation-form/<name>`,
   or `/embed/ticketing/<name>` for a program's `zeffyTicketing`) in the
   site's own `<dialog>` and loads it on first open; `zeffyForm` in
