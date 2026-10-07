@@ -36,7 +36,8 @@ if (!src || !captions || !cover) {
   throw new Error(`Video "${name}" needs ${name}.mp4, ${name}.vtt, and ${name}.webp in src/assets/videos/ (see Videos in AGENTS.md).`);
 }
 
-const seconds = Math.round(mp4Duration(join(process.cwd(), dir, `${name}.mp4`)));
+// Whole seconds, as browsers' players show the length.
+const seconds = Math.floor(mp4Duration(join(process.cwd(), dir, `${name}.mp4`)));
 const minutes = Math.floor(seconds / 60);
 const rest = seconds % 60;
 const unit = (n: number, word: string) => `${n} ${word}${n === 1 ? '' : 's'}`;
