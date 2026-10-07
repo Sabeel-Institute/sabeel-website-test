@@ -87,10 +87,11 @@ const serviceAreas = [
   <!-- Teaching team -->
   <section id="teachers" class="scroll-mt-6 border-t border-border py-14 md:py-16" aria-labelledby="teachers-heading">
     <div class="container-page">
-      <SectionHeading eyebrow="Teaching team" title="Our ‘Alimiyyah-Qualified Teachers" id="teachers-heading">
-        <p>Ust. Sameera Shah and Ust. Mariam Sattar teach alongside the following ‘Alimaat:</p>
-      </SectionHeading>
-      <ul class="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      <SectionHeading eyebrow="Teaching team" title="Our ‘Alimiyyah-Qualified Teachers" id="teachers-heading" />
+      <p class="mt-5 text-[17px] leading-[1.85] text-ink">
+        Ust. Sameera Shah and Ust. Mariam Sattar teach alongside the following ‘Alimaat:
+      </p>
+      <ul class="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {
           teachers.slice(0, 3).map((m) => (
             <li>

@@ -662,8 +662,10 @@ belongs in a menu.
 - A person's name and honorific come from their team file, and every page
   names them the same way, including program summaries and bios: Ustadhah
   for Sameera Shah, Ust. for the other teachers, Sr. and Br. as their files
-  say. Bios begin with the plain name (“Mariam Sattar received…”). Write
-  “‘Alimiyyah” with the opening mark.
+  say. The one exception is the organisation's note under the teaching team
+  heading on Teachers & Team, which calls her Ust. Sameera Shah. Bios begin
+  with the plain name (“Mariam Sattar received…”). Write “‘Alimiyyah” with
+  the opening mark.
 - Program names, fees, and dates exactly as on the flyer or as the
   organisation gives them.
 
