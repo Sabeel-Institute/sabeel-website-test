@@ -210,10 +210,9 @@ components and conventions below, then add `page: /<name>/` to the program.
 To go back, delete the page file and the `page` field.
 
 The Hikam Foundations page, `src/pages/hikam-foundations.astro`, is its
-area's page and the bespoke page of its next intake, `hikam-foundations-2026`.
-That program has `draft: true` until the intake is announced; then publish it
-(see Keep a program off the site) and show its facts on the page with
-`getEntry`.
+area's page and the bespoke page of its next intake, `hikam-foundations-2027`,
+which Programs lists under Coming soon. The page's announcement of the intake
+takes its year from that program.
 
 ### Fields
 
@@ -548,7 +547,7 @@ the 404 page.
 | `Collage` | Three photo slots with captions |
 | `Gallery` | The row of photos from past programs on the home page (see Gallery) |
 | `Video` | A video that downloads only when played: its cover, a play button, and its length, then the player with captions on (see Videos) |
-| `MailingListForm`, `InterestDialog` | Newsletter and interest-list sign-up. Any link with `data-interest` opens the dialog |
+| `MailingListForm`, `InterestDialog` | Newsletter and interest-list sign-up. Any link with `data-interest` opens the dialog; `data-interest="<area>"` opens it with only that area ticked |
 | `ZeffyDialog` | A Zeffy form in a dialog: the donation form on Support, a program's payment form on its page. A link with `data-zeffy="<id>"` opens the dialog with that `id` |
 | `Lightbox` | Enlarging flyers: links with `data-lightbox="<group>"` |
 | `SabeelDifference` | The three-column band on Home and About |
