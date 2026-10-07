@@ -92,7 +92,13 @@ export type Place = { label: string; map: string };
 export async function resolveLocation(program: Program): Promise<{ text: string; places: Place[] } | undefined> {
   const { venue, room, platform, format } = program.data;
   const venues = await Promise.all([venue ?? []].flat().map(async (ref) => (await getEntry(ref))!.data));
-  const onSite = room && venues.length === 1 ? `${room} at ${venues[0]!.name}` : venues.map((v) => v.name).join(' and ');
+  // A program's own room applies to its one venue; otherwise each venue shows the room programs meet in there.
+  const onSite = venues
+    .map((v) => {
+      const at = (venues.length === 1 && room) || v.room;
+      return at ? `${at} at ${v.name}` : v.name;
+    })
+    .join(' and ');
   const isOnline = format ? format !== 'On-site' : Boolean(platform);
   const online = isOnline ? (platform ? `online via ${platform}` : 'online') : '';
   const text = onSite && online ? `${onSite} or ${online}` : onSite || online.charAt(0).toUpperCase() + online.slice(1);

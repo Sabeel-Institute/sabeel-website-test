@@ -87,7 +87,7 @@ const programs = defineCollection({
       endDate: z.coerce.date().optional(),
       /** A place in src/content/venues.yaml, or a list of them; needed unless the program is online only. */
       venue: z.union([reference('venues'), z.array(reference('venues')).min(1)]).optional(),
-      /** The room at the venue, e.g. "Sabeel Classroom", shown as "Sabeel Classroom at Masjid Istiqlal". */
+      /** The room at its one venue when it is not the venue's usual room (see venues.yaml). */
       room: z.string().min(1).optional(),
       /** The online platform, e.g. "Zoom", shown as "Online via Zoom". */
       platform: z.string().min(1).optional(),
@@ -219,6 +219,8 @@ const venues = defineCollection({
     name: z.string().min(1),
     /** Street address, linked to a map on program pages. Only as the organisation gives it. */
     address: z.string().min(1).optional(),
+    /** The room programs meet in there, e.g. "Sabeel Classroom", shown as "Sabeel Classroom at Masjid Istiqlal". */
+    room: z.string().min(1).optional(),
   }),
 });
 

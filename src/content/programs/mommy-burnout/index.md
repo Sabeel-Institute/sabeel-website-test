@@ -31,7 +31,7 @@ instructors:
       - M.Ed. in Counseling, University of Houston
   - name: Sr. Heba (The Marriage Fairy)
     role: Guest speaker · Marriage & relationship coach
-expect: Seven weekly sessions combining Qur’anic guidance, Prophetic wisdom, and practical tools from psychology, in a compassionate space to slow down and reflect. Join in person at Masjid Istiqlal or live on Zoom.
+expect: Seven weekly sessions combining Qur’anic guidance, Prophetic wisdom, and practical tools from psychology, in a compassionate space to slow down and reflect. Join in person in the Sabeel Classroom at Masjid Istiqlal or live on Zoom.
 image: ./image.webp
 imageAlt: "Title artwork: Mommy Burnout, a course on mental and spiritual health"
 flyer: ./flyer.webp
