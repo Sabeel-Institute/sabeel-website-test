@@ -524,7 +524,8 @@ with permission from the people in them, and from the parents of children.
 
 ### Site settings (`src/site.config.ts`)
 
-Contact and finance emails, location, social links, financial-aid form, the
+Contact and finance emails (`email`, and `financeEmail` for financial aid
+questions and larger gifts), location, social links, financial-aid form, the
 Zeffy donation campaign, tax ID, `mailingListAction`, program areas, and the
 header (`mainNav`) and footer (`footerNav`) menus. A header item's `menu`
 lists the links in its drop-down menu; Programs lists the program areas that

@@ -22,7 +22,7 @@ export const site = {
   description:
     'Structured, in-person Islamic learning for women in Houston — from classes and gatherings to sustained study with women trained in the Islamic sciences.',
   email: 'info@oursabeel.com',
-  /** For larger gifts and offers of space, on the Support page. */
+  /** For financial aid questions (Financial Aid page), and larger gifts and offers of space (Support page). */
   financeEmail: 'finance@oursabeel.com',
   location: 'Houston, Texas',
   taxId: '93-2752046',
