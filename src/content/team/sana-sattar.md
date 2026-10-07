@@ -3,7 +3,6 @@ name: Sana Sattar
 honorific: Sr.
 group: board
 order: 50
-listed: false
 role: Advisor
 highlights:
 - Sabeel Graduate
