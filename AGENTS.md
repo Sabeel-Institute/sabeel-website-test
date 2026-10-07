@@ -393,7 +393,7 @@ at least 1500 × 1200 px.
 | Programs | `programs-women`, `programs-teens`, `programs-children` (collage, cropped to 3:4) |
 | Women’s Learning, Youth & Children | `area-womens-learning`, `area-youth-children` |
 | Teachers & Team | `team-hero` |
-| Support | `support-hero`, `rukaiya` |
+| Support | `rukaiya` |
 
 A new slot on a page gets a row here. Use only real, approved Sabeel photos.
 
@@ -490,8 +490,8 @@ with permission from the people in them, and from the parents of children.
 
 ### Site settings (`src/site.config.ts`)
 
-Contact email, location, social links, financial-aid form, the Zeffy donation
-campaign, Zelle address, tax ID, `mailingListAction`, program areas, and the
+Contact and finance emails, location, social links, financial-aid form, the
+Zeffy donation campaign, tax ID, `mailingListAction`, program areas, and the
 header (`mainNav`) and footer (`footerNav`) menus. Change a value here, never
 by typing it into a page.
 
@@ -512,14 +512,14 @@ form, signing up opens a pre-filled email to the organisation.
 
 `zeffyCampaign`, at the top of the file, is the name at the end of the Zeffy
 donation campaign's links (`https://www.zeffy.com/en-US/donation-form/<name>`).
-The Support page's Donate buttons open that campaign's form in a dialog, where
-donors choose the amount and how often to give. The suggested amounts,
-frequencies, and the form's colour are set in the campaign editor on zeffy.com
-(the organisation's Zeffy account) and need no change here; change
-`zeffyCampaign` only to switch to another campaign. `zelle` and `taxId` appear
-on the Support page. Every gift is a general gift: the Support page describes
-what gifts support, and the donation form asks only for the amount and how
-often to give.
+The Support page's Support Sabeel and Donate online buttons open that
+campaign's form in a dialog, where donors choose the amount and how often to
+give. The suggested amounts, frequencies, and the form's colour are set in the
+campaign editor on zeffy.com (the organisation's Zeffy account) and need no
+change here; change `zeffyCampaign` only to switch to another campaign.
+`taxId` and `financeEmail` appear on the Support page. Every gift is a general
+gift: the Support page describes what gifts support, and the donation form
+asks only for the amount and how often to give.
 
 ## Pages and components
 
