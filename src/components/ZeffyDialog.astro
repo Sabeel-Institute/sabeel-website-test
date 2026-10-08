@@ -1,6 +1,6 @@
 ---
 /**
- * A Zeffy form (the donation form, or a paid program's registration form) in a
+ * A Zeffy form (the donation form, or a program's registration form) in a
  * dialog. Any link with `data-zeffy="<id>"` opens the dialog with that `id`;
  * without JavaScript, or with a modified click, the link opens the form on
  * Zeffy's site. The form loads when its dialog first opens. Without a form,
@@ -15,7 +15,7 @@ interface Props {
   title: string;
   /** The form's accessible name, e.g. "Donation form". */
   label: string;
-  /** Left out while a paid program's form is not ready. */
+  /** Left out while a program's form is not ready. */
   form?: ZeffyForm;
 }
 

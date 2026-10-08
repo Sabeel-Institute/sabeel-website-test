@@ -4,10 +4,15 @@
 
 - Program entries use a discriminated union on `status`
   (`src/content.config.ts`); open, ongoing, and closed programs fail the
-  build if a listing field is missing. While a program is open or ongoing,
-  `superRefine` requires `registerUrl` of a free one (`fee` is `FREE`) and
-  refuses it on a paid one, which registers through Zeffy. Folder names are validated in `generateId`, and
-  `womens-learning` / `youth-children` are reserved for the area pages.
+  build if a listing field is missing. Each status's object, and the venue
+  schema, is strict, so a field the schema lacks fails the build (named by
+  `unknownField`) instead of being dropped. `registration` is `none` or one
+  of two strict objects, `{ zeffy }` and `{ link }`, so a program cannot set
+  two; it alone decides what Register does, and `fee` only whether the page
+  links to Financial Aid. `statusLabel` shows an open program with
+  `registration: none` as “No registration needed”. Folder names are
+  validated in `generateId`, and `womens-learning` / `youth-children` are
+  reserved for the area pages.
 - `assertBespokePages` (`src/lib/content.ts`) runs while program pages are
   generated and fails the build when a `page:` value has no matching file in
   `src/pages/`. Its route list skips files and folders starting with `_`, as
@@ -15,9 +20,11 @@
 - The schedule, length, and venue rules for current programs (no dates on
   card lines, a venue unless online only) are in the programs schema's
   `superRefine` (`src/content.config.ts`); past programs keep the schedules
-  they announced. `resolveLocation`, `rhythmLabel`, and `dateRange`
-  (`src/lib/content.ts`) word the fields for cards and pages, so the course
-  files hold each fact once. Map links are Google Maps search URLs built from
+  they announced. For every status it also refuses a venue on an `Online`
+  program, a platform on an `On-site` one, a `room` without exactly one
+  venue, and `registration: none` on a `closed` program. `resolveLocation`,
+  `rhythmLabel`, and `dateRange` (`src/lib/content.ts`) word the fields for
+  cards and pages, so the course files hold each fact once. Map links are Google Maps search URLs built from
   a venue's name and address.
 - `draft: true` programs are left out by `withStatus`, which every listing
   query uses, and by `getStaticPaths` in `programs/[slug].astro`, so they get
@@ -66,9 +73,9 @@
   The wrapper's `aspect-ratio` comes from the cover's size, so a portrait
   video needs no other setting.
 - `ZeffyDialog` shows Zeffy's plain embed (`/embed/donation-form/<name>`,
-  or `/embed/ticketing/<name>` for a program's `zeffyTicketing`) in the
-  site's own `<dialog>` and loads it on first open; without a form (a paid
-  program whose form is not ready), the same dialog says so; `zeffyForm` in
+  or `/embed/ticketing/<name>` for a program's `registration.zeffy`) in the
+  site's own `<dialog>` and loads it on first open; without a form (an open
+  program with no `registration` yet), the same dialog says so; `zeffyForm` in
   `src/site.config.ts` builds a form's page and embed links. Zeffy's pop-up
   script (`embed-form-script.min.js`) is not used: it loads the form in a
   hidden frame on every page view, and its pop-up has no dialog role or

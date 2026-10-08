@@ -12,7 +12,8 @@ frequency: monthly
 format: On-site
 venue: masjid-istiqlal
 fee: "Halaqa $5 · Halaqa and optional activity $15"
-zeffyTicketing: anchored-hearts-sisters-circle
+registration:
+  zeffy: anchored-hearts-sisters-circle
 deadline: Optional activity — register by Wednesday, October 7
 instructors:
   - name: Dr. Sabeen Najam
