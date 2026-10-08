@@ -12,7 +12,7 @@ format: Online
 platform: Zoom
 fee: Free
 registration:
-  link: https://forms.gle/mMNGQ3e832SsFQTQ6
+  zeffy: monthly-quran-room
 image: ./image.webp
 imageAlt: "Title artwork: Monthly Qur’an Room"
 flyer: ./flyer.webp

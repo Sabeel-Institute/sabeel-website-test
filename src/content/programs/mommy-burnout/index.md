@@ -14,6 +14,8 @@ venue: masjid-istiqlal
 platform: Zoom
 duration: 7 sessions
 fee: $150
+registration:
+  zeffy: mommy-burnout
 outcomes:
   - Recognize what is contributing to your burnout
   - Live and mother with renewed purpose

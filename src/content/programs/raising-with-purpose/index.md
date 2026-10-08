@@ -4,13 +4,15 @@ title: Raising with Purpose
 subtitle: A monthly support circle for homeschooling moms
 summary: A monthly circle, with the Muslim Homeschooling Community of Greater Houston, for homeschooling moms to connect and reflect on their purpose and intentions.
 area: womens-learning
-date: 2026-09-27
+date: 2026-10-18
 audience: Homeschooling mothers
 schedule: Sundays · 5:00–7:00 PM CT
 frequency: monthly
 format: On-site
 venue: masjid-istiqlal
 fee: $5
+registration:
+  zeffy: raising-with-purpose
 instructors:
   - mariam-sattar
   - name: Pelin Unal
@@ -27,7 +29,7 @@ A monthly support circle for homeschooling moms, in collaboration with MHSC (Mus
 
 Each gathering is thoughtfully curated to give us time to connect with one another and reflect on our purpose and intentions in homeschooling — what brought us here, what we value most, and what we hope to nurture in our children beyond academics.
 
-## Our debut session — Sunday, September 27
+## This month — Sunday, October 18
 
 - **Nourish** — Halaqah with Ust. Mariam Sattar, Sabeel Institute
 - **Connect** — In conversation with Pelin Unal and Najia Salim
