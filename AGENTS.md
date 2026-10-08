@@ -324,11 +324,13 @@ registration:
   dialog. Ticket names and prices are set on zeffy.com; keep `fee` the same
   as them.
 - **Another site's form** (`link`), for example a partner organisation's
-  Google Form: its full address, copied exactly
-  (`link: https://forms.gle/…`). Register opens it in a new tab.
+  Google Form: its full address, starting with `https://`, copied exactly
+  (`link: https://forms.gle/…`). Register opens it in a new tab. A Zeffy
+  form is always `zeffy`, never `link`.
 - **No registration** (`registration: none`): anyone can come. Cards and the
   page say “No registration needed” in place of “Registration open”, the
-  page has no Register buttons, and Ask a Question is its main button.
+  page has no Register buttons, and Ask a Question is its main button. Such
+  a program has no `deadline`.
 
 Until the form exists, leave `registration` out: Register then opens a
 dialog saying the registration form is a work in progress. Whatever the
@@ -610,7 +612,8 @@ the 404 page.
 
 Queries and helpers in `src/lib/content.ts`: `getCurrentPrograms(area?)`,
 `getUpcomingPrograms(area?)`, `getClosedPrograms(area?)`,
-`getCompletedPrograms(area?)`, `programHref`, `STATUS_LABEL`, `startLabel`,
+`getCompletedPrograms(area?)`, `programHref`, `statusLabel` (a program's
+status as cards and pages show it), `STATUS_LABEL`, `startLabel`,
 `programYear`, `resolveInstructors`, `getGalleryPhotos`, `getTeamGroup`,
 `displayName`, `teamHasPage`, `excerpt`.
 
