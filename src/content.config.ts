@@ -56,12 +56,14 @@ const programs = defineCollection({
     /** A team member id (file name in src/content/team) or a guest written inline. */
     const instructor = z.union([
       reference('team'),
-      z.object({
+      z.strictObject({
         name: z.string().min(1),
         role: z.string().min(1).optional(),
         highlights: z.array(z.string().min(1)).max(3).optional(),
-      }),
-    ]);
+      }, unknownField('guest instructor')),
+    ], {
+      error: 'an instructor is a team file name (sameera-shah), or a guest with name:, and optionally role: and highlights: (see Fields in AGENTS.md)',
+    });
 
     const fields = {
       title: z.string().min(1),
@@ -104,9 +106,9 @@ const programs = defineCollection({
       /**
        * How people join, whatever the fee: `{ zeffy: <name> }`, the Zeffy
        * ticketing form named after /ticketing/ in its links, which Register
-       * opens in a dialog; `{ link: <url> }`, another site's form, which it
-       * opens in a new tab; or `none`, for a program anyone can come to. Left
-       * out, Register says the form is a work in progress.
+       * opens in a dialog; `{ link: <https url> }`, another site's form, which
+       * it opens in a new tab; or `none`, for a program anyone can come to.
+       * Left out, Register says the form is a work in progress.
        */
       registration: z
         .union(
@@ -115,7 +117,17 @@ const programs = defineCollection({
             z.strictObject({
               zeffy: z.string().regex(slugPattern, 'zeffy is the name after /ticketing/ in the Zeffy form links, e.g. "anchored-hearts-sisters-circle"'),
             }),
-            z.strictObject({ link: z.url('link is the form\'s full address, starting with https://') }),
+            z.strictObject({
+              link: z.url({
+                protocol: /^https$/,
+                // A Zeffy form opens in the site's dialog, so it is `zeffy`, never `link`.
+                hostname: /^(?!(?:.+\.)?zeffy\.com$)/,
+                error: (issue) =>
+                  'note' in issue && issue.note === 'Invalid hostname'
+                    ? 'a Zeffy form is not a link: write zeffy: <the name after /ticketing/ in its links> (see Registration in AGENTS.md)'
+                    : 'link is the form\'s full address, starting with https://',
+              }),
+            }),
           ],
           {
             error:
@@ -212,6 +224,13 @@ const programs = defineCollection({
           code: 'custom',
           path: ['status'],
           message: 'a program without registration has no registration to close: set status to completed when it ends (see Status in AGENTS.md)',
+        });
+      }
+      if (d.registration === 'none' && d.deadline) {
+        ctx.addIssue({
+          code: 'custom',
+          path: ['deadline'],
+          message: 'a program without registration has no registration deadline: remove deadline, or set registration (see Registration in AGENTS.md)',
         });
       }
       if (d.endDate && d.endDate < d.date) {
