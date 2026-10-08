@@ -16,7 +16,10 @@ export const PROGRAM_AREAS = ['hikam-foundations', 'womens-learning', 'youth-chi
 export const PROGRAM_FORMATS = ['Online', 'On-site', 'Online & on-site'] as const;
 /** How often a program meets; labels in FREQUENCY_LABEL (src/lib/content.ts). */
 export const PROGRAM_FREQUENCIES = ['weekly', 'twice-monthly', 'monthly', 'daily', 'once'] as const;
-/** The `fee` of a program that charges nothing; pages offer financial aid for any other fee. */
+/**
+ * The `fee` of a program that charges nothing. Only such a program may have
+ * `registration: none`; pages offer financial aid for any other fee.
+ */
 export const FREE = 'Free';
 
 /** Days, then the time: "Mondays · 12:00–1:30 PM CT", "Last Wednesday · 10:00–10:30 AM CT". */
@@ -104,11 +107,11 @@ const programs = defineCollection({
       /** Price text; exactly "Free" when the program charges nothing. */
       fee: z.string().min(1),
       /**
-       * How people join, whatever the fee: `{ zeffy: <name> }`, the Zeffy
-       * ticketing form named after /ticketing/ in its links, which Register
-       * opens in a dialog; `{ link: <https url> }`, another site's form, which
-       * it opens in a new tab; or `none`, for a program anyone can come to.
-       * Left out, Register says the form is a work in progress.
+       * How people join: `{ zeffy: <name> }`, the Zeffy ticketing form named
+       * after /ticketing/ in its links, which Register opens in a dialog;
+       * `{ link: <https url> }`, another site's form, which it opens in a new
+       * tab; or `none`, for a free program anyone can come to. Left out,
+       * Register says the form is a work in progress.
        */
       registration: z
         .union(
@@ -116,7 +119,7 @@ const programs = defineCollection({
             z.literal('none'),
             z.strictObject({
               zeffy: z.string().regex(slugPattern, 'zeffy is the name after /ticketing/ in the Zeffy form links, e.g. "anchored-hearts-sisters-circle"'),
-            }),
+            }, unknownField('registration')),
             z.strictObject({
               link: z.url({
                 protocol: /^https$/,
@@ -127,7 +130,7 @@ const programs = defineCollection({
                     ? 'a Zeffy form is not a link: write zeffy: <the name after /ticketing/ in its links> (see Registration in AGENTS.md)'
                     : 'link is the form\'s full address, starting with https://',
               }),
-            }),
+            }, unknownField('registration')),
           ],
           {
             error:
@@ -233,6 +236,13 @@ const programs = defineCollection({
           message: 'a program without registration has no registration deadline: remove deadline, or set registration (see Registration in AGENTS.md)',
         });
       }
+      if (d.registration === 'none' && d.fee && d.fee !== FREE) {
+        ctx.addIssue({
+          code: 'custom',
+          path: ['registration'],
+          message: `a program with a fee takes registration: set registration to its form, or fee to ${FREE} (see Registration in AGENTS.md)`,
+        });
+      }
       if (d.endDate && d.endDate < d.date) {
         ctx.addIssue({ code: 'custom', path: ['endDate'], message: 'endDate is before date' });
       }
@@ -242,7 +252,7 @@ const programs = defineCollection({
 
 const team = defineCollection({
   loader: glob({ pattern: '*.md', base: './src/content/team' }),
-  schema: z.object({
+  schema: z.strictObject({
     name: z.string().min(1),
     honorific: z.enum(['Ustadhah', 'Ust.', 'Sr.', 'Br.', 'Dr.']),
     /** Section on the Teachers & Team page. */
@@ -257,15 +267,17 @@ const team = defineCollection({
     highlights: z.array(z.string().min(1)).max(3).optional(),
     /** false keeps the file but hides the person from the site. */
     listed: z.boolean().default(true),
-  }),
+  }, unknownField('team')),
 });
 
 const testimonials = defineCollection({
   loader: file('src/content/testimonials.yaml'),
-  schema: z.object({
+  schema: z.strictObject({
+    /** Unique; what tells the quotes apart. */
+    id: z.string().min(1),
     program: z.string().min(1),
     quote: z.string().min(1),
-  }),
+  }, unknownField('testimonial')),
 });
 
 /** Places programs meet; a program names one by its id in `venue`. */
@@ -294,14 +306,14 @@ const gallery = defineCollection({
   loader: file('src/content/gallery.yaml'),
   schema: ({ image }) =>
     z.array(
-      z.object({
+      z.strictObject({
         /** The photo: a WebP file in src/content/gallery/. */
         image: image(),
         /** What the photo shows, for people who cannot see it. */
         alt: z.string().min(1),
         /** The program the photo is from; its name and year, linked to its page, go under the photo. */
         program: reference('programs').optional(),
-      }),
+      }, unknownField('gallery photo')),
     ),
 });
 

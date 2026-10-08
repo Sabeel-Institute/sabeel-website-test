@@ -35,7 +35,7 @@ npm run preview   # serve the built dist/
 
 `npm run build` must end with `0 errors`. It validates every content file
 against the schemas in `src/content.config.ts`, and errors name the file and
-field.
+field, including a field the schema does not have.
 
 ## Everyday tasks
 
@@ -263,7 +263,7 @@ build stops on a field that is not in this table, naming it.
 | `format` | See Format | `Online & on-site` |
 | `venue`, `room`, `platform` | Where it meets; see Format | `masjid-istiqlal`, `Sabeel Classroom`, `Zoom` |
 | `fee` | Price text | `$150`, `Free` |
-| `registration` | How people join (see Registration): `none`, or on the line under it, `zeffy:` a Zeffy form or `link:` another site's form | `zeffy: anchored-hearts-sisters-circle` |
+| `registration` | How people join (see Registration): `none` (free programs only), or on the line under it, `zeffy:` a Zeffy form or `link:` another site's form | `zeffy: anchored-hearts-sisters-circle` |
 | `deadline` | Registration deadline text | |
 | `prerequisites` | Materials or prerequisites | |
 | `outcomes` | Three to five things students will learn (list) | |
@@ -306,8 +306,8 @@ node -e "require('sharp')(process.argv[1]).webp({ quality: 90 }).toFile(process.
 
 ### Registration
 
-`registration` says how people join a program, whatever its fee. While the
-program is `open` or `ongoing`, its page works by it:
+`registration` says how people join a program. While the program is `open`
+or `ongoing`, its page works by it:
 
 ```yaml
 registration:
@@ -327,10 +327,12 @@ registration:
   Google Form: its full address, starting with `https://`, copied exactly
   (`link: https://forms.gle/…`). Register opens it in a new tab. A Zeffy
   form is always `zeffy`, never `link`.
-- **No registration** (`registration: none`): anyone can come. Cards and the
-  page say “No registration needed” in place of “Registration open”, the
-  page has no Register buttons, and Ask a Question is its main button. Such
-  a program has no `deadline`.
+- **No registration** (`registration: none`), only for a free program that
+  anyone can come to. Cards and the page say “No registration needed” in
+  place of “Registration open”, the page has no Register buttons, and Ask a
+  Question is its main button. Such a program has no `deadline`. A program
+  with a fee always takes registration: the build stops on `none` with any
+  `fee` but `Free`.
 
 Until the form exists, leave `registration` out: Register then opens a
 dialog saying the registration form is a work in progress. Whatever the
