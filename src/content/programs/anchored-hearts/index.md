@@ -11,7 +11,7 @@ schedule: Fridays · 5:30–7:45 PM CT
 frequency: monthly
 format: On-site
 venue: masjid-istiqlal
-fee: "Halaqa $5 · Halaqa and optional activity $15"
+fee: Free
 registration:
   zeffy: anchored-hearts-sisters-circle
 deadline: Optional activity — register by Wednesday, October 7
@@ -20,7 +20,7 @@ instructors:
     role: This month’s speaker
   - name: Sr. Hira Jeddy
     role: House of Makers · Creative activity
-expect: An optional creative activity, then the halaqa. This month, make your own pearl bracelet and earrings with House of Makers, with snacks and favors — a special Sabeel rate of $15 (regularly $25).
+expect: An optional creative activity, then the halaqa. This month, make your own pearl bracelet and earrings with House of Makers, with snacks and favors.
 image: ./image.webp
 imageAlt: "Title artwork: Anchored Hearts, Sister’s Circle"
 flyer: ./flyer.webp
