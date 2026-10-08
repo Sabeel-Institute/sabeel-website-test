@@ -11,7 +11,8 @@ frequency: monthly
 format: Online
 platform: Zoom
 fee: Free
-registerUrl: https://forms.gle/mMNGQ3e832SsFQTQ6
+registerUrl: https://www.zeffy.com/en-US/ticketing/monthly-quran-room
+zeffyTicketing: monthly-quran-room
 image: ./image.webp
 imageAlt: "Title artwork: Monthly Qur’an Room"
 flyer: ./flyer.webp

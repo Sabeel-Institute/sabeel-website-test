@@ -13,6 +13,7 @@ format: Online
 platform: Zoom
 duration: 8 sessions
 fee: $5 per session, or $35 for the full series
+zeffyTicketing: journey-to-excellence
 outcomes:
   - The qualities of a believer — tawbah, shukr, sabr, dhikr, taqwa, and more
   - How these qualities help us grow in faith and character

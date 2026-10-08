@@ -11,6 +11,7 @@ frequency: monthly
 format: On-site
 venue: masjid-istiqlal
 fee: $5
+zeffyTicketing: raising-with-purpose
 instructors:
   - mariam-sattar
   - name: Pelin Unal
