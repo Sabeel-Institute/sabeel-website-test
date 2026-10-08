@@ -1,5 +1,5 @@
 ---
-status: open
+status: closed
 title: Quran Immersion
 subtitle: Fall Semester · Arabic Grammar, Tafsir, Tajweed
 summary: A 10-week course that builds your foundations in Qur’anic Arabic, tafsir, and tajweed through Surah Qaf — and prepares you for Hikam Foundations.
