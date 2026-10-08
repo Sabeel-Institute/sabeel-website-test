@@ -25,6 +25,7 @@ import {
   resolveLocation,
   rhythmLabel,
   startLabel,
+  statusLabel,
   type Program,
 } from '../../lib/content';
 
@@ -48,16 +49,23 @@ const closed = d.status === 'closed';
 const free = d.fee === FREE;
 const askHref = `/contact/?inquiry=program&program=${encodeURIComponent(d.title)}`;
 /**
- * Register buttons, while registration is open. A free program links to its
- * own form; a paid one opens its Zeffy form in a dialog, which says the form
- * is a work in progress until the program has one.
+ * Register buttons, while people can join. They open the program's Zeffy form
+ * in a dialog, or another site's form (`link`) in a new tab; until the program
+ * has either, the dialog says the form is a work in progress. A program anyone
+ * can come to (`registration: none`) has no Register buttons.
  */
-const paidForm = d.zeffyTicketing ? zeffyForm('ticketing', d.zeffyTicketing) : undefined;
-const register = !registering
-  ? undefined
-  : free
-    ? { href: d.registerUrl, target: '_blank', rel: 'noopener' }
-    : { href: paidForm?.page ?? askHref, target: paidForm && '_blank', rel: paidForm && 'noopener', 'data-zeffy': 'register-dialog' };
+const reg = d.registration;
+const noRegistration = reg === 'none';
+const zeffy = typeof reg === 'object' && 'zeffy' in reg ? zeffyForm('ticketing', reg.zeffy) : undefined;
+const link = typeof reg === 'object' && 'link' in reg ? reg.link : undefined;
+const register =
+  !registering || noRegistration
+    ? undefined
+    : link
+      ? { href: link, target: '_blank', rel: 'noopener' }
+      : { href: zeffy?.page ?? askHref, target: zeffy && '_blank', rel: zeffy && 'noopener', 'data-zeffy': 'register-dialog' };
+/** A current program without registration: asking a question is its main action. */
+const askOnly = registering && noRegistration;
 /** Closing text for pages that no longer take registrations. */
 const laterNote = completed
   ? 'This page is kept as a record of the program. Join the interest list to hear when similar programs open.'
@@ -76,6 +84,7 @@ const glance = [
   { icon: 'calendar', label: 'Dates', value: dateRange(program) },
   { icon: 'users', label: instructors.length > 1 ? 'Instructors' : 'Instructor', value: completed ? undefined : instructors.map((i) => i.name).join(', ') },
   { icon: 'tag', label: 'Fee', value: completed ? undefined : d.fee },
+  { icon: 'check', label: 'Registration', value: noRegistration && !completed ? 'Not needed' : undefined },
   { icon: 'book-open', label: 'Materials & prerequisites', value: d.prerequisites },
   { icon: 'clock', label: 'Registration deadline', value: completed || closed ? undefined : d.deadline },
 ].filter((r) => r.value);
@@ -100,7 +109,7 @@ const cards = [
       </nav>
       <div class="mt-8 grid items-center gap-10 md:grid-cols-[1.05fr_1fr] md:gap-12">
         <div>
-          <p class="eyebrow">{STATUS_LABEL[d.status]} · {area.label}</p>
+          <p class="eyebrow">{statusLabel(program)} · {area.label}</p>
           <Divider width="sm" class="mt-3" />
           <h1 class="display-lg mt-5 lg:text-[3.1rem]">{d.title}</h1>
           {d.subtitle && <p class="mt-3 font-display text-2xl leading-snug text-ink-soft italic">{d.subtitle}</p>}
@@ -109,15 +118,17 @@ const cards = [
             {
               register ? (
                 <a {...register} class="btn btn-primary px-7 text-base">
-                  Register {free && <Icon name="external" class="size-4" />}
+                  Register {link && <Icon name="external" class="size-4" />}
                 </a>
               ) : (
-                <a href="/contact/?inquiry=interest-list" data-interest class="btn btn-primary px-7 text-base">
-                  Join the Interest List
-                </a>
+                !askOnly && (
+                  <a href="/contact/?inquiry=interest-list" data-interest class="btn btn-primary px-7 text-base">
+                    Join the Interest List
+                  </a>
+                )
               )
             }
-            <a href={completed ? '/programs/' : askHref} class="btn btn-outline px-6 text-base">
+            <a href={completed ? '/programs/' : askHref} class:list={['btn', askOnly ? 'btn-primary' : 'btn-outline', 'px-6 text-base']}>
               {completed ? 'View Current Programs' : 'Ask a Question'}
             </a>
           </div>
@@ -213,7 +224,7 @@ const cards = [
           register && (
             <>
               <a {...register} class="btn btn-primary mt-5 w-full text-base">
-                Register {free && <Icon name="external" class="size-4" />}
+                Register {link && <Icon name="external" class="size-4" />}
               </a>
               {!free && (
                 <p class="mt-3 text-center text-sm text-ink-soft">
@@ -307,11 +318,17 @@ const cards = [
   {
     registering ? (
       <CtaBand title="Ready to join?">
-        <p>{[start && `Starts ${start}`, d.format, d.fee].filter(Boolean).join(' · ')}</p>
+        <p>{[noRegistration && 'No registration needed', start && `Starts ${start}`, d.format, d.fee].filter(Boolean).join(' · ')}</p>
         <Fragment slot="actions">
-          <a {...register} class="btn btn-primary px-7 text-base">
-            Register Now {free && <Icon name="external" class="size-4" />}
-          </a>
+          {
+            register ? (
+              <a {...register} class="btn btn-primary px-7 text-base">
+                Register Now {link && <Icon name="external" class="size-4" />}
+              </a>
+            ) : (
+              <a href={askHref} class="btn btn-primary px-7 text-base">Ask a Question</a>
+            )
+          }
           {!free && <a href="/financial-aid/" class="btn btn-outline bg-surface/60 px-6 text-base">Financial Aid</a>}
         </Fragment>
       </CtaBand>
@@ -323,6 +340,14 @@ const cards = [
             Join the Interest List
           </a>
           <a href="/programs/" class="link-arrow text-base">View Current Programs <Icon name="arrow-right" class="size-5" /></a>
+        </Fragment>
+      </CtaBand>
+    ) : noRegistration ? (
+      <CtaBand title="Coming soon.">
+        <p>No registration needed. Join the interest list and we’ll tell you when it starts.</p>
+        <Fragment slot="actions">
+          <a href="/contact/?inquiry=interest-list" data-interest class="btn btn-primary px-7 text-base">Join the Interest List</a>
+          <a href={askHref} class="btn btn-outline bg-surface/60 px-6 text-base">Ask a Question</a>
         </Fragment>
       </CtaBand>
     ) : (
@@ -337,5 +362,5 @@ const cards = [
   }
 
   <Lightbox />
-  {register && !free && <ZeffyDialog id="register-dialog" title={`Register for ${d.title}`} label="Registration form" form={paidForm} />}
+  {register && !link && <ZeffyDialog id="register-dialog" title={`Register for ${d.title}`} label="Registration form" form={zeffy} />}
 </BaseLayout>

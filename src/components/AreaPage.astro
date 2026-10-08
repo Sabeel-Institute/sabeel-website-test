@@ -26,7 +26,7 @@ const closed = await getClosedPrograms(id);
 
   <section class="py-14 md:py-16" aria-labelledby="current-heading">
     <div class="container-page">
-      <SectionHeading eyebrow="Now enrolling" title={`Current ${area.label.toLowerCase()} programs`} id="current-heading" />
+      <SectionHeading eyebrow="Join us" title={`Current ${area.label.toLowerCase()} programs`} id="current-heading" />
       {
         current.length === 0 && (
           <p class="mt-10 rounded-card bg-surface p-7 text-ink-soft">
@@ -43,7 +43,7 @@ const closed = await getClosedPrograms(id);
   </section>
 
   <CtaBand title="Looking for something else?">
-    <p>See everything open for registration across all three program areas, or look back at past programs.</p>
+    <p>See current programs in all three program areas, or look back at past programs.</p>
     <a slot="actions" href="/programs/" class="btn btn-primary px-7 text-base">View All Programs</a>
     <a slot="actions" href="/past-programs/" class="btn btn-outline px-6 text-base">Past Programs</a>
   </CtaBand>

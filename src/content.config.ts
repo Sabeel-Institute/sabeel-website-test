@@ -16,7 +16,7 @@ export const PROGRAM_AREAS = ['hikam-foundations', 'womens-learning', 'youth-chi
 export const PROGRAM_FORMATS = ['Online', 'On-site', 'Online & on-site'] as const;
 /** How often a program meets; labels in FREQUENCY_LABEL (src/lib/content.ts). */
 export const PROGRAM_FREQUENCIES = ['weekly', 'twice-monthly', 'monthly', 'daily', 'once'] as const;
-/** The `fee` of a program that charges nothing; any other fee is paid through Zeffy. */
+/** The `fee` of a program that charges nothing; pages offer financial aid for any other fee. */
 export const FREE = 'Free';
 
 /** Days, then the time: "Mondays · 12:00–1:30 PM CT", "Last Wednesday · 10:00–10:30 AM CT". */
@@ -30,6 +30,12 @@ const DURATION = /^\d+ (?:sessions?|weeks?|days?|months?|years?)$/;
 /** Route segments under /programs/ that belong to pages, not programs. */
 const RESERVED_SLUGS = new Set(['womens-learning', 'youth-children']);
 const slugPattern = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
+
+/** Names a field the schema lacks, so a misspelt field fails the build instead of being dropped. */
+const unknownField = (what: string) => ({
+  error: (issue: { code?: string; keys?: string[] }) =>
+    issue.code === 'unrecognized_keys' ? `${issue.keys?.join(', ')}: not a ${what} field (see AGENTS.md)` : undefined,
+});
 
 const programs = defineCollection({
   loader: glob({
@@ -89,22 +95,34 @@ const programs = defineCollection({
       endDate: z.coerce.date().optional(),
       /** A place in src/content/venues.yaml, or a list of them; needed unless the program is online only. */
       venue: z.union([reference('venues'), z.array(reference('venues')).min(1)]).optional(),
-      /** The room at its one venue when it is not the venue's usual room (see venues.yaml). */
+      /** The room at its one venue when it is not the venue's `usualRoom`. */
       room: z.string().min(1).optional(),
       /** The online platform, e.g. "Zoom", shown as "Online via Zoom". */
       platform: z.string().min(1).optional(),
       /** Price text; exactly "Free" when the program charges nothing. */
       fee: z.string().min(1),
-      /** A free program's registration form; paid programs register through Zeffy. */
-      registerUrl: z.url().optional(),
       /**
-       * The Zeffy ticketing form a paid program registers and pays through: the
-       * name after /ticketing/ in its links. While registration is open,
-       * Register buttons open it in a dialog.
+       * How people join, whatever the fee: `{ zeffy: <name> }`, the Zeffy
+       * ticketing form named after /ticketing/ in its links, which Register
+       * opens in a dialog; `{ link: <url> }`, another site's form, which it
+       * opens in a new tab; or `none`, for a program anyone can come to. Left
+       * out, Register says the form is a work in progress.
        */
-      zeffyTicketing: z
-        .string()
-        .regex(slugPattern, 'zeffyTicketing must be the name after /ticketing/ in the Zeffy form links, e.g. "anchored-hearts-sisters-circle"')
+      registration: z
+        .union(
+          [
+            z.literal('none'),
+            z.strictObject({
+              zeffy: z.string().regex(slugPattern, 'zeffy is the name after /ticketing/ in the Zeffy form links, e.g. "anchored-hearts-sisters-circle"'),
+            }),
+            z.strictObject({ link: z.url('link is the form\'s full address, starting with https://') }),
+          ],
+          {
+            error:
+              'registration is none, or has one line under it: zeffy: <the name after /ticketing/ in the Zeffy ' +
+              'form links>, or link: <the address of another site\'s form> (see Registration in AGENTS.md)',
+          },
+        )
         .optional(),
       /** Registration deadline as people should read it. */
       deadline: z.string().min(1).optional(),
@@ -137,23 +155,23 @@ const programs = defineCollection({
         .optional(),
     };
 
-    /** Taking registrations now. */
-    const open = z.object({ ...fields, status: z.literal('open') });
+    /** People can join now: registration is open, or none is needed. */
+    const open = z.strictObject({ ...fields, status: z.literal('open') }, unknownField('program'));
     /** A running series people can still join. */
-    const ongoing = z.object({ ...fields, status: z.literal('ongoing') });
+    const ongoing = z.strictObject({ ...fields, status: z.literal('ongoing') }, unknownField('program'));
     /** Registration has closed; the program is still running. */
-    const closed = z.object({ ...fields, status: z.literal('closed') });
+    const closed = z.strictObject({ ...fields, status: z.literal('closed') }, unknownField('program'));
     /** Announced; registration not open yet. */
-    const upcoming = z.object({
+    const upcoming = z.strictObject({
       ...fields,
       status: z.literal('upcoming'),
       schedule: fields.schedule.optional(),
       format: fields.format.optional(),
       frequency: fields.frequency.optional(),
       fee: fields.fee.optional(),
-    });
+    }, unknownField('program'));
     /** Finished; kept as an archive record. */
-    const completed = z.object({
+    const completed = z.strictObject({
       ...fields,
       status: z.literal('completed'),
       summary: fields.summary.optional(),
@@ -162,7 +180,7 @@ const programs = defineCollection({
       format: fields.format.optional(),
       frequency: fields.frequency.optional(),
       fee: fields.fee.optional(),
-    });
+    }, unknownField('program'));
     return z.discriminatedUnion('status', [open, ongoing, closed, upcoming, completed]).superRefine((d, ctx) => {
       if (d.image && !d.imageAlt) {
         ctx.addIssue({ code: 'custom', path: ['imageAlt'], message: 'imageAlt is required when image is set' });
@@ -180,17 +198,21 @@ const programs = defineCollection({
       if ((d.status === 'open' || d.status === 'ongoing' || d.status === 'closed') && d.format !== 'Online' && !d.venue) {
         ctx.addIssue({ code: 'custom', path: ['venue'], message: 'venue is required unless the program is online only' });
       }
-      if (d.status === 'open' || d.status === 'ongoing') {
-        if (d.fee === FREE && !d.registerUrl) {
-          ctx.addIssue({ code: 'custom', path: ['registerUrl'], message: 'registerUrl is required for a free program (see Registration in AGENTS.md)' });
-        }
-        if (d.fee !== FREE && d.registerUrl) {
-          ctx.addIssue({
-            code: 'custom',
-            path: ['registerUrl'],
-            message: 'a paid program registers through its Zeffy form: remove registerUrl, and set zeffyTicketing once the form exists (see Registration in AGENTS.md)',
-          });
-        }
+      if (d.format === 'Online' && d.venue) {
+        ctx.addIssue({ code: 'custom', path: ['venue'], message: 'an online-only program has no venue: remove venue, or set format to "Online & on-site"' });
+      }
+      if (d.format === 'On-site' && d.platform) {
+        ctx.addIssue({ code: 'custom', path: ['platform'], message: 'an on-site program has no platform: remove platform, or set format to "Online & on-site"' });
+      }
+      if (d.room && (!d.venue || (Array.isArray(d.venue) && d.venue.length > 1))) {
+        ctx.addIssue({ code: 'custom', path: ['room'], message: 'room is the room at the program\'s one venue: set one venue, or remove room' });
+      }
+      if (d.status === 'closed' && d.registration === 'none') {
+        ctx.addIssue({
+          code: 'custom',
+          path: ['status'],
+          message: 'a program without registration has no registration to close: set status to completed when it ends (see Status in AGENTS.md)',
+        });
       }
       if (d.endDate && d.endDate < d.date) {
         ctx.addIssue({ code: 'custom', path: ['endDate'], message: 'endDate is before date' });
@@ -230,13 +252,18 @@ const testimonials = defineCollection({
 /** Places programs meet; a program names one by its id in `venue`. */
 const venues = defineCollection({
   loader: file('src/content/venues.yaml'),
-  schema: z.object({
+  schema: z.strictObject({
+    /** What programs write in `venue`, e.g. "masjid-istiqlal". */
+    id: z.string().min(1),
     name: z.string().min(1),
     /** Street address, linked to a map on program pages. Only as the organisation gives it. */
     address: z.string().min(1).optional(),
-    /** The room programs meet in there, e.g. "Sabeel Classroom", shown as "Sabeel Classroom at Masjid Istiqlal". */
-    room: z.string().min(1).optional(),
-  }),
+    /**
+     * The room programs meet in there unless they name another, e.g. "Sabeel
+     * Classroom", shown as "Sabeel Classroom at Masjid Istiqlal".
+     */
+    usualRoom: z.string().min(1).optional(),
+  }, unknownField('venue')),
 });
 
 /**

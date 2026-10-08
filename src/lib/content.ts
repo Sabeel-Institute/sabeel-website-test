@@ -54,6 +54,12 @@ export const STATUS_LABEL = {
   completed: 'Program completed',
 } as const;
 
+/** The status as cards and pages show it; an open program anyone can come to says so. */
+export function statusLabel(program: Program): string {
+  const { status, registration } = program.data;
+  return status === 'open' && registration === 'none' ? 'No registration needed' : STATUS_LABEL[status];
+}
+
 const longDate = new Intl.DateTimeFormat('en-US', { dateStyle: 'long', timeZone: 'UTC' });
 
 export const FREQUENCY_LABEL: Record<(typeof PROGRAM_FREQUENCIES)[number], string> = {
@@ -92,10 +98,10 @@ export type Place = { label: string; map: string };
 export async function resolveLocation(program: Program): Promise<{ text: string; places: Place[] } | undefined> {
   const { venue, room, platform, format } = program.data;
   const venues = await Promise.all([venue ?? []].flat().map(async (ref) => (await getEntry(ref))!.data));
-  // A program's own room applies to its one venue; otherwise each venue shows the room programs meet in there.
+  // A program's own room is at its one venue; otherwise each venue shows its usual room.
   const onSite = venues
     .map((v) => {
-      const at = (venues.length === 1 && room) || v.room;
+      const at = room || v.usualRoom;
       return at ? `${at} at ${v.name}` : v.name;
     })
     .join(' and ');

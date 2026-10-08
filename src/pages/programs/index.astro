@@ -33,11 +33,11 @@ const notJoinable = [
 
 <BaseLayout
   title="Programs"
-  description="Programs for women, teens, and children at Sabeel Institute: what is open for registration now, our three program areas, and past programs."
+  description="Programs for women, teens, and children at Sabeel Institute: current programs, our three program areas, and past programs."
 >
   <PageHero eyebrow="Programs" title="Find your place to learn at Sabeel.">
     <p>
-      Explore programs now accepting registration, learn about our program areas, or browse previously offered
+      Explore current programs, learn about our program areas, or browse previously offered
       programs.
     </p>
     <Collage
@@ -60,18 +60,18 @@ const notJoinable = [
     </div>
   </section>
 
-  <!-- Now enrolling -->
-  <section class="border-t border-border py-14 md:py-16" aria-labelledby="enrolling-heading">
+  <!-- Current programs -->
+  <section class="border-t border-border py-14 md:py-16" aria-labelledby="current-heading">
     <div class="container-page">
-      <SectionHeading eyebrow="Now enrolling" title="Open for registration" id="enrolling-heading">
-        <p>Grouped by where they meet: online, on site in Houston, or both. Registration links, dates, and fees are on each program’s page.</p>
+      <SectionHeading eyebrow="Join us" title="Current programs" id="current-heading">
+        <p>Grouped by where they meet: online, on site in Houston, or both. How to join, dates, and fees are on each program’s page.</p>
       </SectionHeading>
       {
         current.length > 0 ? (
           <CurrentPrograms programs={current} />
         ) : (
           <p class="mt-10 rounded-card bg-surface p-7 text-ink-soft">
-            No programs are open for registration right now. Join the interest list to hear when the next ones open.
+            There are no current programs right now. Join the interest list to hear when the next ones open.
           </p>
         )
       }

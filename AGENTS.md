@@ -46,7 +46,7 @@ field.
 | Add a program | Programs → Recipes → Add a program |
 | New session of a monthly gathering | Programs → Recipes → Recurring gathering |
 | Images from the program's designers | Programs → Program images |
-| How people register, free or paid | Programs → Registration |
+| How people register: Zeffy, another site's form, or no registration | Programs → Registration |
 | Add, rename, or hide a person | Team |
 | Add a testimonial | Testimonials |
 | Add a place where programs meet | Venues |
@@ -148,7 +148,7 @@ the build stops if a folder is not a program on the site.
 ```mermaid
 stateDiagram-v2
   [*] --> upcoming: announced
-  upcoming --> open: registration opens
+  upcoming --> open: people can join
   [*] --> open
   open --> ongoing: series underway, still joinable
   open --> closed: registration closes, program continues
@@ -162,8 +162,8 @@ stateDiagram-v2
 
 | `status` | Use when | Shown as | Listed on | Its page offers |
 |---|---|---|---|---|
-| `open` | Registration is open | Registration open | Home, Programs, its area page | Register buttons (see Registration) |
-| `ongoing` | A series has begun and people can still join | Ongoing series | Same places, after open programs | Register buttons |
+| `open` | People can join: registration is open, or none is needed | Registration open, or No registration needed | Home, Programs, its area page | Register buttons, unless no registration is needed (see Registration) |
+| `ongoing` | A series has begun and people can still join | Ongoing series | Same places, after open programs | The same as `open` |
 | `closed` | Registration has closed; the program is still running | Registration closed | “Registration closed” on Programs and its area page | Join the Interest List |
 | `upcoming` | Announced; registration is not open yet | Coming soon | “Coming soon” on Programs and its area page | Join the Interest List |
 | `completed` | The program has ended | Program completed | Past Programs | Join the Interest List; kept as a record |
@@ -172,7 +172,8 @@ Current programs (open and ongoing) are listed open before ongoing, latest
 start date first; the home page shows the first three. When registration
 closes before a program ends, change only `status` to `closed`; when a program
 ends, change only `status` to `completed`. Keep every other field: the page
-stays up, its registration buttons go, and shared links keep working.
+stays up, its registration buttons go, and shared links keep working. A
+program without registration is never `closed`; the build stops if it is.
 
 ### Format
 
@@ -183,11 +184,15 @@ it. Where it meets is three fields, and the page words them:
 - `venue`: a place from `src/content/venues.yaml` by its id
   (`masjid-istiqlal`), or a list of them. Needed unless the program is online
   only.
-- `room`: the room at its one venue, only when it is not the venue's usual
-  room. A venue's usual room is in `venues.yaml`: programs at Masjid Istiqlal
-  meet in the Sabeel Classroom, shown as “Sabeel Classroom at Masjid
-  Istiqlal”.
+- `room`: the room at its one venue, only when it is not the venue's
+  `usualRoom` (see Venues). Programs at Masjid Istiqlal meet in the Sabeel
+  Classroom, shown as “Sabeel Classroom at Masjid Istiqlal”, unless they set
+  another room.
 - `platform`: the online platform (`Zoom`), shown as “online via Zoom”.
+
+`format` agrees with them: an `Online` program has no `venue`, and an
+`On-site` one has no `platform`. The build stops if they disagree, or if a
+program sets `room` without exactly one venue.
 
 The page's Location reads, for example, “Sabeel Classroom at Masjid Istiqlal
 or online via Zoom”, with each venue's address linked to a map.
@@ -210,9 +215,10 @@ Every program gets a page in one of two ways:
   Schedule · Location bar; “What students will learn” (`outcomes`) beside an
   “At a glance” panel; Instructor / What to expect / Policies cards; the
   Markdown body as “Program details”; the original flyer; a closing band
-  (“Ready to join?”, “Registration opens soon.”, or “Interested in a future
-  offering?” by status). Sections with no data are left out. Change the
-  template only when the change should apply to every program.
+  (“Ready to join?”; “Registration opens soon.”, or “Coming soon.” without
+  registration; or “Interested in a future offering?”, by status). Sections
+  with no data are left out. Change the template only when the change should
+  apply to every program.
 - **Bespoke.** A hand-designed page for a flagship program, like
   `/hikam-foundations/`. The program folder keeps the facts and adds
   `page: /hikam-foundations/`; the page file reads them with
@@ -234,10 +240,10 @@ takes its year from that program.
 
 Required for `open` and `ongoing`: `title`, `summary`, `area`, `date`,
 `audience`, `schedule`, `format`, `frequency`, `fee`, and `venue` unless the
-program is online only; a free program also needs `registerUrl` (see
-Registration). `closed` needs the same except `registerUrl`.
+program is online only. `closed` needs the same.
 `upcoming` needs `title`, `summary`, `area`, `date`, `audience`.
-`completed` needs `title`, `area`, `date`. Everything else is optional.
+`completed` needs `title`, `area`, `date`. Everything else is optional. The
+build stops on a field that is not in this table, naming it.
 
 | Field | Meaning | Example |
 |---|---|---|
@@ -257,8 +263,7 @@ Registration). `closed` needs the same except `registerUrl`.
 | `format` | See Format | `Online & on-site` |
 | `venue`, `room`, `platform` | Where it meets; see Format | `masjid-istiqlal`, `Sabeel Classroom`, `Zoom` |
 | `fee` | Price text | `$150`, `Free` |
-| `registerUrl` | A free program's registration form, copied exactly; paid programs have none | `https://forms.gle/…` |
-| `zeffyTicketing` | Zeffy form a paid program registers and pays through: the name after `/ticketing/` in its links (see Registration) | `anchored-hearts-sisters-circle` |
+| `registration` | How people join (see Registration): `none`, or on the line under it, `zeffy:` a Zeffy form or `link:` another site's form | `zeffy: anchored-hearts-sisters-circle` |
 | `deadline` | Registration deadline text | |
 | `prerequisites` | Materials or prerequisites | |
 | `outcomes` | Three to five things students will learn (list) | |
@@ -301,21 +306,34 @@ node -e "require('sharp')(process.argv[1]).webp({ quality: 90 }).toFile(process.
 
 ### Registration
 
-While a program is `open` or `ongoing`, its page has Register buttons, which
-work by its fee:
+`registration` says how people join a program, whatever its fee. While the
+program is `open` or `ongoing`, its page works by it:
 
-- **Paid** (any `fee` but `Free`): people register and pay through a
-  ticketing form on Zeffy (the organisation's Zeffy account), with a ticket
-  for each price; the form asks for their details. Set `zeffyTicketing` to
-  the name after `/ticketing/` in the form's links: for
+```yaml
+registration:
+  zeffy: anchored-hearts-sisters-circle
+```
+
+- **A Zeffy form** (`zeffy`), for most programs, free or paid: people
+  register, and pay if there is a fee, through a ticketing form in the
+  organisation's Zeffy account, with a ticket for each price ($0 when the
+  program is free); the form asks for their details. `zeffy` is the name
+  after `/ticketing/` in the form's links: for
   `https://www.zeffy.com/embed/ticketing/anchored-hearts-sisters-circle?modal=true`
   it is `anchored-hearts-sisters-circle`. Register opens the form in a
-  dialog. Until the form exists, leave `zeffyTicketing` out: Register then
-  opens a dialog saying the registration form is a work in progress. Ticket
-  names and prices are set on zeffy.com; keep `fee` the same as them. A paid
-  program has no `registerUrl`, and the build stops if it does.
-- **Free** (`fee: Free`): Register opens the program's own form,
-  `registerUrl`, in a new tab.
+  dialog. Ticket names and prices are set on zeffy.com; keep `fee` the same
+  as them.
+- **Another site's form** (`link`), for example a partner organisation's
+  Google Form: its full address, copied exactly
+  (`link: https://forms.gle/…`). Register opens it in a new tab.
+- **No registration** (`registration: none`): anyone can come. Cards and the
+  page say “No registration needed” in place of “Registration open”, the
+  page has no Register buttons, and Ask a Question is its main button.
+
+Until the form exists, leave `registration` out: Register then opens a
+dialog saying the registration form is a work in progress. Whatever the
+registration, a program whose `fee` is not `Free` also links to Financial
+Aid.
 
 The form's name is all the site needs; do not add Zeffy's embed code (its
 `zeffy-form-link` attribute and script) to a page.
@@ -347,9 +365,8 @@ still running, change only `status` to `closed`.
 program. Everything else about it stays as it is.
 
 **Recurring gathering** (for example Anchored Hearts): edit the same folder
-each cycle: `date`, `starts`, `zeffyTicketing` (when the session has its own
-Zeffy form; `registerUrl` for a free gathering), instructors, and the “This
-month” text.
+each cycle: `date`, `starts`, `registration` (when the session has its own
+form), instructors, and the “This month” text.
 Replace `flyer.webp` with the new flyer under the same name, and
 `image.webp` too if the artwork changed. The folder always describes the next
 session; earlier sessions are not kept.
@@ -396,7 +413,8 @@ Refer to people in programs by file name under `instructors`.
 ### Venues (`src/content/venues.yaml`)
 
 `id`, `name`, and optional `address`, as the organisation gives it, and
-optional `room`, the room programs meet in there. Programs name a venue by its
+optional `usualRoom`, the room programs meet in there unless they set their
+own `room`. Programs name a venue by its
 `id` in `venue`; program pages show the room and the venue's name and link the
 address to a map. Add a place here before a program uses it.
 
@@ -585,7 +603,7 @@ the 404 page.
 | `Gallery` | The row of photos from past programs on the home page (see Gallery) |
 | `Video` | A 16:9 or portrait video that downloads only when played: its cover, a play button, and its length, then the player with captions on (see Videos) |
 | `MailingListForm`, `InterestDialog` | Newsletter and interest-list sign-up. Any link with `data-interest` opens the dialog; `data-interest="<area>"` opens it with only that area ticked |
-| `ZeffyDialog` | A Zeffy form in a dialog: the donation form on Support, a paid program's registration form on its page, or a note that the form is a work in progress. A link with `data-zeffy="<id>"` opens the dialog with that `id` |
+| `ZeffyDialog` | A Zeffy form in a dialog: the donation form on Support, a program's registration form on its page, or a note that the form is a work in progress. A link with `data-zeffy="<id>"` opens the dialog with that `id` |
 | `Lightbox` | Enlarging flyers: links with `data-lightbox="<group>"` |
 | `SabeelDifference` | The three-column band on Home and About |
 | `Divider`, `Icon` | Gold diamond divider; inline icons (add new ones to `Icon.astro` using Lucide paths) |
@@ -651,7 +669,7 @@ belongs in a menu.
 
 ## Writing conventions
 
-- Sentence case for headings (“Open for registration”). Eyebrows are
+- Sentence case for headings (“What students will learn”). Eyebrows are
   uppercased by CSS, so write them in sentence case too.
 - “On-site” with a hyphen as a label or before a noun (“On-site programs”);
   two words when describing where people meet (“classes meet on site”).

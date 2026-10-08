@@ -7,7 +7,7 @@
 import { Image } from 'astro:assets';
 import Icon, { type IconName } from './Icon.astro';
 import { areas } from '../site.config';
-import { STATUS_LABEL, programHref, programYear, resolveInstructors, rhythmLabel, type Program } from '../lib/content';
+import { programHref, programYear, resolveInstructors, rhythmLabel, statusLabel, type Program } from '../lib/content';
 
 interface Props {
   program: Program;
@@ -19,7 +19,7 @@ const d = program.data;
 const href = programHref(program);
 const area = areas[d.area].label;
 const completed = d.status === 'completed';
-const eyebrow = completed ? `${programYear(program)} · ${area}` : `${STATUS_LABEL[d.status]} · ${area}`;
+const eyebrow = completed ? `${programYear(program)} · ${area}` : `${statusLabel(program)} · ${area}`;
 const teachers = completed ? (await resolveInstructors(d.instructors)).map((i) => i.name) : [];
 const details: { icon: IconName; label: string; value?: string }[] = [
   { icon: 'users', label: 'Audience', value: d.audience },
