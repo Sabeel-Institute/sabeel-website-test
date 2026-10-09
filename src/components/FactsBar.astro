@@ -1,48 +1,67 @@
 ---
-/** Row of labelled facts (Audience, Dates, Schedule, Location ...); a value can be several lines, and a fact can add links under it, such as map links. */
+/**
+ * Row of labelled facts (Audience, Dates, Schedule, Location, Fee ...). A
+ * value can be several lines; a fact can add map links, and a note that ends
+ * in a link, under it. Three to a row on wide screens (four when there are
+ * exactly four), two on tablets, one on phones; a short last row widens to
+ * fill it.
+ */
 import Icon from './Icon.astro';
 
 interface Props {
-  facts: { label: string; value?: string | readonly string[]; links?: { text: string; href: string }[] }[];
+  facts: {
+    label: string;
+    value?: string | readonly string[];
+    /** Addresses linked to a map. */
+    places?: { text: string; href: string }[];
+    /** A line under the value that ends in a link: "Need help with the fee? Financial aid". */
+    note?: { text: string; link: string; href: string };
+  }[];
   class?: string;
 }
 const { facts, class: className = '' } = Astro.props;
 const shown = facts.map((f) => ({ ...f, lines: [f.value ?? []].flat().filter(Boolean) })).filter((f) => f.lines.length);
+const width = shown.length === 4 ? 'lg:basis-1/4' : shown.length === 2 ? 'lg:basis-1/2' : 'lg:basis-1/3';
 ---
 
-<dl
-  class:list={[
-    'grid overflow-hidden rounded-card border border-gold/70 bg-surface sm:grid-cols-2',
-    shown.length >= 4 ? 'lg:grid-cols-4' : shown.length === 3 ? 'lg:grid-cols-3' : '',
-    className,
-  ]}
->
-  {
-    shown.map((f) => (
-      <div class="border-b border-gold/40 px-5 py-4 last:border-b-0 sm:border-r sm:[&:nth-child(2n)]:border-r-0 lg:border-b-0 lg:[&:nth-child(2n)]:border-r lg:last:border-r-0">
-        <dt class="text-sm text-ink-soft">{f.label}</dt>
-        <dd class="mt-0.5 space-y-1 text-[17px] font-semibold text-ink">
-          {f.lines.map((line) => (
-            <span class="block">{line}</span>
-          ))}
-        </dd>
-        {f.links?.map((l) => (
-          <dd class="mt-1">
-            <a
-              href={l.href}
-              target="_blank"
-              rel="noopener"
-              class="inline-flex gap-1.5 text-[15px] font-medium text-raspberry underline decoration-gold underline-offset-4 hover:decoration-raspberry"
-            >
-              <Icon name="map-pin" class="mt-[3px] size-4 shrink-0" />
-              <span>
-                {l.text}
-                <span class="sr-only"> (map, opens in a new tab)</span>
-              </span>
-            </a>
+<div class:list={['overflow-hidden rounded-card border border-gold/70 bg-surface', className]}>
+  {/* Each fact draws its right and bottom rules; the list's negative margins tuck the outer ones under the frame. */}
+  <dl class="-mr-px -mb-px flex flex-wrap">
+    {
+      shown.map((f) => (
+        <div class:list={['grow basis-full border-r border-b border-gold/40 px-5 py-4 sm:basis-1/2', width]}>
+          <dt class="text-sm text-ink-soft">{f.label}</dt>
+          <dd class="mt-0.5 space-y-1 text-[17px] font-semibold text-ink">
+            {f.lines.map((line) => (
+              <span class="block">{line}</span>
+            ))}
           </dd>
-        ))}
-      </div>
-    ))
-  }
-</dl>
+          {f.places?.map((l) => (
+            <dd class="mt-1">
+              <a
+                href={l.href}
+                target="_blank"
+                rel="noopener"
+                class="inline-flex gap-1.5 text-[15px] font-medium text-raspberry underline decoration-gold underline-offset-4 hover:decoration-raspberry"
+              >
+                <Icon name="map-pin" class="mt-[3px] size-4 shrink-0" />
+                <span>
+                  {l.text}
+                  <span class="sr-only"> (map, opens in a new tab)</span>
+                </span>
+              </a>
+            </dd>
+          ))}
+          {f.note && (
+            <dd class="mt-1.5 text-[15px] text-ink-soft">
+              {f.note.text}{' '}
+              <a href={f.note.href} class="font-medium text-raspberry underline decoration-gold underline-offset-4 hover:decoration-raspberry">
+                {f.note.link}
+              </a>
+            </dd>
+          )}
+        </div>
+      ))
+    }
+  </dl>
+</div>
