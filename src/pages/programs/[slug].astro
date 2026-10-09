@@ -23,6 +23,7 @@ import {
   assertProgramImages,
   programLocation,
   programSchedule,
+  renderCardText,
   resolveInstructors,
   statusLabel,
   type Instructor,
@@ -92,10 +93,12 @@ const facts = [
 ];
 const highlight = joinable ? d.highlight : undefined;
 /** Short cards beside the main text: who teaches, how it runs, the rules. */
-const cards: ({ title: string; instructors: Instructor[] } | { title: string; text: string })[] = [
+const expect = await renderCardText(program, 'expect');
+const policies = await renderCardText(program, 'policies');
+const cards: ({ title: string; instructors: Instructor[] } | { title: string; html: string })[] = [
   ...(instructors.length ? [{ title: instructors.length > 1 ? 'Instructors' : 'Instructor', instructors }] : []),
-  ...(d.expect ? [{ title: 'What to expect', text: d.expect }] : []),
-  ...(d.policies ? [{ title: 'Policies', text: d.policies }] : []),
+  ...(expect ? [{ title: 'What to expect', html: expect }] : []),
+  ...(policies ? [{ title: 'Policies', html: policies }] : []),
 ];
 const outcomes = d.outcomes ?? [];
 /**

@@ -346,8 +346,8 @@ optional. The build stops on a field that is not in this table, naming it.
 | `card` | One or two lines a card, or a Programs list, shows in place of its dates and times; see Cards | `2 years · Starts 2027` |
 | `outcomes` | Three to five things students will learn (list) | |
 | `instructors` | Team file names and/or inline guests `{ name, role, highlights }` | `sameera-shah` |
-| `expect` | Teaching format, activities, participation, and anything to bring or know first | |
-| `policies` | Attendance, refunds, recording, safeguarding | |
+| `expect` | Teaching format, activities, participation, and anything to bring or know first; Markdown without headings (see below) | |
+| `policies` | Attendance, refunds, recording, safeguarding; Markdown without headings (see below) | |
 | `image`, `imageAlt` | The program image, 16:9 (see Program images); alt text required with it | `./image.webp` |
 | `flyer` | Original flyer, US Letter portrait (see Program images) | `./flyer.webp` |
 | `page` | Bespoke page path | `/hikam-foundations/` |
@@ -368,8 +368,27 @@ In YAML, a line that contains “: ” must be in quotes.
 
 The Markdown body after the front matter is “Program details”, or “What to
 know” when the program has no `outcomes`. Use `##` and `###` headings (never
-`#`), `-` bullets, `**bold**`, and site-relative links that end in `/` (for
-example `/teachers-and-team/sameera-shah/`).
+`#`), `-` bullets, `1.` numbered lists, `**bold**`, `*italics*`, and
+site-relative links that end in `/` (for example
+`/teachers-and-team/sameera-shah/`).
+
+`expect` and `policies` take the same formatting except headings, which the
+build refuses there: each is a card with its own title. Write them as a YAML
+block, indented under the field, with a blank line between paragraphs and
+before a list:
+
+```yaml
+expect: |
+  Each session has three parts:
+
+  - **Nourish** — a halaqah
+  - **Connect** — a conversation with guests
+```
+
+Every other text field is plain: one line (`title`, `subtitle`, `summary`,
+`highlight`), one line or a list of lines (`audience`, `location`, `fee`,
+`deadline`), one or two lines (`card`), or a list of short points
+(`outcomes`).
 
 ### Program images
 
@@ -697,7 +716,7 @@ the 404 page.
 | `SectionHeading` | Section opening: `eyebrow`, `title`, gold divider; the default slot is aside text on the right |
 | `CtaBand` | Closing band: `title`, optional `eyebrow`, text and an `actions` slot |
 | `FactsBar` | A program's facts, three to a row (`facts=[{ label, value, places, note }]`): a value can be several lines, `places` are map links, `note` a line ending in a link |
-| `InfoCard` | A short card on a program page: its instructors, or a paragraph (What to expect, Policies) |
+| `InfoCard` | A short card on a program page: its instructors, or formatted text (What to expect, Policies) |
 | `ProgramCard` | A program's card: the same lines for every current program (see Cards); completed ones show year and summary |
 | `CurrentPrograms` | Current programs grouped by format |
 | `AreaCards` | The three program-area cards on Programs |

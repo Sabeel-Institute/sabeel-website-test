@@ -1,5 +1,6 @@
 import type { ImageMetadata } from 'astro';
 import { getCollection, getEntry, type CollectionEntry } from 'astro:content';
+import { satteri } from '@astrojs/markdown-satteri';
 import type { AreaId } from '../site.config';
 import { describeSchedule, type ScheduleText } from './schedule';
 
@@ -64,6 +65,26 @@ export const STATUS_LABEL = {
 export function statusLabel(program: Program): string {
   const { status, registration } = program.data;
   return status === 'open' && registration === 'none' ? 'No registration needed' : STATUS_LABEL[status];
+}
+
+/** Astro's own Markdown renderer, with the settings it renders a program's body with. */
+const markdown = satteri().createRenderer({ syntaxHighlight: false });
+
+/**
+ * A short Markdown field (`expect`, `policies`) as HTML for its card. Cards
+ * have their own title, so the build stops on a heading in one.
+ */
+export async function renderCardText(program: Program, field: 'expect' | 'policies'): Promise<string | undefined> {
+  const text = program.data[field];
+  if (!text) return undefined;
+  const html = (await (await markdown).render(text)).code;
+  if (/<h[1-6][\s>]/.test(html)) {
+    throw new Error(
+      `Program "${program.id}" has a heading in ${field}. A card's text has no headings: ` +
+        'use bold or a list, or move the section to the body (see Fields in AGENTS.md).',
+    );
+  }
+  return html;
 }
 
 /** Lines of text a field holds: one line, or a list of them. */
