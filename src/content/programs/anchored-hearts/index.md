@@ -12,7 +12,9 @@ audience: Women and youth girls
 format: On-site
 venue: masjid-istiqlal
 location: Sabeel Classroom at Masjid Istiqlal
-fee: Free
+fee:
+  - "Halaqa: free"
+  - "Optional activity: $15"
 financialAid: false
 registration:
   zeffy: anchored-hearts-sisters-circle
