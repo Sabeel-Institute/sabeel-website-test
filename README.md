@@ -16,3 +16,6 @@ for how to add or update them, how bespoke program pages work, and the design
 rules, and [docs/deployment.md](docs/deployment.md) for how deploys work and
 how to set them up or move them. Every pull request gets a preview and a
 visual comparison with `main`, linked in a comment on the pull request.
+
+Staff who ask an agent for changes can see everything a program's page and
+card can show in [docs/course-guide.md](docs/course-guide.md).

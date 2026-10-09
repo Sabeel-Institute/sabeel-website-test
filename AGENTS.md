@@ -3,6 +3,9 @@
 Read this whole file before changing anything. It explains how the site is
 built, the conventions every change follows, and how to keep changes easy to
 review and merge. Deployment has its own guide: [docs/deployment.md](docs/deployment.md).
+Staff who ask you for changes learn what a program can show from
+[docs/course-guide.md](docs/course-guide.md), so their requests use its
+words.
 
 ## What this is
 
@@ -829,13 +832,18 @@ Keep every change easy to review and merge:
    unrelated code, and do not rewrite whole files to change a few lines.
 4. **Do not commit** screenshots, notes, scratch files, `dist/`,
    `node_modules/`, or `.astro/`. Put screenshots in the pull-request
-   description instead.
+   description instead. The one exception is the staff guide's pictures in
+   `docs/course-guide/`.
 5. **Leave deployment alone** (`.github/workflows/`, `firebase.json` hosting
    settings, `.firebaserc`, `scripts/visual-diff/`) unless the task is about
    deploying; see docs/deployment.md. Adding a redirect for a moved page to
    `firebase.json` is fine.
 6. **Update docs with the change.** If you add a field, component, page, or
-   convention, update this file in the same pull request.
+   convention, update this file in the same pull request. If you change what
+   a program can show (a field, the program page, its card, or the
+   listings), also update the staff guide,
+   [docs/course-guide.md](docs/course-guide.md), and retake the pictures it
+   shows.
 7. **Verify** (below), then open a pull request that says what changed and
    why. A few minutes after its build passes, every pull request gets a
    comment with a preview link and a **Visual changes** line.

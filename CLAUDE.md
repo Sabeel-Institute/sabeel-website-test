@@ -54,6 +54,13 @@
   `@astrojs/markdown-satteri`, a direct dependency at the version Astro
   uses), so they format like the body. A heading in either fails the build
   there, from the rendered HTML, which catches every heading syntax.
+- `docs/course-guide.md` is the staff guide to the program template. Its
+  pictures in `docs/course-guide/` are WebP screenshots of the built site,
+  taken with Playwright at twice the pixel density, with the numbered
+  markers drawn into the page before each capture. States no program is in
+  (Coming soon, No registration needed, no form yet) come from a scratch copy
+  with sample settings, and the guide says so. The same guide is published
+  as a page for staff, which is updated from it.
 - `draft: true` programs are left out by `withStatus`, which every listing
   query uses, and by `getStaticPaths` in `programs/[slug].astro`, so they get
   no page and no listing. Drafts skip the bespoke-page and image checks.
