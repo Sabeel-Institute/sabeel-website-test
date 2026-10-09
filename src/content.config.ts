@@ -173,9 +173,9 @@ const programs = defineCollection({
         /** Three to five things students will learn. */
         outcomes: z.array(z.string().min(1)).min(1).max(8).optional(),
         instructors: z.array(instructor).min(1).optional(),
-        /** Teaching format, activities, homework, parent role, participation, and anything to bring or know first. */
+        /** Teaching format, activities, homework, parent role, participation, and anything to bring or know first; Markdown without headings. */
         expect: z.string().min(1).optional(),
-        /** Attendance, refunds, recording, accessibility, safeguarding. */
+        /** Attendance, refunds, recording, accessibility, safeguarding; Markdown without headings. */
         policies: z.string().min(1).optional(),
         /**
          * The program image: a 16:9 photograph or artwork (1920 × 1080 px), shown

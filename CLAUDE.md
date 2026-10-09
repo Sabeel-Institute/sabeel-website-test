@@ -49,6 +49,11 @@
   shows `location`, or the venues' names, and map links for every venue the
   program or its parts name: Google Maps search URLs built from a venue's
   name and address.
+- `expect` and `policies` are Markdown, rendered by `renderCardText`
+  (`src/lib/content.ts`) with Astro's own processor (`satteri()` from
+  `@astrojs/markdown-satteri`, a direct dependency at the version Astro
+  uses), so they format like the body. A heading in either fails the build
+  there, from the rendered HTML, which catches every heading syntax.
 - `draft: true` programs are left out by `withStatus`, which every listing
   query uses, and by `getStaticPaths` in `programs/[slug].astro`, so they get
   no page and no listing. Drafts skip the bespoke-page and image checks.
