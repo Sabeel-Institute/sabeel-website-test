@@ -4,10 +4,10 @@ title: MHC Open Day
 subtitle: Quran & Nasheeds
 summary: Open day of Quran recitation and nasheeds for boys under 15 at Masjid Arafat, with snacks served.
 area: youth-children
-date: '2026-04-12'
-dateApprox: true
+schedule:
+  - start: 2026-04-12
+    time: 12:00–1:30 PM
 audience: Boys
-schedule: Sunday, April 12, 12-1:30 PM
 format: On-site
 venue: masjid-arafat
 flyer: ./flyer.webp

@@ -3,14 +3,15 @@ status: ongoing
 title: Monthly Qur’an Room
 summary: A calm, reflective half hour with the Qur’an on the last Wednesday of every month — a space to reconnect with Allah’s words and build a consistent habit.
 area: womens-learning
-date: 2026-03-25
-starts: Last Wednesday of each month
+schedule:
+  - start: 2026-03-25
+    time: 10:00–10:30 AM
+    repeat: FREQ=MONTHLY;BYDAY=-1WE
 audience: Women
-schedule: Last Wednesday · 10:00–10:30 AM CT
-frequency: monthly
 format: Online
-platform: Zoom
+location: Online via Zoom
 fee: Free
+financialAid: false
 registration:
   zeffy: monthly-quran-room
 image: ./image.webp

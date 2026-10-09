@@ -4,13 +4,18 @@ title: Journey Through the Seerah
 subtitle: A Seerah Book Club and Seerah Conference for Kids
 summary: A summer Seerah book club and in-person conference for boys and girls ages 8-13 with Ustadhah Sameera Shah.
 area: youth-children
-date: '2025-06-04'
-dateApprox: true
+schedule:
+  - start: 2025-06-04
+    time: 4:00–5:00 PM
+    repeat: FREQ=WEEKLY;BYDAY=WE;UNTIL=20250625
+    label: Book club · Online
+  - start: 2025-06-28
+    time: 11:00 AM–1:00 PM
+    label: Conference
 audience: Children
-schedule: "Book Club: Wednesdays, June 4-25, 4-5 PM, online via Zoom; Conference: June 28, 11 AM-1 PM, at Masjid Arafat"
 format: Online & on-site
 venue: masjid-arafat
-platform: Zoom
+location: Masjid Arafat or online via Zoom
 instructors:
 - sameera-shah
 flyer: ./flyer.webp

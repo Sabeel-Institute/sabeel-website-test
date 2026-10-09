@@ -45,6 +45,8 @@ field, including a field the schema does not have.
 | Keep a program off the site for now | Programs → Recipes → Keep a program off the site |
 | Add a program | Programs → Recipes → Add a program |
 | New session of a monthly gathering | Programs → Recipes → Recurring gathering |
+| When a program meets: dates, days, times | Programs → Schedule |
+| Prices, an early-bird price | Programs → Fields |
 | Images from the program's designers | Programs → Program images |
 | How people register: Zeffy, another site's form, or no registration | Programs → Registration |
 | Add, rename, or hide a person | Team |
@@ -171,39 +173,113 @@ stateDiagram-v2
 Current programs (open and ongoing) are listed open before ongoing, latest
 start date first; the home page shows the first three. When registration
 closes before a program ends, change only `status` to `closed`; when a program
-ends, change only `status` to `completed`. Keep every other field: the page
-stays up, its registration buttons go, and shared links keep working. A
-program without registration is never `closed`; the build stops if it is.
+ends, change `status` to `completed` (and end a repeat that has no end; see
+Recipes). Keep every other field: the page stays up, its registration
+buttons go, and shared links keep working.
 
-### Format
+### Format and location
 
 `format` is `Online`, `On-site`, or `Online & on-site`. Programs and the area
 pages group current programs under these three headings, and each card shows
-it. Where it meets is three fields, and the page words them:
+it. Where it meets is two more fields:
 
 - `venue`: a place from `src/content/venues.yaml` by its id
-  (`masjid-istiqlal`), or a list of them. Needed unless the program is online
-  only.
-- `room`: the room at its one venue, only when it is not the venue's
-  `usualRoom` (see Venues). Programs at Masjid Istiqlal meet in the Sabeel
-  Classroom, shown as “Sabeel Classroom at Masjid Istiqlal”, unless they set
-  another room.
-- `platform`: the online platform (`Zoom`), shown as “online via Zoom”.
+  (`masjid-istiqlal`), or a list of them. A part of the schedule can name its
+  own (see Schedule).
+- `location`: where it meets, as the page says it: `Sabeel Classroom at
+  Masjid Istiqlal or online via Zoom`, `Online via Zoom`. Without it, the page
+  shows the venues' names.
 
-`format` agrees with them: an `Online` program has no `venue`, and an
-`On-site` one has no `platform`. The build stops if they disagree, or if a
-program sets `room` without exactly one venue.
+The page's Location shows `location`, then the address of every venue the
+program names, each linked to a map.
 
-The page's Location reads, for example, “Sabeel Classroom at Masjid Istiqlal
-or online via Zoom”, with each venue's address linked to a map.
+### Schedule
+
+`schedule` says when a program meets, as a list of parts. Each part has a
+first day, and as much of the rest as it needs:
+
+| Field | Meaning | Example |
+|---|---|---|
+| `start` | First day, `YYYY-MM-DD` | `2026-09-14` |
+| `time` | Central time as people read it; the site adds “CT”. Leave it out for an all-day event, or a time set by prayer (say so in `label`) | `12:00–1:30 PM`, `10:00 AM–1:00 PM`, `6:00 PM` |
+| `repeat` | How it repeats, as a calendar rule (below) | `FREQ=WEEKLY;BYDAY=MO;COUNT=7` |
+| `skip` | Dates the rule gives that do not take place | `[2026-11-26]` |
+| `end` | Last day of one continuous multi-day event, such as a camping trip. With `time`, the start time is on the first day and the end time on the last | `2026-07-12` |
+| `venue` | This part's place, when it is not the program's `venue` | `masjid-al-aqsa` |
+| `label` | A few words that set this part apart | `Book club`, `Girls 14+`, `Monthly` |
+
+```yaml
+schedule:
+  - start: 2026-09-14
+    time: 12:00–1:30 PM
+    repeat: FREQ=WEEKLY;BYDAY=MO;COUNT=7
+```
+
+A part without `repeat` or `end` is one session on `start`. An evening event
+that runs past midnight is written `11:45 PM–1:00 AM`. `repeat` is a rule in
+the form calendar apps use (iCalendar RRULE):
+
+| The program meets | `repeat` |
+|---|---|
+| 7 Mondays | `FREQ=WEEKLY;BYDAY=MO;COUNT=7` |
+| Tuesdays and Thursdays until March 28 | `FREQ=WEEKLY;BYDAY=TU,TH;UNTIL=20240328` |
+| Every other Sunday, 4 times | `FREQ=WEEKLY;INTERVAL=2;BYDAY=SU;COUNT=4` |
+| Monday to Thursday, for two weeks | `FREQ=WEEKLY;BYDAY=MO,TU,WE,TH;COUNT=8` |
+| 5 days in a row | `FREQ=DAILY;COUNT=5` |
+| The last Wednesday of each month, with no end | `FREQ=MONTHLY;BYDAY=-1WE` |
+| The third Friday of each month | `FREQ=MONTHLY;BYDAY=3FR` |
+
+`start` is the first session, so it is a day the rule gives. `COUNT` is the
+number of sessions and `UNTIL` the last day (`YYYYMMDD`); use one of them, or
+neither for a gathering that continues. A rule uses only `FREQ` (`DAILY`,
+`WEEKLY`, `MONTHLY`), `INTERVAL`, `COUNT`, `UNTIL`, `BYDAY`, and
+`BYMONTHDAY`. The build stops on any other part, a `start` the rule does not
+give, a `skip` that is not one of its dates, or a completed program whose
+rule has no end. To move one session, skip it and add a part for the new
+day.
+
+Several parts describe a program in pieces: blocks of dates, different days
+at different times, two places, or activities on the same nights (an
+activity after midnight starts on the next day):
+
+```yaml
+schedule:
+  - start: 2026-07-25
+    time: 4:45–7:45 PM
+    repeat: FREQ=DAILY;COUNT=4
+    venue: maryam-islamic-center
+  - start: 2026-07-29
+    time: 4:45–7:45 PM
+    repeat: FREQ=DAILY;COUNT=4
+    venue: masjid-al-aqsa
+```
+
+When the dates are not known, as for a program announced for a year or an
+old record, leave out `schedule` and give `date`: the first day, or a best
+guess. Pages then show only its year. A program has `schedule` or `date`,
+not both.
+
+Cards and pages word the schedule themselves: “Sept 14 – Oct 26 · 7
+sessions”, “Mondays · 12:00–1:30 PM CT”, “Last Wednesday of each month”.
+`label` adds your own words to a part's line.
 
 ### Cards
 
-Every current program's card shows the same lines, in this order: audience,
-schedule, how often (`frequency` and `duration`, “Weekly · 7 sessions”), and
-format. Dates, the venue, and the fee are on the program's page only. Write
-these fields exactly as the Fields table shows, so cards read alike; the
-build stops when a schedule or a length contains dates.
+Every current program's card shows the same lines, in this order: audience;
+the dates (“Sept 14 – Oct 26 · 7 sessions”, “Saturday, Oct 24”); the days and
+time, one line per part of the schedule (“Mondays · 12:00–1:30 PM CT”); and
+format. When the dates and times are too long for a card, or say too little,
+`card` gives one or two lines of your own in their place, on the card and in
+the Coming soon and Registration closed lists on Programs:
+
+```yaml
+card:
+  - July 25 – Aug 1 · two 4-day sessions
+  - 4:45–7:45 PM CT
+```
+
+The build cannot check `card` against the schedule, so keep it for the odd
+long case.
 
 ### Standard and bespoke pages
 
@@ -211,14 +287,14 @@ Every program gets a page in one of two ways:
 
 - **Standard (default).** `src/pages/programs/[slug].astro` builds the page
   from the fields, in a fixed order: status and area label, title, summary,
-  Register and Ask a Question buttons, photo; the Audience · Starts ·
-  Schedule · Location bar; “What students will learn” (`outcomes`) beside an
-  “At a glance” panel; Instructor / What to expect / Policies cards; the
-  Markdown body as “Program details”; the original flyer; a closing band
-  (“Ready to join?”; “Registration opens soon.”, or “Coming soon.” without
-  registration; or “Interested in a future offering?”, by status). Sections
-  with no data are left out. Change the template only when the change should
-  apply to every program.
+  `highlight`, Register and Ask a Question buttons, photo; the Audience ·
+  Dates · Schedule · Location bar; “What students will learn” (`outcomes`)
+  beside an “At a glance” panel; Instructor / What to expect / Policies
+  cards; the Markdown body as “Program details”; the original flyer; a
+  closing band (“Ready to join?”; “Registration opens soon.”, or “Coming
+  soon.” without registration; or “Interested in a future offering?”, by
+  status). Sections with no data are left out. Change the template only when
+  the change should apply to every program.
 - **Bespoke.** A hand-designed page for a flagship program, like
   `/hikam-foundations/`. The program folder keeps the facts and adds
   `page: /hikam-foundations/`; the page file reads them with
@@ -238,33 +314,29 @@ takes its year from that program.
 
 ### Fields
 
-Required for `open` and `ongoing`: `title`, `summary`, `area`, `date`,
-`audience`, `schedule`, `format`, `frequency`, `fee`, and `venue` unless the
-program is online only. `closed` needs the same.
-`upcoming` needs `title`, `summary`, `area`, `date`, `audience`.
-`completed` needs `title`, `area`, `date`. Everything else is optional. The
-build stops on a field that is not in this table, naming it.
+Every program needs `status`, `title`, `area`, and `schedule` or `date`.
+Until it is `completed` it also needs `summary`, and while it is `open` or
+`ongoing`, `format`, which decides where it is listed. Everything else is
+optional. The build stops on a field that is not in this table, naming it.
 
 | Field | Meaning | Example |
 |---|---|---|
 | `status` | See Status | `open` |
 | `title` | Name as on the flyer | `Mommy Burnout` |
 | `subtitle` | Tagline under the title | `A Journey from Burnout to Barakah` |
-| `summary` | One sentence: what students learn and why it matters (≤ 240 characters); used on cards and link previews | |
+| `summary` | One sentence: what students learn and why it matters; at the top of the page and in link previews | |
 | `area` | See Areas | `womens-learning` |
-| `date` | First session, `YYYY-MM-DD`; orders listings | `2026-09-14` |
-| `dateApprox` | `true` when only the year is known (shown as the year) | |
-| `starts` | Overrides how the start is shown | `Fall 2026`, `Last Wednesday of each month` |
+| `schedule` | When it meets; see Schedule | |
+| `date` | Only without a schedule: the first day or a best guess, `YYYY-MM-DD`; pages show its year | `2027-01-01` |
 | `audience` | Who may attend | `Adult women`, `Boys 12–16 · Girls 13+` |
-| `endDate` | Last session, `YYYY-MM-DD`; the page shows the dates from `date` to `endDate` | `2026-10-26` |
-| `schedule` | Days, then the time, without dates or frequency | `Mondays · 12:00–1:30 PM CT`, `Last Wednesday · 10:00–10:30 AM CT` |
-| `frequency` | `weekly`, `twice-monthly`, `monthly`, `daily`, or `once` | `weekly` |
-| `duration` | Length without dates; leave out for open-ended gatherings | `7 sessions`, `10 weeks`, `5 days` |
-| `format` | See Format | `Online & on-site` |
-| `venue`, `room`, `platform` | Where it meets; see Format | `masjid-istiqlal`, `Sabeel Classroom`, `Zoom` |
-| `fee` | Price text | `$150`, `Free` |
-| `registration` | How people join (see Registration): `none` (free programs only), or on the line under it, `zeffy:` a Zeffy form or `link:` another site's form | `zeffy: anchored-hearts-sisters-circle` |
-| `deadline` | Registration deadline text | |
+| `format` | See Format and location | `Online & on-site` |
+| `venue`, `location` | Where it meets; see Format and location | `masjid-istiqlal`, `Sabeel Classroom at Masjid Istiqlal` |
+| `fee` | Price as people should read it; one line per price | `$150`, `Free` |
+| `financialAid` | `false` leaves out the Financial aid link under Register, for a free program | `false` |
+| `registration` | How people join (see Registration): `none`, or on the line under it, `zeffy:` a Zeffy form or `link:` another site's form | `zeffy: anchored-hearts-sisters-circle` |
+| `deadline` | Registration deadline text | `Register by Wednesday, October 7` |
+| `highlight` | A short line above the Register button: an early-bird price, limited seats, a new date. Shown until registration closes | `Register by October 20 and save $5.` |
+| `card` | One or two lines a card, or a Programs list, shows in place of its dates and times; see Cards | `2 years · Starts 2027` |
 | `prerequisites` | Materials or prerequisites | |
 | `outcomes` | Three to five things students will learn (list) | |
 | `instructors` | Team file names and/or inline guests `{ name, role, highlights }` | `sameera-shah` |
@@ -274,6 +346,19 @@ build stops on a field that is not in this table, naming it.
 | `flyer` | Original flyer, US Letter portrait (see Program images) | `./flyer.webp` |
 | `page` | Bespoke page path | `/hikam-foundations/` |
 | `draft` | `true` keeps the program in the repository but off the site: no page, no listing | |
+
+`audience`, `location`, `fee`, and `deadline` are one line, or a list of
+lines shown one under another. Write a price that changes on a date with its
+date, so it stays true after the date passes:
+
+```yaml
+fee:
+  - $30 early bird, through Oct 20
+  - $35 from Oct 21
+highlight: Register by October 20 and save $5.
+```
+
+In YAML, a line that contains “: ” must be in quotes.
 
 The Markdown body after the front matter is “Program details”. Use `##` and
 `###` headings (never `#`), `-` bullets, `**bold**`, and site-relative links
@@ -327,17 +412,15 @@ registration:
   Google Form: its full address, starting with `https://`, copied exactly
   (`link: https://forms.gle/…`). Register opens it in a new tab. A Zeffy
   form is always `zeffy`, never `link`.
-- **No registration** (`registration: none`), only for a free program that
-  anyone can come to. Cards and the page say “No registration needed” in
-  place of “Registration open”, the page has no Register buttons, and Ask a
-  Question is its main button. Such a program has no `deadline`. A program
-  with a fee always takes registration: the build stops on `none` with any
-  `fee` but `Free`.
+- **No registration** (`registration: none`), for a program anyone can come
+  to. Cards and the page say “No registration needed” in place of
+  “Registration open”, the page has no Register buttons, and Ask a Question
+  is its main button.
 
 Until the form exists, leave `registration` out: Register then opens a
-dialog saying the registration form is a work in progress. Whatever the
-registration, a program whose `fee` is not `Free` also links to Financial
-Aid.
+dialog saying the registration form is a work in progress. Under the
+Register button, the page links to Financial Aid, unless the program sets
+`financialAid: false`, as a free program does.
 
 The form's name is all the site needs; do not add Zeffy's embed code (its
 `zeffy-form-link` attribute and script) to a page.
@@ -363,24 +446,37 @@ The form's name is all the site needs; do not add Zeffy's embed code (its
 **Close registration early.** When registration closes while the program is
 still running, change only `status` to `closed`.
 
-**Retire a program.** Change only `status` to `completed`.
+**Retire a program.** Change `status` to `completed` and keep every other
+field. A gathering that repeats with no end also gets `UNTIL`, its last day,
+in its rule.
 
 **Keep a program off the site.** Add `draft: true`; remove it to publish the
 program. Everything else about it stays as it is.
 
-**Recurring gathering** (for example Anchored Hearts): edit the same folder
-each cycle: `date`, `starts`, `registration` (when the session has its own
-form), instructors, and the “This month” text.
+**Recurring gathering.** A gathering on a fixed day, such as the last
+Wednesday of each month, has one repeating part in `schedule` and needs no
+edit each month. For one whose day is set each time (for example Anchored
+Hearts), edit the same folder each cycle: the one part of `schedule`, the
+next session with `label: Monthly`; `registration` (when the session has its
+own form); instructors; and the “This month” text.
 Replace `flyer.webp` with the new flyer under the same name, and
 `image.webp` too if the artwork changed. The folder always describes the next
 session; earlier sessions are not kept.
 
 **Archive-only record** (a past program that only has a flyer): a folder with
-`status: completed`, `title`, `area`, `date` (plus `dateApprox: true` if only
-the year is known), optionally `subtitle`, `summary`, `audience`, `schedule`,
-`format`, `venue`, `instructors`, and `flyer`. No body.
+`status: completed`, `title`, `area`, `schedule` from the flyer (or `date`
+when its dates are not known), optionally `subtitle`, `summary`,
+`audience`, `format`, `venue`, `location`, `instructors`, and `flyer`. No
+body. Its year is the one the organisation gives, as in its folder name.
+When the flyer's weekday does not fall on its date in that year, keep the
+weekday and the month, and use the nearest day of that month with that
+weekday. A flyer that prints neither a year nor a weekday gets `date` only,
+so its page shows only the year; one that gives a start but no end gets that
+first session only, with `label: First session`. Nights of Ramadan follow
+the calculated calendar (Fiqh Council of North America), as Sabeel's flyers
+do: the 21st night of Ramadan 2025 was the evening of March 20.
 
-**Add a new program field.** Add it to the shared `fields` object in
+**Add a new program field.** Add it to the program schema in
 `src/content.config.ts` as optional, with a one-line comment; render it in the
 standard template (and in bespoke pages that need it); add a row to the Fields
 table above; use it in at least one program. Existing programs must stay
@@ -416,11 +512,10 @@ Refer to people in programs by file name under `instructors`.
 
 ### Venues (`src/content/venues.yaml`)
 
-`id`, `name`, and optional `address`, as the organisation gives it, and
-optional `usualRoom`, the room programs meet in there unless they set their
-own `room`. Programs name a venue by its
-`id` in `venue`; program pages show the room and the venue's name and link the
-address to a map. Add a place here before a program uses it.
+`id`, `name`, and optional `address`, as the organisation gives it. Programs
+name a venue by its `id` in `venue`, or in a part of their `schedule`;
+program pages link the address to a map. Add a place here before a program
+uses it.
 
 ### Testimonials (`src/content/testimonials.yaml`)
 
@@ -615,9 +710,11 @@ the 404 page.
 Queries and helpers in `src/lib/content.ts`: `getCurrentPrograms(area?)`,
 `getUpcomingPrograms(area?)`, `getClosedPrograms(area?)`,
 `getCompletedPrograms(area?)`, `programHref`, `statusLabel` (a program's
-status as cards and pages show it), `STATUS_LABEL`, `startLabel`,
-`programYear`, `resolveInstructors`, `getGalleryPhotos`, `getTeamGroup`,
-`displayName`, `teamHasPage`, `excerpt`.
+status as cards and pages show it), `STATUS_LABEL`, `programSchedule` (the
+schedule as cards and pages word it), `programLocation`, `firstDay`,
+`programYear`, `asLines`, `resolveInstructors`, `getGalleryPhotos`,
+`getTeamGroup`, `displayName`, `teamHasPage`, `excerpt`. `src/lib/schedule.ts`
+reads and words schedules.
 
 **A new page** is a file in `src/pages/` wrapped in `BaseLayout`, opening with
 `PageHero`, with sections that open with `SectionHeading`, and ending with a

@@ -1,13 +1,13 @@
 ---
-/** Row of labelled facts (Audience, Starts, Schedule, Location ...); a fact can add links under its value, such as map links. */
+/** Row of labelled facts (Audience, Dates, Schedule, Location ...); a value can be several lines, and a fact can add links under it, such as map links. */
 import Icon from './Icon.astro';
 
 interface Props {
-  facts: { label: string; value?: string; links?: { text: string; href: string }[] }[];
+  facts: { label: string; value?: string | readonly string[]; links?: { text: string; href: string }[] }[];
   class?: string;
 }
 const { facts, class: className = '' } = Astro.props;
-const shown = facts.filter((f) => f.value);
+const shown = facts.map((f) => ({ ...f, lines: [f.value ?? []].flat().filter(Boolean) })).filter((f) => f.lines.length);
 ---
 
 <dl
@@ -21,7 +21,11 @@ const shown = facts.filter((f) => f.value);
     shown.map((f) => (
       <div class="border-b border-gold/40 px-5 py-4 last:border-b-0 sm:border-r sm:[&:nth-child(2n)]:border-r-0 lg:border-b-0 lg:[&:nth-child(2n)]:border-r lg:last:border-r-0">
         <dt class="text-sm text-ink-soft">{f.label}</dt>
-        <dd class="mt-0.5 text-[17px] font-semibold text-ink">{f.value}</dd>
+        <dd class="mt-0.5 space-y-1 text-[17px] font-semibold text-ink">
+          {f.lines.map((line) => (
+            <span class="block">{line}</span>
+          ))}
+        </dd>
         {f.links?.map((l) => (
           <dd class="mt-1">
             <a

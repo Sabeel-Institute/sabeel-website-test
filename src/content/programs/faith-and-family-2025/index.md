@@ -4,10 +4,11 @@ title: Faith & Family
 subtitle: Tafsir of Surah Aal e Imran & Positive Parenting
 summary: A free ladies-only course combining tafsir of Surah Aal e Imran with positive parenting guidance.
 area: womens-learning
-date: '2025-09-06'
-dateApprox: true
+schedule:
+  - start: 2025-09-06
+    time: 11:00 AM–1:00 PM
+    repeat: FREQ=WEEKLY;BYDAY=SA;UNTIL=20251213
 audience: Women
-schedule: Sept 6th - Dec 13th, Saturdays, 11:00 AM-1:00 PM
 format: On-site
 venue: maryam-islamic-center
 flyer: ./flyer.webp

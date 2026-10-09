@@ -4,12 +4,12 @@ title: Introduction to Stocks & Investments – The Halal Way
 subtitle: Let’s Invest Your First $50
 summary: A beginner-friendly, sisters-only workshop exploring the basics of stocks and investing through a halal and ethical lens.
 area: womens-learning
-date: 2026-10-24
+schedule:
+  - start: 2026-10-24
+    time: 3:00–5:00 PM
 audience: Women
-schedule: Saturday · 3:00–5:00 PM CT
-frequency: once
 format: Online
-platform: Zoom
+location: Online via Zoom
 fee: $50
 registration:
   zeffy: introduction-to-stocks-and-investments-the-halal-way

@@ -4,14 +4,14 @@ title: Teen Sundays
 subtitle: "Surah Yusuf: Trusting Allah When Life Doesn’t Make Sense"
 summary: A twice-monthly Qur’an program where teens explore Surah Yusuf and what it teaches about resilience, patience, identity, forgiveness, and trust in Allah’s plan.
 area: youth-children
-date: 2026-09-13
-endDate: 2026-10-25
+schedule:
+  - start: 2026-09-13
+    time: 2:15–4:15 PM
+    repeat: FREQ=WEEKLY;INTERVAL=2;BYDAY=SU;COUNT=4
 audience: Boys 12–16 · Girls 13+
-schedule: Sundays · 2:15–4:15 PM CT
-frequency: twice-monthly
 format: On-site
 venue: masjid-istiqlal
-duration: 4 sessions
+location: Sabeel Classroom at Masjid Istiqlal
 fee: $100
 outcomes:
   - How to stay strong when life feels uncertain

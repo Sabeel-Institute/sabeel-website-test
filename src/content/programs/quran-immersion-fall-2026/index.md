@@ -4,15 +4,17 @@ title: Quran Immersion
 subtitle: Fall Semester · Arabic Grammar, Tafsir, Tajweed
 summary: A 10-week course that builds your foundations in Qur’anic Arabic, tafsir, and tajweed through Surah Qaf — and prepares you for Hikam Foundations.
 area: womens-learning
-date: 2026-09-17
-endDate: 2026-11-19
+schedule:
+  - start: 2026-09-17
+    time: 10:00 AM–1:00 PM
+    repeat: FREQ=WEEKLY;BYDAY=TH;COUNT=10
 audience: Women and youth girls
-schedule: Thursdays · 10:00 AM–1:00 PM CT
-frequency: weekly
 format: Online & on-site
 venue: masjid-istiqlal
-duration: 10 sessions
-fee: $50 in person · $75 online
+location: Sabeel Classroom at Masjid Istiqlal or online
+fee:
+  - $50 in person
+  - $75 online
 outcomes:
   - Arabic grammar step by step, using the primer 10 Lessons of Arabic (Das Sabaq)
   - The themes of faith, reflection, and resurrection in Surah Qaf
