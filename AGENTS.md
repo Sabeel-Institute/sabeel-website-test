@@ -286,15 +286,23 @@ long case.
 Every program gets a page in one of two ways:
 
 - **Standard (default).** `src/pages/programs/[slug].astro` builds the page
-  from the fields, in a fixed order: status and area label, title, summary,
-  `highlight`, Register and Ask a Question buttons, photo; the Audience ·
-  Dates · Schedule · Location bar; “What students will learn” (`outcomes`)
-  beside an “At a glance” panel; Instructor / What to expect / Policies
-  cards; the Markdown body as “Program details”; the original flyer; a
-  closing band (“Ready to join?”; “Registration opens soon.”, or “Coming
-  soon.” without registration; or “Interested in a future offering?”, by
-  status). Sections with no data are left out. Change the template only when
-  the change should apply to every program.
+  from the fields, in a fixed order:
+  1. Status and area label, title, summary, `highlight`, Register and Ask a
+     Question buttons, photo.
+  2. The facts: Audience, Dates, Schedule, Location, Fee (with the Financial
+     aid link under it while people can join), and Registration deadline.
+  3. “About this program”. A program with `outcomes` or a Markdown body
+     shows “What students will learn” (or the body as “What to know”), then
+     the Instructor, What to expect, Before you join, and Policies cards,
+     then the body as “Program details”, with the original flyer pinned
+     beside them. A program with neither shows its flyer with the cards
+     beside it.
+  4. A closing band (“Ready to join?”; “Registration opens soon.”, or
+     “Coming soon.” without registration; or “Interested in a future
+     offering?”, by status).
+
+  Sections with no data are left out. Change the template only when the
+  change should apply to every program.
 - **Bespoke.** A hand-designed page for a flagship program, like
   `/hikam-foundations/`. The program folder keeps the facts and adds
   `page: /hikam-foundations/`; the page file reads them with
@@ -332,12 +340,12 @@ optional. The build stops on a field that is not in this table, naming it.
 | `format` | See Format and location | `Online & on-site` |
 | `venue`, `location` | Where it meets; see Format and location | `masjid-istiqlal`, `Sabeel Classroom at Masjid Istiqlal` |
 | `fee` | Price as people should read it; one line per price | `$150`, `Free` |
-| `financialAid` | `false` leaves out the Financial aid link under Register, for a free program | `false` |
+| `financialAid` | `false` leaves out the Financial aid link under the fee, for a free program | `false` |
 | `registration` | How people join (see Registration): `none`, or on the line under it, `zeffy:` a Zeffy form or `link:` another site's form | `zeffy: anchored-hearts-sisters-circle` |
 | `deadline` | Registration deadline text | `Register by Wednesday, October 7` |
 | `highlight` | A short line above the Register button: an early-bird price, limited seats, a new date. Shown until registration closes | `Register by October 20 and save $5.` |
 | `card` | One or two lines a card, or a Programs list, shows in place of its dates and times; see Cards | `2 years · Starts 2027` |
-| `prerequisites` | Materials or prerequisites | |
+| `prerequisites` | Materials or prerequisites, shown as a “Before you join” card | `Bring a mushaf` |
 | `outcomes` | Three to five things students will learn (list) | |
 | `instructors` | Team file names and/or inline guests `{ name, role, highlights }` | `sameera-shah` |
 | `expect` | Teaching format, activities, participation | |
@@ -360,9 +368,10 @@ highlight: Register by October 20 and save $5.
 
 In YAML, a line that contains “: ” must be in quotes.
 
-The Markdown body after the front matter is “Program details”. Use `##` and
-`###` headings (never `#`), `-` bullets, `**bold**`, and site-relative links
-that end in `/` (for example `/teachers-and-team/sameera-shah/`).
+The Markdown body after the front matter is “Program details”, or “What to
+know” when the program has no `outcomes`. Use `##` and `###` headings (never
+`#`), `-` bullets, `**bold**`, and site-relative links that end in `/` (for
+example `/teachers-and-team/sameera-shah/`).
 
 ### Program images
 
@@ -418,9 +427,9 @@ registration:
   is its main button.
 
 Until the form exists, leave `registration` out: Register then opens a
-dialog saying the registration form is a work in progress. Under the
-Register button, the page links to Financial Aid, unless the program sets
-`financialAid: false`, as a free program does.
+dialog saying the registration form is a work in progress. Under the fee,
+the page links to Financial Aid while people can join, unless the program
+sets `financialAid: false`, as a free program does.
 
 The form's name is all the site needs; do not add Zeffy's embed code (its
 `zeffy-form-link` attribute and script) to a page.
@@ -689,7 +698,8 @@ the 404 page.
 | `PageHero` | Page opening: `eyebrow`, `title`, lead text (default slot), `actions` slot, and optionally a photo slot or `media` slot beside the text, or an `aside` slot of further text beside a larger lead |
 | `SectionHeading` | Section opening: `eyebrow`, `title`, gold divider; the default slot is aside text on the right |
 | `CtaBand` | Closing band: `title`, optional `eyebrow`, text and an `actions` slot |
-| `FactsBar` | Labelled facts row (`facts=[{ label, value }]`) |
+| `FactsBar` | A program's facts, three to a row (`facts=[{ label, value, places, note }]`): a value can be several lines, `places` are map links, `note` a line ending in a link |
+| `InfoCard` | A short card on a program page: its instructors, or a paragraph (What to expect, Before you join, Policies) |
 | `ProgramCard` | A program's card: the same lines for every current program (see Cards); completed ones show year and summary |
 | `CurrentPrograms` | Current programs grouped by format |
 | `AreaCards` | The three program-area cards on Programs |

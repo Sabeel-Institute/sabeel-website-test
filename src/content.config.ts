@@ -129,7 +129,7 @@ const programs = defineCollection({
         location: lines('location').optional(),
         /** Price as people should read it, e.g. "$150", or one line per price. */
         fee: lines('fee').optional(),
-        /** false leaves out the Financial aid link under Register, for a free program. */
+        /** false leaves out the Financial aid link under the fee, for a free program. */
         financialAid: z.boolean().default(true),
         /**
          * How people join: `{ zeffy: <name> }`, the Zeffy ticketing form named
@@ -170,7 +170,7 @@ const programs = defineCollection({
         highlight: z.string().min(1).optional(),
         /** One or two lines a card, or a Programs list, shows in place of its dates and times. */
         card: z.union([z.string().min(1), z.array(z.string().min(1)).min(1).max(2)]).optional(),
-        /** Materials or prerequisites. */
+        /** Materials or prerequisites, shown as a "Before you join" card. */
         prerequisites: z.string().min(1).optional(),
         /** Three to five things students will learn. */
         outcomes: z.array(z.string().min(1)).min(1).max(8).optional(),

@@ -11,6 +11,7 @@ import Divider from '../../components/Divider.astro';
 import Icon from '../../components/Icon.astro';
 import Photo from '../../components/Photo.astro';
 import FactsBar from '../../components/FactsBar.astro';
+import InfoCard from '../../components/InfoCard.astro';
 import CtaBand from '../../components/CtaBand.astro';
 import Lightbox from '../../components/Lightbox.astro';
 import ZeffyDialog from '../../components/ZeffyDialog.astro';
@@ -24,6 +25,7 @@ import {
   programSchedule,
   resolveInstructors,
   statusLabel,
+  type Instructor,
   type Program,
 } from '../../lib/content';
 
@@ -73,27 +75,35 @@ const instructors = await resolveInstructors(d.instructors);
 const flyerFull = d.flyer ? await getImage({ src: d.flyer, width: 1600 }) : undefined;
 const when = await programSchedule(program);
 const location = await programLocation(program);
-const outcomesFirst = Boolean(d.outcomes?.length);
-/** Flyer-only records put the flyer in the About column instead of repeating the summary. */
-const flyerInAbout = !outcomesFirst && !body && Boolean(flyerFull);
-const glance = [
-  { icon: 'calendar', label: 'Length', value: when.length },
-  { icon: 'users', label: instructors.length > 1 ? 'Instructors' : 'Instructor', value: completed ? undefined : instructors.map((i) => i.name).join(', ') },
-  { icon: 'tag', label: 'Fee', value: completed ? undefined : d.fee },
-  { icon: 'check', label: 'Registration', value: noRegistration && !completed ? 'Not needed' : undefined },
-  { icon: 'book-open', label: 'Materials & prerequisites', value: d.prerequisites },
-  { icon: 'clock', label: 'Registration deadline', value: completed || closed ? undefined : d.deadline },
-]
-  .map((r) => ({ ...r, lines: asLines(r.value) }))
-  .filter((r) => r.lines.length);
-/** The highlight line is about joining, so it goes once registration has closed. */
-const highlight = completed || closed ? undefined : d.highlight;
-const showGlance = glance.length > 0 || registering;
-const cards = [
-  instructors.length > 0 && 'instructor',
-  d.expect && 'expect',
-  d.policies && 'policies',
-].filter(Boolean);
+/** Joining facts (fee, deadline, highlight) go once registration has closed. */
+const joinable = !completed && !closed;
+/** Every fact about the program, in one block under the opening. */
+const facts = [
+  { label: 'Audience', value: d.audience },
+  { label: 'Dates', value: when.length ? [when.pageDates, when.length] : when.pageDates },
+  { label: 'Schedule', value: when.pageLines },
+  { label: 'Location', value: location.lines, places: location.places.map((p) => ({ text: p.label, href: p.map })) },
+  {
+    label: 'Fee',
+    value: completed ? undefined : d.fee,
+    note: joinable && d.financialAid ? { text: 'Need help with the fee?', link: 'Financial aid', href: '/financial-aid/' } : undefined,
+  },
+  { label: 'Registration deadline', value: joinable ? d.deadline : undefined },
+];
+const highlight = joinable ? d.highlight : undefined;
+/** Short cards beside the main text: who teaches, how it runs, what to bring, the rules. */
+const cards: ({ title: string; instructors: Instructor[] } | { title: string; text: string })[] = [
+  ...(instructors.length ? [{ title: instructors.length > 1 ? 'Instructors' : 'Instructor', instructors }] : []),
+  ...(d.expect ? [{ title: 'What to expect', text: d.expect }] : []),
+  ...(d.prerequisites ? [{ title: 'Before you join', text: d.prerequisites }] : []),
+  ...(d.policies ? [{ title: 'Policies', text: d.policies }] : []),
+];
+const outcomes = d.outcomes ?? [];
+/**
+ * A program with text of its own (outcomes or a body) leads with it and keeps
+ * its flyer beside it; one without leads with its flyer, the cards beside it.
+ */
+const textLead = outcomes.length > 0 || Boolean(body);
 ---
 
 <BaseLayout title={d.title} description={d.summary ?? d.subtitle ?? d.title} shareImage={d.image ?? d.flyer}>
@@ -149,163 +159,104 @@ const cards = [
   <!-- Key facts -->
   <section class="py-8 md:py-10">
     <div class="container-page">
-      <FactsBar
-        facts={[
-          { label: 'Audience', value: d.audience },
-          { label: 'Dates', value: when.pageDates },
-          { label: 'Schedule', value: when.pageLines },
-          { label: 'Location', value: location.lines, links: location.places.map((p) => ({ text: p.label, href: p.map })) },
-        ]}
-      />
+      <FactsBar facts={facts} />
     </div>
   </section>
 
-  <!-- What students will learn + at a glance -->
-  <section class="border-y border-border py-12 md:py-16">
-    <div class:list={['container-page grid gap-10', showGlance && 'lg:grid-cols-[1.2fr_1fr] lg:gap-14']}>
-      <div>
-        <p class="eyebrow">About this program</p>
-        {
-          outcomesFirst ? (
-            <>
-              <h2 class="display-md mt-1">What students will learn</h2>
-              <Divider class="mt-4" />
-              <div class="prose-sabeel mt-6 text-[17px]">
-                <ul>
-                  {d.outcomes!.map((o) => (
-                    <li>{o}</li>
-                  ))}
-                </ul>
-              </div>
-            </>
-          ) : (
-            <>
-              <h2 class="display-md mt-1">{flyerInAbout ? 'Original flyer' : completed ? 'About the program' : 'What to know'}</h2>
-              <Divider class="mt-4" />
-              {flyerInAbout && flyerFull && d.flyer ? (
-                <a
-                  href={flyerFull.src}
-                  data-lightbox="flyer"
-                  data-title={d.title}
-                  data-alt={`Flyer for ${d.title}`}
-                  class="group relative mt-6 block max-w-[480px] overflow-hidden rounded-sm border border-border shadow-card"
-                >
-                  <Image src={d.flyer} alt={`Original flyer for ${d.title}`} widths={[480, 960]} sizes="480px" class="w-full" />
-                  <span class="absolute right-3 bottom-3 flex items-center gap-1.5 rounded-full bg-surface/95 px-3 py-1.5 text-sm font-medium text-ink shadow-card">
-                    <Icon name="zoom-in" class="size-4" /> Enlarge
-                  </span>
-                </a>
-              ) : (
-                <div class="prose-sabeel mt-6 text-[17px] leading-[1.8]">
-                  {body ? <Content /> : <p>{d.summary}</p>}
-                </div>
-              )}
-            </>
-          )
-        }
-      </div>
-
-      {showGlance && (
-      <aside class="self-start rounded-card border border-gold/70 border-t-4 border-t-gold bg-surface p-6 sm:p-8" aria-labelledby="glance-heading">
-        <h2 id="glance-heading" class="font-display text-2xl font-bold text-raspberry">At a glance</h2>
-        <dl class="mt-4 divide-y divide-border text-[15px]">
-          {
-            glance.map((r) => (
-              <div class="grid grid-cols-[1.5rem_1fr] gap-3 py-3">
-                <Icon name={r.icon as 'tag'} class="mt-0.5 size-5 text-gold-text" />
+  <!-- About the program: its text with the flyer beside it, or its flyer with the cards beside it -->
+  {
+    (textLead || cards.length > 0 || flyerFull) && (
+      <section class="border-y border-border py-12 md:py-16">
+        <div class:list={['container-page grid gap-12', textLead && flyerFull && 'lg:grid-cols-[minmax(0,1fr)_340px] lg:gap-16']}>
+          <div class="min-w-0">
+            <p class="eyebrow">About this program</p>
+            {textLead ? (
+              <div class="space-y-12">
                 <div>
-                  <dt class="text-sm text-ink-soft">{r.label}</dt>
-                  <dd class="space-y-1 font-medium text-ink">
-                    {r.lines.map((line) => (
-                      <span class="block">{line}</span>
-                    ))}
-                  </dd>
+                  <h2 class="display-md mt-1">{outcomes.length ? 'What students will learn' : completed ? 'About the program' : 'What to know'}</h2>
+                  <Divider class="mt-4" />
+                  {outcomes.length ? (
+                    <div class="prose-sabeel mt-6 text-[17px]">
+                      <ul>
+                        {outcomes.map((o) => (
+                          <li>{o}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  ) : (
+                    <div class="prose-sabeel mt-6 text-[17px] leading-[1.8]">
+                      <Content />
+                    </div>
+                  )}
                 </div>
+                {cards.length > 0 && (
+                  <div class:list={['grid gap-5', cards.length > 1 && 'sm:grid-cols-2', !flyerFull && cards.length > 2 && 'lg:grid-cols-3']}>
+                    {cards.map((c, i) => (
+                      <InfoCard
+                        {...c}
+                        class:list={[
+                          // An odd last card takes the whole row.
+                          cards.length > 1 && cards.length % 2 === 1 && i === cards.length - 1 && 'sm:col-span-2',
+                          !flyerFull && cards.length === 3 && 'lg:col-span-1',
+                        ]}
+                      />
+                    ))}
+                  </div>
+                )}
+                {outcomes.length > 0 && body && (
+                  <div>
+                    <h2 class="display-md">Program details</h2>
+                    <Divider class="mt-4" />
+                    <div class="prose-sabeel mt-6 max-w-[46rem] text-[17px] leading-[1.8]">
+                      <Content />
+                    </div>
+                  </div>
+                )}
               </div>
-            ))
-          }
-        </dl>
-        {
-          register && (
-            <>
-              <a {...register} class="btn btn-primary mt-5 w-full text-base">
-                Register {link && <Icon name="external" class="size-4" />}
-              </a>
-              {d.financialAid && (
-                <p class="mt-3 text-center text-sm text-ink-soft">
-                  Need help with the fee?{' '}
-                  <a href="/financial-aid/" class="text-raspberry underline decoration-gold underline-offset-4">Financial aid</a>
-                </p>
-              )}
-            </>
-          )
-        }
-      </aside>
-      )}
-    </div>
-  </section>
+            ) : (
+              <>
+                {flyerFull && d.flyer && (
+                  <>
+                    <h2 class="display-md mt-1">Original flyer</h2>
+                    <Divider class="mt-4" />
+                  </>
+                )}
+                <div class:list={['mt-6 grid gap-8', flyerFull ? 'lg:grid-cols-[480px_minmax(0,1fr)] lg:gap-12' : cards.length > 1 && 'sm:grid-cols-2']}>
+                  {flyerFull && d.flyer && (
+                    <a
+                      href={flyerFull.src}
+                      data-lightbox="flyer"
+                      data-title={d.title}
+                      data-alt={`Flyer for ${d.title}`}
+                      class="group relative block max-w-[480px] self-start overflow-hidden rounded-sm border border-border shadow-card"
+                    >
+                      <Image src={d.flyer} alt={`Original flyer for ${d.title}`} widths={[480, 960]} sizes="480px" class="w-full" />
+                      <span class="absolute right-3 bottom-3 flex items-center gap-1.5 rounded-full bg-surface/95 px-3 py-1.5 text-sm font-medium text-ink shadow-card">
+                        <Icon name="zoom-in" class="size-4" /> Enlarge
+                      </span>
+                    </a>
+                  )}
+                  {cards.length > 0 && (
+                    <div class:list={[flyerFull ? 'space-y-5 self-start' : 'contents']}>
+                      {cards.map((c) => (
+                        <InfoCard {...c} />
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </>
+            )}
+          </div>
 
-  <!-- Instructor, what to expect, policies -->
-  {
-    cards.length > 0 && (
-      <section class="py-12 md:py-14">
-        <div class:list={['container-page grid gap-5', cards.length === 3 ? 'lg:grid-cols-3' : cards.length === 2 ? 'md:grid-cols-2' : '']}>
-          {instructors.length > 0 && (
-            <div class="rounded-card border border-gold/60 bg-surface p-7">
-              <h2 class="text-xl font-semibold text-ink">{instructors.length > 1 ? 'Instructors' : 'Instructor'}</h2>
-              <ul class="mt-4 space-y-4">
-                {instructors.map((i) => (
-                  <li>
-                    <p class="font-semibold text-raspberry">
-                      {i.href ? <a href={i.href} class="underline decoration-gold underline-offset-4 hover:decoration-raspberry">{i.name}</a> : i.name}
-                    </p>
-                    {i.role && <p class="text-[15px] text-ink-soft">{i.role}</p>}
-                    {i.highlights?.map((h) => <p class="text-[15px] text-ink-soft">{h}</p>)}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
-          {d.expect && (
-            <div class="rounded-card border border-gold/60 bg-surface p-7">
-              <h2 class="text-xl font-semibold text-ink">What to expect</h2>
-              <p class="mt-3 leading-[1.75] text-ink-soft">{d.expect}</p>
-            </div>
-          )}
-          {d.policies && (
-            <div class="rounded-card border border-gold/60 bg-surface p-7">
-              <h2 class="text-xl font-semibold text-ink">Policies</h2>
-              <p class="mt-3 leading-[1.75] text-ink-soft">{d.policies}</p>
-            </div>
-          )}
-        </div>
-      </section>
-    )
-  }
-
-  <!-- Full details and original flyer -->
-  {
-    ((outcomesFirst && body) || (flyerFull && !flyerInAbout)) && (
-      <section class:list={['py-12 md:py-14', cards.length > 0 && 'pt-0 md:pt-0']}>
-        <div class:list={['container-page grid gap-10', outcomesFirst && body && flyerFull && 'lg:grid-cols-[1fr_minmax(0,340px)] lg:gap-16']}>
-          {outcomesFirst && body && (
-            <div>
-              <h2 class="display-md">Program details</h2>
-              <Divider class="mt-4" />
-              <div class="prose-sabeel mt-6 max-w-[46rem] text-[17px] leading-[1.8]">
-                <Content />
-              </div>
-            </div>
-          )}
-          {flyerFull && d.flyer && !flyerInAbout && (
-            <figure class:list={['self-start', !(outcomesFirst && body) && 'max-w-[340px]']}>
+          {textLead && flyerFull && d.flyer && (
+            <figure class="self-start lg:sticky lg:top-8">
               <figcaption class="mb-3 text-sm font-bold tracking-wide text-gold-text uppercase">Original flyer</figcaption>
               <a
                 href={flyerFull.src}
                 data-lightbox="flyer"
                 data-title={d.title}
                 data-alt={`Flyer for ${d.title}`}
-                class="group relative block overflow-hidden rounded-sm border border-border shadow-card"
+                class="group relative block max-w-[340px] overflow-hidden rounded-sm border border-border shadow-card"
               >
                 <Image src={d.flyer} alt={`Flyer for ${d.title}`} widths={[340, 680]} sizes="340px" class="w-full" />
                 <span class="absolute right-3 bottom-3 flex items-center gap-1.5 rounded-full bg-surface/95 px-3 py-1.5 text-sm font-medium text-ink shadow-card">
