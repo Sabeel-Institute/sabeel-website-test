@@ -83,7 +83,7 @@ const glance = [
   { icon: 'calendar', label: d.frequency ? 'How often' : 'Length', value: rhythmLabel(program) },
   { icon: 'calendar', label: 'Dates', value: dateRange(program) },
   { icon: 'users', label: instructors.length > 1 ? 'Instructors' : 'Instructor', value: completed ? undefined : instructors.map((i) => i.name).join(', ') },
-  { icon: 'tag', label: 'Fee', value: completed ? undefined : d.fee },
+  { icon: 'tag', label: 'Fee', value: completed ? undefined : d.fee, isFee: true },
   { icon: 'check', label: 'Registration', value: noRegistration && !completed ? 'Not needed' : undefined },
   { icon: 'book-open', label: 'Materials & prerequisites', value: d.prerequisites },
   { icon: 'clock', label: 'Registration deadline', value: completed || closed ? undefined : d.deadline },
@@ -114,7 +114,10 @@ const cards = [
           <h1 class="display-lg mt-5 lg:text-[3.1rem]">{d.title}</h1>
           {d.subtitle && <p class="mt-3 font-display text-2xl leading-snug text-ink-soft italic">{d.subtitle}</p>}
           {d.summary && <p class="mt-5 max-w-[36rem] text-lg leading-relaxed text-ink-soft">{d.summary}</p>}
-          <div class="mt-8 flex flex-wrap gap-3">
+          {d.earlyBird?.banner && (
+            <p class="mt-5 font-semibold text-raspberry">{d.earlyBird.banner}</p>
+          )}
+          <div class:list={[d.earlyBird?.banner ? 'mt-4' : 'mt-8', 'flex flex-wrap gap-3']}>
             {
               register ? (
                 <a {...register} class="btn btn-primary px-7 text-base">
@@ -214,7 +217,22 @@ const cards = [
                 <Icon name={r.icon as 'tag'} class="mt-0.5 size-5 text-gold-text" />
                 <div>
                   <dt class="text-sm text-ink-soft">{r.label}</dt>
-                  <dd class="font-medium text-ink">{r.value}</dd>
+                  <dd class="font-medium text-ink">
+                    {r.isFee && d.earlyBird ? (
+                      <div class="mt-1 space-y-1">
+                        <div>
+                          <span class="text-ink-soft">Early bird:</span>{' '}
+                          <span class="text-lg font-bold text-raspberry">{d.earlyBird.fee}</span>{' '}
+                          <span class="text-ink font-semibold">through {d.earlyBird.until}</span>
+                        </div>
+                        <div class="text-sm text-ink-soft">
+                          <span>Regular fee:</span> <span class="font-semibold text-ink">{d.earlyBird.regularFee}</span> starting {d.earlyBird.from}
+                        </div>
+                      </div>
+                    ) : (
+                      r.value
+                    )}
+                  </dd>
                 </div>
               </div>
             ))
@@ -318,7 +336,7 @@ const cards = [
   {
     registering ? (
       <CtaBand title="Ready to join?">
-        <p>{[noRegistration && 'No registration needed', start && `Starts ${start}`, d.format, d.fee].filter(Boolean).join(' · ')}</p>
+        <p>{[noRegistration && 'No registration needed', start && `Starts ${start}`, d.format, d.earlyBird?.ctaText ?? d.fee].filter(Boolean).join(' · ')}</p>
         <Fragment slot="actions">
           {
             register ? (

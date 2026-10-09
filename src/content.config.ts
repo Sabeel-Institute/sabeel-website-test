@@ -106,6 +106,17 @@ const programs = defineCollection({
       platform: z.string().min(1).optional(),
       /** Price text; exactly "Free" when the program charges nothing. */
       fee: z.string().min(1),
+      /** Optional early bird pricing details. */
+      earlyBird: z
+        .strictObject({
+          banner: z.string().min(1),
+          fee: z.string().min(1),
+          until: z.string().min(1),
+          regularFee: z.string().min(1),
+          from: z.string().min(1),
+          ctaText: z.string().min(1),
+        }, unknownField('early bird pricing'))
+        .optional(),
       /**
        * How people join: `{ zeffy: <name> }`, the Zeffy ticketing form named
        * after /ticketing/ in its links, which Register opens in a dialog;

@@ -12,7 +12,14 @@ frequency: daily
 duration: 2 days
 format: On-site
 venue: masjid-istiqlal
-fee: $40
+fee: $30 early bird · $35 regular
+earlyBird:
+  banner: Register by October 20 and save $5.
+  fee: $30
+  until: October 20, 2026
+  regularFee: $35
+  from: October 21, 2026
+  ctaText: Early bird $30 through Oct 20 · $35 from Oct 21
 registration:
   zeffy: race-to-jannah-2-day-event
 expect: A hands-on Islamic adventure filled with stories, games, crafts, and teamwork.
