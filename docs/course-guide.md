@@ -12,6 +12,7 @@ want.
 [Where it meets](#where-it-meets) · [Pictures](#pictures) ·
 [Kinds of text](#what-kind-of-text-each-part-takes) ·
 [Everyday requests](#everyday-requests) ·
+[New course checklist](#new-course-checklist) ·
 [What stays the same](#what-stays-the-same-on-every-course) ·
 [Checking a change](#checking-a-change) ·
 [Your agent’s words](#your-agents-words)
@@ -374,16 +375,31 @@ on-site**. That decides its group on Programs and the icon on its card.
 
 ## Pictures
 
-A course has up to two images, each in one fixed shape, so the site never
-has to crop or stretch them badly.
+A course has up to two images, each in one fixed shape, so the site shows
+them as they are. Designers can make both from the same artwork.
 
-| Image | Shape and size | Where it shows |
+| | Course picture | Flyer |
 |---|---|---|
-| **Course picture** | Wide, 1920 × 1080 | On the card, at the top of the page, and in link previews. A photograph or artwork, with at most a large title: no small text, since dates, times, and fees change. Keep anything important away from the edges. |
-| **Flyer** | Letter size, 2550 × 3300 | Shown whole and enlargeable on the page and in Past Programs. |
+| **Size** | 1920 × 1080 px | 2550 × 3300 px |
+| **Shape** | Wide (16:9). The website refuses any other shape | US Letter, portrait: 8.5 × 11 in at 300 dpi |
+| **Where it shows** | On the card, at the top of the course page, and in link previews, which trim a thin strip from its top and bottom | Whole, lower on the course page and in Past Programs, and larger when someone clicks it |
+| **What’s on it** | A photo or artwork in the course’s theme, such as a wide version of the flyer’s artwork, not the flyer itself. At most a large title: dates, times, and fees are on the page, and they change | The full flyer |
+| **Margins** | Keep anything important at least 5% in from each edge | Keep text and the QR code at least 5% in from each edge |
+| **Description** | One line saying what it shows, for people who can’t see it, such as “Title artwork: Mommy Burnout, a course on mental and spiritual health” | Not needed: the website labels it as the course’s flyer |
+| **File** | PNG or a high-quality JPG; your agent converts it | PNG or a high-quality JPG; your agent converts it |
 
-Until a course has its own picture, a crop of the flyer’s title can stand
-in. Designers’ guidance for both is in the Sabeel brand kit.
+- Any wide (16:9) preset works for the course picture, such as Canva’s
+  “Presentation (16:9)”.
+- No course picture yet? A wide crop of the flyer’s title can stand in until
+  there is one. Without either, the card has no picture and the page shows a
+  pattern in its place.
+- Square (1080 × 1080) and 4:5 (1080 × 1350) flyers for Instagram and
+  WhatsApp are not used by the website.
+- Teacher profiles on the website are text only, so no instructor photos
+  are needed.
+- Designing the flyer itself? The
+  [Sabeel flyers guide](https://github.com/Sabeel-Institute/brand/blob/main/skills/sabeel-flyers/SKILL.md)
+  covers what every flyer must say, readable type, and QR codes.
 
 ## What kind of text each part takes
 
@@ -409,7 +425,7 @@ word.
 
 | Task | Tell your agent |
 |---|---|
-| Add a new course | “Add a new course from this flyer.” Give the agent what you have: the flyer and picture, title, who it’s for, dates and times, place, fee, registration link, a one-sentence summary, what students will learn, instructors, and what to expect. Anything missing is simply left off the page. |
+| Add a new course | “Add a new course from this flyer.” Give the agent what you have, using the [new course checklist](#new-course-checklist). Anything optional you leave out is simply left off the page. |
 | Next month’s gathering | “Update Anchored Hearts for next month: [date], [time], speaker [name]. Here is the new flyer.” |
 | Open, close, or end | “Open registration for [course name].” · “Close registration for [course name].” · “[Course name] has ended; move it to past programs.” A gathering that repeats with no end also needs its last date when it ends. |
 | Early-bird price | “Add an early bird: $30 through October 20, then $35, and highlight it.” Later: “The early bird has ended; remove it.” |
@@ -418,6 +434,96 @@ word.
 | Hide a course for now | “Keep [course name] off the site until we announce it.” Everything stays saved; nothing shows. |
 | A Youth & Children series | When a Summer Garden or Camp Futuwwah ends: “Add this year’s Camp Futuwwah to its series on the Youth & Children page.” |
 | Add a past course | “Add this old flyer to Past Programs.” The agent takes the dates from the flyer. If the flyer shows no year and no weekday, the page shows only the year. |
+
+## New course checklist
+
+What to gather for a new course, before asking your agent to add it. Details
+marked **Needed** must be there for the course to go on the site; the rest
+are optional, and the page leaves out any part you don’t give.
+
+| Detail | | What to give |
+|---|---|---|
+| Stage | **Needed** | Coming soon, Registration open, or Ongoing series (see [Stages](#a-courses-stage-decides-where-it-appears)). |
+| Title | **Needed** | Exactly as on the flyer. |
+| Program area | **Needed** | Women’s Learning, Youth & Children, or Hikam Foundations. |
+| Summary | **Needed** | One sentence on what students will learn and why it matters. It shows under the title and in link previews. |
+| Dates and times | **Needed** | In plain words, with anything skipped or moved (see [Dates and times](#dates-and-times)). If they aren’t set yet, the year it starts. |
+| Online, On-site, or Online & on-site | **Needed** once registration opens | Decides its group on Programs. |
+| Subtitle | Optional | A tagline under the title. |
+| Who it’s for | Optional | “Adult women”, “Boys 12–16 · Girls 13+”. |
+| Place | Optional | The place’s name, and its street address if the site doesn’t know it yet, for the map link. |
+| How the location should read | Optional | “Sabeel Classroom at Masjid Istiqlal or online via Zoom”. |
+| Fee | Optional | One line per price, as charged; early-bird prices with their last date. Say if the course is free. |
+| Registration | Optional | A Zeffy form link, another organisation’s form link, “no registration needed”, or “not ready yet” (see [Registration](#registration)). |
+| Registration deadline | Optional | As people should read it. |
+| Highlight line | Optional | One short line for the top of the page. |
+| What students will learn | Optional | Three to five short points. |
+| Instructors | Optional | Teachers on the Teachers & Team page, by name. For a guest: name, role, and up to three short lines. For a new teacher joining Teachers & Team: name and title (Ustadhah, Ust., Sr., Br., or Dr.), role, up to three short lines of studies and degrees, and a longer bio. |
+| What to expect | Optional | How it runs, the activities, and anything to bring or know first. |
+| Policies | Optional | Attendance, refunds, recording, safeguarding. |
+| Longer write-up | Optional | Anything else for the page, such as a session-by-session list. |
+| Flyer and course picture | Optional | See [Pictures](#pictures). |
+
+### Fill-in template
+
+Copy this into an email or message (the copy button is at the top right of
+the box), fill it in, and attach the flyer and the course picture.
+
+```text
+New course for the Sabeel website
+
+Stage (Coming soon, Registration open, or Ongoing series):
+
+ABOUT THE COURSE
+Title:
+Subtitle (optional):
+Summary (one sentence):
+Program area (Women’s Learning, Youth & Children, or Hikam Foundations):
+Who it’s for (optional):
+
+WHEN
+Dates and times, in plain words (for example: seven Mondays from
+September 14, 12 to 1:30 pm), or the year if not set yet:
+Anything skipped or moved (optional):
+
+WHERE
+Online, On-site, or Online & on-site:
+Place (name, and street address if it’s new):
+How the location should read (optional):
+
+FEE AND REGISTRATION
+Fee (one line per price; early-bird prices with their last date; or Free):
+Registration (Zeffy form link, another organisation’s form link,
+no registration needed, or not ready yet):
+Registration deadline (optional):
+Highlight line for the top of the page (optional):
+
+ON THE COURSE PAGE (all optional)
+What students will learn (three to five points):
+Instructors:
+What to expect:
+Policies:
+Longer write-up:
+
+IMAGES (attach both)
+Flyer: US Letter portrait, 2550 × 3300 px, PNG or JPG
+Course picture: 16:9, 1920 × 1080 px, PNG or JPG
+Course picture description (one line):
+```
+
+### Photos and videos
+
+Once a course has run, the website can show photos and videos from it.
+
+- Send only photos and videos Sabeel approves for the website.
+- Faces are blurred or turned away, unless the people shown have agreed to
+  show them. For children, their families agree.
+- Children’s names are never shared without separate permission.
+- A photo at the top of a page or section is landscape, with the subject
+  near the centre, at least 1600 × 1200 px. Photos in the home page’s row
+  can be landscape or portrait.
+- Videos are landscape (16:9) or portrait (9:16), with permission from the
+  people in them and from the parents of children.
 
 ## What stays the same on every course
 
