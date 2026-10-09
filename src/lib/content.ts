@@ -1,7 +1,7 @@
 import type { ImageMetadata } from 'astro';
 import { getCollection, getEntry, type CollectionEntry } from 'astro:content';
 import type { AreaId } from '../site.config';
-import type { PROGRAM_FREQUENCIES } from '../content.config';
+import { describeSchedule, type ScheduleText } from './schedule';
 
 export type Program = CollectionEntry<'programs'>;
 export type TeamMember = CollectionEntry<'team'>;
@@ -11,7 +11,13 @@ export type Instructor = { name: string; role?: string; highlights?: readonly st
 
 type Status = Program['data']['status'];
 
-const newestFirst = (a: Program, b: Program) => b.data.date.getTime() - a.data.date.getTime();
+/** A program's first day: from its schedule, or its `date` when it has none. */
+export function firstDay(program: Program): Date {
+  const { schedule, date } = program.data;
+  return schedule ? new Date(Math.min(...schedule.map((p) => +p.start))) : date!;
+}
+
+const newestFirst = (a: Program, b: Program) => +firstDay(b) - +firstDay(a);
 const statusRank: Record<Status, number> = { open: 0, ongoing: 1, closed: 2, upcoming: 3, completed: 4 };
 
 /** Programs on the site (not drafts) with one of these statuses. */
@@ -29,7 +35,7 @@ export async function getCurrentPrograms(area?: AreaId): Promise<Program[]> {
 
 export async function getUpcomingPrograms(area?: AreaId): Promise<Program[]> {
   const list = await withStatus(['upcoming'], area);
-  return list.sort((a, b) => a.data.date.getTime() - b.data.date.getTime());
+  return list.sort((a, b) => +firstDay(a) - +firstDay(b));
 }
 
 /** Running programs whose registration has closed. */
@@ -60,55 +66,36 @@ export function statusLabel(program: Program): string {
   return status === 'open' && registration === 'none' ? 'No registration needed' : STATUS_LABEL[status];
 }
 
-const longDate = new Intl.DateTimeFormat('en-US', { dateStyle: 'long', timeZone: 'UTC' });
+/** Lines of text a field holds: one line, or a list of them. */
+export const asLines = (value: string | readonly string[] | undefined): string[] => [value ?? []].flat().filter(Boolean);
 
-export const FREQUENCY_LABEL: Record<(typeof PROGRAM_FREQUENCIES)[number], string> = {
-  weekly: 'Weekly',
-  'twice-monthly': 'Twice a month',
-  monthly: 'Monthly',
-  daily: 'Daily',
-  once: 'One session',
-};
-
-/** How often and how long: "Weekly · 7 sessions", "Monthly". */
-export function rhythmLabel(program: Program): string | undefined {
-  const { frequency, duration } = program.data;
-  return [frequency && FREQUENCY_LABEL[frequency], duration].filter(Boolean).join(' · ') || undefined;
-}
-
-const MONTHS = ['Jan', 'Feb', 'March', 'April', 'May', 'June', 'July', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'];
-
-/** First to last session, "Sept 14 – Oct 26"; nothing without an end date. */
-export function dateRange(program: Program): string | undefined {
-  const { date, endDate } = program.data;
-  if (!endDate) return undefined;
-  const withYear = date.getUTCFullYear() !== endDate.getUTCFullYear();
-  const show = (d: Date) => `${MONTHS[d.getUTCMonth()]} ${d.getUTCDate()}${withYear ? `, ${d.getUTCFullYear()}` : ''}`;
-  return `${show(date)} – ${show(endDate)}`;
+/**
+ * When a program meets, as cards and pages word it (see `describeSchedule`).
+ * Without a schedule, only the year of its `date` is known.
+ */
+export async function programSchedule(program: Program): Promise<ScheduleText> {
+  const { schedule, date, status } = program.data;
+  if (schedule) {
+    const names = new Map((await getCollection('venues')).map((v) => [v.id, v.data.name]));
+    return describeSchedule(schedule, (id) => names.get(id)!);
+  }
+  const year = String(date!.getUTCFullYear());
+  return { first: date!, cardDates: status === 'completed' ? year : `Starts ${year}`, cardLines: [], pageDates: year, pageLines: [] };
 }
 
 /** A venue address to link to a map; `label` names the venue too when the program meets at several. */
 export type Place = { label: string; map: string };
 
 /**
- * Where a program meets, as its page says it ("Sabeel Classroom at Masjid
- * Istiqlal", "Masjid Istiqlal or online via Zoom"), and the venue addresses to
- * link to a map.
+ * Where a program meets: its `location` text, or else its venues' names, and
+ * the addresses of every venue it names, its schedule's included, to link to
+ * a map.
  */
-export async function resolveLocation(program: Program): Promise<{ text: string; places: Place[] } | undefined> {
-  const { venue, room, platform, format } = program.data;
-  const venues = await Promise.all([venue ?? []].flat().map(async (ref) => (await getEntry(ref))!.data));
-  // A program's own room is at its one venue; otherwise each venue shows its usual room.
-  const onSite = venues
-    .map((v) => {
-      const at = room || v.usualRoom;
-      return at ? `${at} at ${v.name}` : v.name;
-    })
-    .join(' and ');
-  const isOnline = format ? format !== 'On-site' : Boolean(platform);
-  const online = isOnline ? (platform ? `online via ${platform}` : 'online') : '';
-  const text = onSite && online ? `${onSite} or ${online}` : onSite || online.charAt(0).toUpperCase() + online.slice(1);
-  if (!text) return undefined;
+export async function programLocation(program: Program): Promise<{ lines: string[]; places: Place[] }> {
+  const { venue, schedule, location } = program.data;
+  const refs = [...[venue ?? []].flat(), ...(schedule ?? []).flatMap((p) => (p.venue ? [p.venue] : []))];
+  const ids = [...new Set(refs.map((r) => r.id))];
+  const venues = await Promise.all(ids.map(async (id) => (await getEntry('venues', id))!.data));
   const places = venues.flatMap((v) =>
     v.address
       ? [
@@ -119,18 +106,12 @@ export async function resolveLocation(program: Program): Promise<{ text: string;
         ]
       : [],
   );
-  return { text, places };
-}
-
-/** The start as people should read it. */
-export function startLabel(program: Program): string {
-  const d = program.data;
-  if (d.starts) return d.starts;
-  return d.dateApprox ? String(d.date.getUTCFullYear()) : longDate.format(d.date);
+  const lines = location ? asLines(location) : venues.length ? [venues.map((v) => v.name).join(' and ')] : [];
+  return { lines, places };
 }
 
 export function programYear(program: Program): number {
-  return program.data.date.getUTCFullYear();
+  return firstDay(program).getUTCFullYear();
 }
 
 /** Team references become linked names; inline guests pass through. */

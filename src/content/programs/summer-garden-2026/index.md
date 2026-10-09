@@ -4,10 +4,18 @@ title: Summer Garden
 subtitle: 'Flourish: A Summer Sisterhood Experience'
 summary: Ten-day summer sisterhood program for girls to grow in faith and build confidence, offered at two locations by age group.
 area: youth-children
-date: '2026-07-13'
-dateApprox: true
+schedule:
+  - start: 2026-07-13
+    time: 11:00 AM–1:30 PM
+    repeat: FREQ=WEEKLY;BYDAY=MO,TU,WE,TH;UNTIL=20260723
+    venue: masjid-al-aqsa
+    label: Program 1 · Girls 14+
+  - start: 2026-07-27
+    time: 11:00 AM–2:00 PM
+    repeat: FREQ=WEEKLY;BYDAY=MO,TU,WE,TH;UNTIL=20260806
+    venue: maryam-islamic-center
+    label: Program 2 · Girls 11–16
 audience: Girls
-schedule: 'Program 1 (Masjid Aqsa, Girls 14+): July 13-23, Mon-Thurs, 11:00 AM-1:30 PM; Program 2 (MIC, Girls 11-16): July 27-Aug 6, Mon-Thurs, 11:00 AM-2:00 PM'
 format: On-site
 venue: [masjid-al-aqsa, maryam-islamic-center]
 flyer: ./flyer.webp

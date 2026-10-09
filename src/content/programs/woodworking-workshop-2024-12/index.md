@@ -4,13 +4,13 @@ title: Woodworking Workshop
 subtitle: Setting Goals for the Hereafter
 summary: A workshop for girls ages 11-14 combining a goal-setting talk with Ustadhah Sameera Shah and a hands-on woodworking project with Sr. Fariha Nasir.
 area: youth-children
-date: '2024-12-16'
-dateApprox: true
+schedule:
+  - start: 2024-12-14
+    time: 11:00 AM–1:30 PM
 audience: Girls
-schedule: Saturday, December 16th, 11:00 AM-1:30 PM
 format: On-site
 venue: maryam-islamic-center
-room: Upstairs Sisters Hall
+location: Upstairs Sisters Hall at Maryam Islamic Center
 instructors:
 - sameera-shah
 - name: Sr. Fariha Nasir

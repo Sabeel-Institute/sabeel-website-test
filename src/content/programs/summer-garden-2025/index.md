@@ -4,9 +4,11 @@ title: Summer Garden
 subtitle: 'Glow Up: Inside and Out'
 summary: A summer program for girls ages 11-16 focused on inner and outer growth, featuring games, activities, and snacks.
 area: youth-children
-date: '2025-06-29'
+schedule:
+  - start: 2025-06-29
+    time: 11:00 AM–2:00 PM
+    repeat: FREQ=DAILY;UNTIL=20250703
 audience: Girls
-schedule: June 29th-July 3rd, Sunday-Thursday, 11 AM-2 PM CST
 format: On-site
 venue: maryam-islamic-center
 flyer: ./flyer.webp

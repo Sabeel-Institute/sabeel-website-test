@@ -4,15 +4,15 @@ title: Journey to Excellence
 subtitle: Nurturing the Heart, Growing in Faith, Striving for Ihsān
 summary: An eight-week online series on the beautiful qualities of a believer — tawbah, shukr, sabr, dhikr, taqwa, and more — and how they lead to ihsān.
 area: womens-learning
-date: 2026-10-06
-endDate: 2026-11-24
+schedule:
+  - start: 2026-10-06
+    time: 7:00–8:00 PM
+    repeat: FREQ=WEEKLY;BYDAY=TU;COUNT=8
 audience: Women and youth girls
-schedule: Tuesdays · 7:00–8:00 PM CT
-frequency: weekly
 format: Online
-platform: Zoom
-duration: 8 sessions
+location: Online via Zoom
 fee: Free
+financialAid: false
 registration:
   zeffy: journey-to-excellence
 outcomes:

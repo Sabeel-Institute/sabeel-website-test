@@ -9,7 +9,7 @@ import Icon from '../../components/Icon.astro';
 import Photo from '../../components/Photo.astro';
 import Video from '../../components/Video.astro';
 import { areas } from '../../site.config';
-import { getClosedPrograms, getCurrentPrograms, getUpcomingPrograms, programHref, programYear } from '../../lib/content';
+import { firstDay, getClosedPrograms, getCurrentPrograms, getUpcomingPrograms, programHref, programYear } from '../../lib/content';
 
 const area = areas['youth-children'];
 const current = await getCurrentPrograms('youth-children');
@@ -60,7 +60,7 @@ const shown = await Promise.all(
         return program;
       }),
     );
-    programs.sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+    programs.sort((a, b) => +firstDay(b) - +firstDay(a));
     return { ...s, programs };
   }),
 );

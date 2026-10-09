@@ -4,15 +4,14 @@ title: Mommy Burnout
 subtitle: A Journey from Burnout to Barakah
 summary: Our flagship seven-session course helps mothers step out of survival mode, rooted in Qur’anic guidance, Prophetic wisdom, and practical insights from psychology.
 area: womens-learning
-date: 2026-09-14
-endDate: 2026-10-26
+schedule:
+  - start: 2026-09-14
+    time: 12:00–1:30 PM
+    repeat: FREQ=WEEKLY;BYDAY=MO;COUNT=7
 audience: Adult women
-schedule: Mondays · 12:00–1:30 PM CT
-frequency: weekly
 format: Online & on-site
 venue: masjid-istiqlal
-platform: Zoom
-duration: 7 sessions
+location: Sabeel Classroom at Masjid Istiqlal or online via Zoom
 fee: $150
 registration:
   zeffy: mommy-burnout

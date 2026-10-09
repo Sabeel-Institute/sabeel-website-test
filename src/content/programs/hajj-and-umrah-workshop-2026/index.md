@@ -3,12 +3,14 @@ status: completed
 title: Hajj and Umrah Workshop
 summary: A ladies-only in-person workshop on the rites of Hajj and Umrah taught by Ust. Mariam Sattar, co-hosted with Masjid Istiqlal Houston.
 area: womens-learning
-date: '2026-04-01'
-dateApprox: true
+schedule:
+  - start: 2026-04-01
+    time: 12:00–1:00 PM
+    label: First session
 audience: Women
-schedule: Wednesdays, starting April 1st, 12:00 PM-1:00 PM
 format: On-site
 venue: masjid-istiqlal
+location: Sabeel Classroom at Masjid Istiqlal
 instructors:
 - mariam-sattar
 flyer: ./flyer.webp

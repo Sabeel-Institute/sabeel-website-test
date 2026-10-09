@@ -2,9 +2,13 @@
 
 ## Maintainer notes
 
-- Program entries use a discriminated union on `status`
-  (`src/content.config.ts`); open, ongoing, and closed programs fail the
-  build if a listing field is missing. Each status's object, an inline guest
+- The program schema (`src/content.config.ts`) types only what the site acts
+  on: `status`, `area`, `format`, the schedule, `registration`,
+  `financialAid`, `page`, venues, and instructors; what people only read
+  (`audience`, `location`, `fee`, `deadline`, `highlight`, `card`) is free
+  text, one line or a list. Its `superRefine` requires `schedule` or `date`
+  (not both), `summary` until a program is completed, and `format` while it
+  is open or ongoing. The program object, a schedule part, an inline guest
   instructor, and the team, venue, testimonial, and gallery photo schemas
   are strict, so a field the schema lacks fails the build (named by
   `unknownField`) instead of being dropped. The `file()` loader keeps each
@@ -12,7 +16,8 @@
   `registration` is `none` or one of two strict objects, `{ zeffy }` and
   `{ link }` (each with `unknownField`, which catches a field indented under
   `registration` by mistake), so a program cannot set two; it alone decides
-  what Register does, and `fee` whether the page links to Financial Aid.
+  what Register does, and `financialAid` (on unless `false`) whether the page
+  links to Financial Aid.
   `link` must be `https` and not on zeffy.com, whose forms open in the
   dialog through `zeffy`; the error names which, from the issue's `note`.
   `statusLabel` shows an open program with `registration: none` as “No
@@ -22,16 +27,28 @@
   generated and fails the build when a `page:` value has no matching file in
   `src/pages/`. Its route list skips files and folders starting with `_`, as
   Astro does, so a published program cannot point at an unbuilt page.
-- The schedule, length, and venue rules for current programs (no dates on
-  card lines, a venue unless online only) are in the programs schema's
-  `superRefine` (`src/content.config.ts`); past programs keep the schedules
-  they announced. For every status it also refuses a venue on an `Online`
-  program, a platform on an `On-site` one, a `room` without exactly one
-  venue, and `registration: none` on a `closed` program, with a `deadline`,
-  or with a `fee` other than `FREE`. `resolveLocation`, `rhythmLabel`, and
-  `dateRange` (`src/lib/content.ts`) word the fields for cards and pages, so
-  the course files hold each fact once. Map links are Google Maps search
-  URLs built from a venue's name and address.
+- `src/lib/schedule.ts` checks schedule parts (`checkPart`, from the
+  schema's part `superRefine`) and words them (`describeSchedule`, through
+  `programSchedule` in `src/lib/content.ts`), so dates, days, times, and
+  counts on cards, pages, and the Programs rows come from one source. It
+  expands rules with ical.js. Days are UTC midnight, as `z.coerce.date()`
+  reads `YYYY-MM-DD`, and times stay Central wall-clock minutes, so wording
+  needs no time-zone arithmetic. ical.js silently drops rule parts it does
+  not know (`BYDAYS=MO` becomes plain weekly), hence the `RULE_PARTS` list;
+  and it skips a DTSTART the rule does not give, which is how a `start` off
+  the rule is caught (first occurrence ≠ `start`). It also reads `COUNT=0`
+  as endless and lets a malformed `BYDAY` through until the rule is
+  iterated, so `ruleProblem` checks whole numbers and `checkPart` catches
+  iteration errors. Dates go through the schema's `day`, which takes only
+  `YYYY-MM-DD` and holds UTC midnight; `z.coerce.date()` would read
+  `2026-9-14` as local midnight. A time may end before it starts only from
+  PM to AM, past midnight, or on a multi-day event. The count (“7
+  sessions”) is given for one part, or for parts that are plain blocks of
+  dates: parts with their own label or venue are tracks or activities, and
+  parts after midnight share days with the evening's. `programLocation`
+  shows `location`, or the venues' names, and map links for every venue the
+  program or its parts name: Google Maps search URLs built from a venue's
+  name and address.
 - `draft: true` programs are left out by `withStatus`, which every listing
   query uses, and by `getStaticPaths` in `programs/[slug].astro`, so they get
   no page and no listing. Drafts skip the bespoke-page and image checks.
@@ -89,8 +106,17 @@
   `?modal=true` variant adds a close button on narrow screens, which this
   dialog provides itself. Zeffy takes no amount from a link, so donors
   choose it in its form.
-- `dateApprox: true` marks programs whose year is inferred rather than
-  printed on the flyer; pages show only the year for them.
+- A past program's schedule follows its flyer, in the year its folder
+  names. Where the printed weekday does not fall on the printed date in
+  that year, the weekday and month stand and the day moves to the nearest
+  one with that weekday in that month (the organisation's rule). A flyer
+  with neither a year nor a weekday gives only `date`, so pages show the
+  year; one with a start and no end gives its first session only, because a
+  completed program's rules must end (`repeatsForever` in the schema's
+  `superRefine`; an endless past program would recur forever in a
+  calendar). Dates given as nights of Ramadan follow the calculated
+  calendar (FCNA), which Sabeel's own flyers match (the 21st night was
+  March 30 in 2024 and March 20 in 2025).
 - `firebase.json` redirects other addresses for these pages (`/courses/`,
   `/our-team/`, `/seminary/`, `/donate/`, `/our-mission/`, `/my-courses/`,
   and more) so existing links keep working.

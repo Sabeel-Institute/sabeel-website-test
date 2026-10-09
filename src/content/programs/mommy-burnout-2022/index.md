@@ -4,14 +4,14 @@ title: Mommy Burnout
 subtitle: A Course on Mental and Spiritual Health
 summary: Free course on mental and spiritual health for mothers, taught by LPC-Associate Selina Ali and Ustadhah Sameera Shah.
 area: womens-learning
-date: '2022-09-28'
-dateApprox: true
+schedule:
+  - start: 2022-09-28
+    time: 12:00–1:15 PM
+    repeat: FREQ=WEEKLY;BYDAY=WE;UNTIL=20221116
 audience: Women
-schedule: Sep 28 - Nov 16, Wednesdays, 12:00-1:15 PM
 format: Online & on-site
 venue: maryam-islamic-center
-room: Women’s Prayer Hall
-platform: Zoom
+location: Women’s Prayer Hall at Maryam Islamic Center or online via Zoom
 instructors:
 - name: Sr. Selina Ali
   role: LPC-Associate

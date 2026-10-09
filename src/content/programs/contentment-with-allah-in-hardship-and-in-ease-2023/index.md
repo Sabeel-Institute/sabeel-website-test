@@ -4,13 +4,13 @@ title: 'Contentment with Allah: In Hardship and in Ease'
 subtitle: A Sisters Only Special
 summary: Sisters-only talk on finding contentment with Allah in hardship and ease, featuring guest speaker Mufti Hussain Kamani.
 area: womens-learning
-date: '2023-07-15'
-dateApprox: true
+schedule:
+  - start: 2023-07-15
+    time: 6:00 PM
 audience: Women
-schedule: Sat, July 15, 6 PM
 format: On-site
 venue: masjid-hamza
-room: Upstairs ladies’ section
+location: Upstairs ladies’ section at Masjid Hamza
 instructors:
 - name: Mufti Hussain Kamani
 flyer: ./flyer.webp

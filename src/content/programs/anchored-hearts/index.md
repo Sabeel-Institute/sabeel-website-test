@@ -4,14 +4,16 @@ title: Anchored Hearts Sister’s Circle
 subtitle: Come as you are, leave with a heart a little more anchored.
 summary: A monthly gathering where sisters learn, reflect, and connect through beneficial Islamic talks, meaningful conversation, and occasional social activities.
 area: womens-learning
-date: 2026-10-16
-starts: Friday, October 16
+schedule:
+  - start: 2026-10-16
+    time: 5:30–7:45 PM
+    label: Monthly
 audience: Women and youth girls
-schedule: Fridays · 5:30–7:45 PM CT
-frequency: monthly
 format: On-site
 venue: masjid-istiqlal
+location: Sabeel Classroom at Masjid Istiqlal
 fee: Free
+financialAid: false
 registration:
   zeffy: anchored-hearts-sisters-circle
 deadline: Optional activity — register by Wednesday, October 7

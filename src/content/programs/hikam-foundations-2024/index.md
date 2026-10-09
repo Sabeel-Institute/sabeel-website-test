@@ -4,12 +4,14 @@ title: Hikam Foundations
 subtitle: 2024 cohort
 summary: A part-time, in-person program giving women a foundational knowledge base in Arabic grammar, tafsir, hadith, and fiqh, taught by female ‘Alimiyyah graduates.
 area: hikam-foundations
-date: 2024-09-04
+schedule:
+  - start: 2024-09-04
+    time: 10:30 AM–1:30 PM
+    label: First class
 audience: Girls and women
-schedule: Wednesdays at Masjid Istiqlal, 10:30 AM–1:30 PM CT · Saturdays at Maryam Islamic Center, 10:15 AM–1:00 PM CT
 format: On-site
 venue: [masjid-istiqlal, maryam-islamic-center]
-duration: 1 year
+location: Sabeel Classroom at Masjid Istiqlal and Maryam Islamic Center
 fee: Free of charge
 outcomes:
   - Arabic grammar

@@ -4,12 +4,14 @@ title: Raising with Purpose
 subtitle: A monthly support circle for homeschooling moms
 summary: A monthly circle, with the Muslim Homeschooling Community of Greater Houston, for homeschooling moms to connect and reflect on their purpose and intentions.
 area: womens-learning
-date: 2026-10-18
+schedule:
+  - start: 2026-10-18
+    time: 5:00–7:00 PM
+    label: Monthly
 audience: Homeschooling mothers
-schedule: Sundays · 5:00–7:00 PM CT
-frequency: monthly
 format: On-site
 venue: masjid-istiqlal
+location: Sabeel Classroom at Masjid Istiqlal
 fee: $5
 registration:
   zeffy: raising-with-purpose
