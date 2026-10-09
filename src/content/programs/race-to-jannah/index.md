@@ -12,7 +12,10 @@ audience: Children 6–10
 format: On-site
 venue: masjid-istiqlal
 location: Sabeel Classroom at Masjid Istiqlal
-fee: $40
+fee:
+  - $30 early bird, through Oct 20
+  - $35 from Oct 21
+highlight: Register by October 20 and save $5.
 registration:
   zeffy: race-to-jannah-2-day-event
 expect: A hands-on Islamic adventure filled with stories, games, crafts, and teamwork.
