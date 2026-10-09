@@ -170,12 +170,10 @@ const programs = defineCollection({
         highlight: z.string().min(1).optional(),
         /** One or two lines a card, or a Programs list, shows in place of its dates and times. */
         card: z.union([z.string().min(1), z.array(z.string().min(1)).min(1).max(2)]).optional(),
-        /** Materials or prerequisites, shown as a "Before you join" card. */
-        prerequisites: z.string().min(1).optional(),
         /** Three to five things students will learn. */
         outcomes: z.array(z.string().min(1)).min(1).max(8).optional(),
         instructors: z.array(instructor).min(1).optional(),
-        /** Teaching format, activities, homework, parent role, participation. */
+        /** Teaching format, activities, homework, parent role, participation, and anything to bring or know first. */
         expect: z.string().min(1).optional(),
         /** Attendance, refunds, recording, accessibility, safeguarding. */
         policies: z.string().min(1).optional(),
