@@ -91,11 +91,10 @@ const facts = [
   { label: 'Registration deadline', value: joinable ? d.deadline : undefined },
 ];
 const highlight = joinable ? d.highlight : undefined;
-/** Short cards beside the main text: who teaches, how it runs, what to bring, the rules. */
+/** Short cards beside the main text: who teaches, how it runs, the rules. */
 const cards: ({ title: string; instructors: Instructor[] } | { title: string; text: string })[] = [
   ...(instructors.length ? [{ title: instructors.length > 1 ? 'Instructors' : 'Instructor', instructors }] : []),
   ...(d.expect ? [{ title: 'What to expect', text: d.expect }] : []),
-  ...(d.prerequisites ? [{ title: 'Before you join', text: d.prerequisites }] : []),
   ...(d.policies ? [{ title: 'Policies', text: d.policies }] : []),
 ];
 const outcomes = d.outcomes ?? [];

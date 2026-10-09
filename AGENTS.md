@@ -293,10 +293,9 @@ Every program gets a page in one of two ways:
      aid link under it while people can join), and Registration deadline.
   3. “About this program”. A program with `outcomes` or a Markdown body
      shows “What students will learn” (or the body as “What to know”), then
-     the Instructor, What to expect, Before you join, and Policies cards,
-     then the body as “Program details”, with the original flyer pinned
-     beside them. A program with neither shows its flyer with the cards
-     beside it.
+     the Instructor, What to expect, and Policies cards, then the body as
+     “Program details”, with the original flyer pinned beside them. A
+     program with neither shows its flyer with the cards beside it.
   4. A closing band (“Ready to join?”; “Registration opens soon.”, or
      “Coming soon.” without registration; or “Interested in a future
      offering?”, by status).
@@ -345,10 +344,9 @@ optional. The build stops on a field that is not in this table, naming it.
 | `deadline` | Registration deadline text | `Register by Wednesday, October 7` |
 | `highlight` | A short line above the Register button: an early-bird price, limited seats, a new date. Shown until registration closes | `Register by October 20 and save $5.` |
 | `card` | One or two lines a card, or a Programs list, shows in place of its dates and times; see Cards | `2 years · Starts 2027` |
-| `prerequisites` | Materials or prerequisites, shown as a “Before you join” card | `Bring a mushaf` |
 | `outcomes` | Three to five things students will learn (list) | |
 | `instructors` | Team file names and/or inline guests `{ name, role, highlights }` | `sameera-shah` |
-| `expect` | Teaching format, activities, participation | |
+| `expect` | Teaching format, activities, participation, and anything to bring or know first | |
 | `policies` | Attendance, refunds, recording, safeguarding | |
 | `image`, `imageAlt` | The program image, 16:9 (see Program images); alt text required with it | `./image.webp` |
 | `flyer` | Original flyer, US Letter portrait (see Program images) | `./flyer.webp` |
@@ -699,7 +697,7 @@ the 404 page.
 | `SectionHeading` | Section opening: `eyebrow`, `title`, gold divider; the default slot is aside text on the right |
 | `CtaBand` | Closing band: `title`, optional `eyebrow`, text and an `actions` slot |
 | `FactsBar` | A program's facts, three to a row (`facts=[{ label, value, places, note }]`): a value can be several lines, `places` are map links, `note` a line ending in a link |
-| `InfoCard` | A short card on a program page: its instructors, or a paragraph (What to expect, Before you join, Policies) |
+| `InfoCard` | A short card on a program page: its instructors, or a paragraph (What to expect, Policies) |
 | `ProgramCard` | A program's card: the same lines for every current program (see Cards); completed ones show year and summary |
 | `CurrentPrograms` | Current programs grouped by format |
 | `AreaCards` | The three program-area cards on Programs |
