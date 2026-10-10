@@ -432,7 +432,7 @@ word.
 | Cancel or move a session | “There is no class on [date].” · “The [date] session moves to [new date], same time.” |
 | Change the place | “[Course name] now meets in [room] at [place].” A new place needs its address once, for the map link. |
 | Hide a course for now | “Keep [course name] off the site until we announce it.” Everything stays saved; nothing shows. |
-| A Youth & Children series | When a Summer Garden or Camp Futuwwah ends: “Add this year’s Camp Futuwwah to its series on the Youth & Children page.” |
+| A Youth & Children series | When a Summer Garden or Camp Futuwwah ends: “Add this year’s Camp Futuwwah to its series on the Youth & Children page.” This changes the page itself, so it is a structural change (see [Checking a change](#checking-a-change)). |
 | Add a past course | “Add this old flyer to Past Programs.” The agent takes the dates from the flyer. If the flyer shows no year and no weekday, the page shows only the year. |
 
 ## New course checklist
@@ -569,8 +569,23 @@ request”). A few minutes later a comment appears on it with two links:
 - **Visual changes:** before-and-after pictures of every page that looks
   different. Check that only the pages you expected changed.
 
-When it looks right, the website’s administrator publishes it. Until then,
-nothing on the live site changes.
+When it looks right, publish it: at the bottom of the pull request, press the
+green merge button, then confirm. The live site shows the change a few
+minutes later; until then, nothing on it changes. The button stays grey
+while GitHub is still checking the change, when the check fails (ask your
+agent to fix it), and for a structural change until the administrator
+approves it.
+
+**Routine and structural changes.** Courses, teachers, testimonials, places,
+the photos on the home page, and the photos on other pages are routine
+content: that is what most requests change, and you publish them yourself. A
+change to anything else, such as the template, the menus, contact details,
+an old address that should lead somewhere, or a new edition in a Youth &
+Children series, is structural. Your agent tells you when a request needs
+one, and keeps it in its own review, so your routine changes can go live
+without waiting. A structural review gets the label “structural”, and GitHub
+asks the administrator to approve it; once they have, it is published the
+same way.
 
 ## Your agent’s words
 

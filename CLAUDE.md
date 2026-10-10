@@ -186,6 +186,16 @@
   release whose dependencies have no known vulnerabilities, and
   `allowScripts` (honoured by npm 11.18 and later) stops Puppeteer
   downloading its own Chrome.
+- The ruleset's code-owner review is what holds a structural pull request:
+  "Require review from Code Owners" with 0 required approvals, so only files
+  that `.github/CODEOWNERS` gives an owner need one. `scope.yml` only labels
+  and comments, so it reports no status. It judges a pull request by its
+  changed files' paths alone, from `main`, against CODEOWNERS on the base
+  branch, as GitHub does: the last pattern that matches a file decides, and
+  a file with no owner is routine. It reads only `*`, `/folder/`, and
+  `/file` patterns, and fails on any other rather than misjudge. The list
+  under "Routine and structural changes" in AGENTS.md and the comment's
+  description of routine content must match CODEOWNERS.
 - `preview.yml`'s `delete-preview` job runs on `pull_request_target`, which
   GitHub runs from `main` with `ref` set to `refs/heads/main`, so the identity
   pool's condition accepts it. It checks out only `main`'s Firebase settings

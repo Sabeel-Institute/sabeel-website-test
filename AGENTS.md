@@ -146,7 +146,8 @@ programs by folder name, photo slots, a description for Summer Garden and
 Camp Futuwwah, and a video for Camp Futuwwah. A description fits every
 edition, so it leaves out what changes from year to year, such as how many
 days the program runs. When a new edition ends, add its folder to its series;
-the build stops if a folder is not a program on the site.
+the build stops if a folder is not a program on the site. That edits the page,
+so it is a structural change (see Routine and structural changes).
 
 ### Status
 
@@ -857,11 +858,38 @@ Keep every change easy to review and merge:
 7. **Verify** (below), then open a pull request that says what changed and
    why. A few minutes after its build passes, every pull request gets a
    comment with a preview link and a **Visual changes** line.
-8. **Only the repository admin merges into `main`.** Merging deploys the live
-   site.
+8. **Merging deploys the live site.** Any member of the organization can
+   merge a routine pull request once its build passes; a structural one
+   needs the repository admin's approval first (see Routine and structural
+   changes). Merge only when the person you are working for asks you to.
 
 If `main` has moved and your branch conflicts, update the branch from `main`
 and resolve the conflicts, keeping other people’s changes.
+
+## Routine and structural changes
+
+A pull request is **routine** when it changes only content staff maintain,
+the paths `.github/CODEOWNERS` leaves without an owner:
+
+- `src/content/programs/` (programs, their flyers and images)
+- `src/content/team/`
+- `src/content/testimonials.yaml` and `src/content/venues.yaml`
+- `src/content/gallery.yaml` and `src/content/gallery/`
+- `src/assets/photos/`
+
+Any member of the organization can merge a routine pull request once its
+build passes. Any other file makes it **structural**: pages (including the
+Youth & Children series lists), components, layouts, styles, the schemas,
+`src/site.config.ts`, `firebase.json` (redirects included), workflows,
+scripts, packages, and the docs. `.github/CODEOWNERS` makes the repository
+admin the owner of those files, so GitHub merges a structural pull request
+only after the admin approves it. The Change scope workflow
+(`.github/workflows/scope.yml`) labels it `structural` and comments the files
+that make it so. When a request needs a structural change, such as a new
+field, a layout change, a menu, contact details, a redirect, or a new edition
+in a Youth & Children series, tell the person asking, and keep it in its own
+pull request, apart from routine content, so the routine part can go live
+without waiting.
 
 ## Before you open a pull request
 
