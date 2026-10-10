@@ -56,7 +56,7 @@ flowchart TB
 | Billing account | “My Billing Account”, in the `oursabeel.com` organization | Google Cloud → Billing |
 | Hosting site | `oursabeel-website` (the project's default site, also at https://oursabeel-website.web.app) | `firebase.json` (`hosting.site`); previews read it from `main`'s copy |
 | Live URL | https://oursabeel.com; https://www.oursabeel.com redirects to it | `astro.config.mjs` (`site`, used for canonical and link-preview URLs, the sitemap, and robots.txt); GitHub repo "Website" field; the site's custom domains in Firebase Hosting |
-| Domain and DNS | `oursabeel.com`, registered at Namecheap, DNS on Namecheap BasicDNS | Namecheap → Domain List → Manage → Advanced DNS (see [Custom domain](#custom-domain)) |
+| Domain and DNS | `oursabeel.com`, registered at NameSilo, which also hosts its DNS (name servers `NS1.DNSOWL.COM`, `NS2.DNSOWL.COM`, `NS3.DNSOWL.COM`) | NameSilo → Domain Manager → `oursabeel.com` → its DNS records (see [Custom domain](#custom-domain)) |
 | GitHub repository | `Sabeel-Institute/website`, repo ID `1388459667`, owner ID `334027596` | Google identity pool condition and service-account binding |
 | Identity pool | `github` ("GitHub Actions") | Google Cloud |
 | Identity provider | `github-oidc`, issuer `https://token.actions.githubusercontent.com` | Google Cloud; resource path in both workflows |
@@ -125,9 +125,12 @@ why deploys use the identity pool. Never create or use a key.
 
 The site's custom domains, in Firebase console → Hosting → the site's
 **Custom domains**, are `oursabeel.com` and `www.oursabeel.com`, which
-redirects to it. The domain is registered at Namecheap, and its DNS records
-are in Namecheap → Domain List → `oursabeel.com` → Manage → **Advanced DNS**
-(email routing under **Mail Settings → Custom MX**):
+redirects to it. The domain is registered at NameSilo, which also hosts its
+DNS: the domain's name servers are NameSilo's own, `NS1.DNSOWL.COM`,
+`NS2.DNSOWL.COM`, and `NS3.DNSOWL.COM`, and its records are in NameSilo →
+Domain Manager → `oursabeel.com` → its DNS records. There, a host is written
+without the domain (`www`, `_dmarc`), and left empty for `oursabeel.com`
+itself, written `@` below:
 
 | Type | Host | Value | For |
 |---|---|---|---|
