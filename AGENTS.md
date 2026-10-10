@@ -110,7 +110,7 @@ flowchart LR
 | `src/styles/global.css` | Design tokens and shared classes |
 | `src/assets/` | Images processed at build time (`photos/`, `images/`, `decor/`), and videos (`videos/`) |
 | `public/` | Files served as-is (favicons) |
-| `firebase.json` | Hosting settings and redirects for moved pages |
+| `firebase.json` | Hosting settings, and redirects for moved pages and the old WordPress site's addresses |
 | `.github/workflows/` | Build and deploy (see docs/deployment.md) |
 | `scripts/visual-diff/` | Screenshot comparison of each pull request with `main` (see docs/deployment.md) |
 
@@ -532,7 +532,9 @@ Refer to people in programs by file name under `instructors`.
   `order` between those of the people it should sit between, and start the
   bio with the plain name (see Writing conventions).
 - **Hide a person:** set `listed: false`. Their card and bio page go; programs
-  that list them still show their name, without a link.
+  that list them still show their name, without a link. If a redirect in
+  `firebase.json` leads to their bio page, change its destination to
+  `/teachers-and-team/`.
 - **Rename a person:** correct `name`, rename the file, change every
   `instructors` entry that uses the old file name, fix the old spelling
   wherever else it appears in `src/`, and add a 301 redirect from
@@ -757,6 +759,14 @@ belongs in a menu.
 ```json
 { "source": "/old-path{,/}", "destination": "/new-path/", "type": 301 }
 ```
+
+`redirects` also sends each page address of the WordPress site that
+oursabeel.com served before this one to its match here: its courses
+(`/my-courses/…`) to their programs, people (`/aminamian/`) to their bio
+pages, and its donation pages to Support. Firebase applies redirects before
+serving pages, so a redirect's `source` must never be the address of a page
+on this site, and a page that a redirect leads to keeps its address or gets
+a redirect of its own.
 
 ## Design rules
 
