@@ -26,6 +26,11 @@
         "type": 301
       },
       {
+        "source": "/my-courses{,/}",
+        "destination": "/programs/",
+        "type": 301
+      },
+      {
         "source": "/my-courses/monthly-quran-room{,/}",
         "destination": "/programs/monthly-quran-room/",
         "type": 301
