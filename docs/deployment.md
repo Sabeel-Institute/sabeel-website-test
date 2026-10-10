@@ -40,8 +40,17 @@ flowchart TB
   `pull_request_target` trigger runs `main`'s copy, which checks out only
   `main`'s `.firebaserc` and `firebase.json`. A pull request that has closed
   by the time its build finishes gets no preview.
-- `preview.yml` and the `deploy-live` job run from `main`, so changes to them
-  take effect once merged. The `build` and `visual-diff` jobs run from the
+- `.github/CODEOWNERS` makes the admin the owner of every file except
+  routine content (listed in AGENTS.md, "Routine and structural changes"),
+  and the ruleset requires the owner's approval, so a pull request that
+  changes any other file waits for the admin; GitHub asks the admin for a
+  review. `.github/workflows/scope.yml` (Change scope) runs on every pull
+  request into `main`, from `main` (`pull_request_target`), and labels such a
+  pull request `structural`, with a comment naming the files that make it
+  so. It reads only the list of changed files and `.github/CODEOWNERS`,
+  through the API, and never checks out or runs pull-request code.
+- `preview.yml`, `scope.yml`, and the `deploy-live` job run from `main`, so
+  changes to them take effect once merged. The `build` and `visual-diff` jobs run from the
   pull request's merge commit, so a pull request's own changes to them (or to
   `scripts/visual-diff/`) apply to its own runs, and other open pull requests
   pick up merged changes only when GitHub next merges them with `main` (see
@@ -155,20 +164,24 @@ Settings; repository settings under the repository → Settings.
 
 | Setting | Where | Value |
 |---|---|---|
-| Base permission | Organization → Member privileges → Base permissions | **Write**, so members can push branches and open pull requests |
-| Member roles | Organization → People | Invite people as **Member**. Owners are admins on every repository and can merge |
+| Base permission | Organization → Member privileges → Base permissions | **Write**, so members can push branches, open pull requests, and merge routine ones |
+| Member roles | Organization → People | Invite people as **Member**. Owners are admins on every repository, so they can change its settings and merge any pull request |
 | Security defaults for new repositories | Organization → Code security | Dependabot alerts, secret scanning, and push protection on |
-| Ruleset "Protect main" | Repository → Rules → Rulesets → New branch ruleset | Enforcement **Active**; target **Default branch**; rules **Restrict updates**, **Restrict deletions**, **Block force pushes**; bypass list **Repository admin**, set to **For pull requests only** |
+| Ruleset "Protect main" | Repository → Rules → Rulesets → New branch ruleset | Enforcement **Active**; target **Default branch**; rules **Restrict deletions**; **Require a pull request before merging**, with required approvals **0**, **Dismiss stale pull request approvals when new commits are pushed**, and **Require review from Code Owners**; **Require status checks to pass**, with the check `build` from the source **GitHub Actions**; **Block force pushes**; bypass list **Repository admin**, set to **For pull requests only** |
 | Who can open pull requests | Repository → General → Features → Pull requests | **Collaborators only** |
 | Who can open issues | Repository → General → Features → Issues → Creation allowed by | **Collaborators only** |
 | Wiki, Projects | Repository → General → Features | Off |
 | Workflow token | Repository → Actions → General → Workflow permissions | **Read repository contents and packages permissions**; "Allow GitHub Actions to create and approve pull requests" off |
 | Security scanning | Repository → Code security | Secret scanning, push protection, and Dependabot alerts on |
 | About | Repository → General (or the gear beside "About" on the code page) | Description, and Website set to the live URL |
+| Label `structural` | Repository → Issues → Labels | Exists, so the Change scope workflow can add it to structural pull requests |
 
-With these, only you can change `main`, and only by merging a pull request;
-members can open pull requests; nobody outside the organization can open pull
-requests or issues on the public repository.
+With these, `main` changes only through pull requests whose `build` check
+passed. Members merge routine pull requests themselves; one that changes any
+other file waits for your approval, because `.github/CODEOWNERS` names you as
+its owner (change that line if the admin's GitHub account changes). You can
+merge any pull request, bypassing the rules. Nobody outside the organization
+can open pull requests or issues on the public repository.
 
 ## Visual comparison
 
