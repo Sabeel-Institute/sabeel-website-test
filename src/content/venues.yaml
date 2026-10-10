@@ -28,3 +28,4 @@
   name: RICC (Richmond)
 - id: private-residence-richmond
   name: Private residence, Richmond, TX
+# Test of the merge rules; this pull request is closed unmerged.
