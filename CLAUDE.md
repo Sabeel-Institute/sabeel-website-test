@@ -186,15 +186,22 @@
   release whose dependencies have no known vulnerabilities, and
   `allowScripts` (honoured by npm 11.18 and later) stops Puppeteer
   downloading its own Chrome.
-- The ruleset's code-owner review is what holds a structural pull request:
-  "Require review from Code Owners" with 0 required approvals, so only files
-  that `.github/CODEOWNERS` gives an owner need one. `scope.yml` only labels
-  and comments, so it reports no status. It judges a pull request by its
-  changed files' paths alone, from `main`, against CODEOWNERS on the base
-  branch, as GitHub does: the last pattern that matches a file decides, and
-  a file with no owner is routine. It reads only `*`, `/folder/`, and
-  `/file` patterns, and fails on any other rather than misjudge. The list
-  under "Routine and structural changes" in AGENTS.md and the comment's
+- `scope.yml`'s `change scope` status is what holds a structural pull
+  request: the ruleset requires it from GitHub Actions, and only the admin
+  can bypass it. The ruleset's code-owner review (0 required approvals)
+  cannot do it alone: a structural pull request opened from the admin's
+  account, which is the only code owner, was mergeable without review when
+  tested on 2026-10-10, and the admin's account opens pull requests too.
+  The workflow judges a pull request by its changed files' paths alone,
+  from `main`, against CODEOWNERS on the base branch, as GitHub does: the
+  last pattern that matches a file decides, and a file with no owner is
+  routine. It reads only `*`, `/folder/`, and `/file` patterns, and fails on
+  any other rather than misjudge. It reports through a commit status on the
+  pull request's head commit, and its own job passes either way, so a
+  structural pull request does not send its author a failed-run email. A
+  pull request it has not judged has no status and cannot be merged until a
+  push, or closing and reopening it, runs the workflow. The list under
+  "Routine and structural changes" in AGENTS.md and the comment's
   description of routine content must match CODEOWNERS.
 - `preview.yml`'s `delete-preview` job runs on `pull_request_target`, which
   GitHub runs from `main` with `ref` set to `refs/heads/main`, so the identity

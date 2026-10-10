@@ -1,14 +1,14 @@
 name: Change scope
 
-# Marks structural pull requests. A file is routine content when
-# .github/CODEOWNERS leaves it without an owner; the admin owns every other
-# file, so the ruleset holds a pull request that changes one until the admin
-# approves it. This workflow shows why: a structural pull request gets the
-# "structural" label and a comment that names its files outside routine
-# content. GitHub runs this file from main (pull_request_target), so a pull
-# request cannot change the rules that judge it. It never checks out or runs
-# pull-request code: it reads only the list of changed files and CODEOWNERS
-# on main.
+# Holds structural pull requests for the admin. A file is routine content
+# when .github/CODEOWNERS leaves it without an owner; the admin owns every
+# other file. A pull request that changes one gets the "structural" label, a
+# comment that names those files, and a failing "change scope" status, which
+# the "Protect main" ruleset requires, so only the admin can merge it. A
+# routine pull request gets a passing status. GitHub runs this file from main
+# (pull_request_target), so a pull request cannot change the rules that judge
+# it. It never checks out or runs pull-request code: it reads only the list
+# of changed files and CODEOWNERS on main.
 
 on:
   pull_request_target:
@@ -29,6 +29,7 @@ jobs:
     permissions:
       contents: read
       pull-requests: write
+      statuses: write
     steps:
       - name: Classify the changed files
         uses: actions/github-script@v9
@@ -81,7 +82,7 @@ jobs:
             if (outside.length > 50) list.push(`- and ${outside.length - 50} more`);
             if (unlisted) list.push(`- more files than GitHub lists (${pr.changed_files} changed)`);
             const body = structural
-              ? `${marker}\n**Structural change.** This pull request changes files outside routine content (courses, teachers, testimonials, places, the home page's photos, and page photos), so it can be merged only after the admin approves it:\n\n${list.join('\n')}`
+              ? `${marker}\n**Structural change.** This pull request changes files outside routine content (courses, teachers, testimonials, places, the home page's photos, and page photos), so only the admin can merge it:\n\n${list.join('\n')}`
               : `${marker}\n**Routine change.** Only routine content files changed, so it can be merged once the \`build\` check passes.`;
             // A routine pull request gets a comment only to replace an earlier structural one.
             if (existing) {
@@ -89,3 +90,15 @@ jobs:
             } else if (structural) {
               await github.rest.issues.createComment({ owner, repo, issue_number, body });
             }
+
+            const count = outside.length + (unlisted ? 1 : 0);
+            await github.rest.repos.createCommitStatus({
+              owner, repo,
+              sha: pr.head.sha,
+              state: structural ? 'failure' : 'success',
+              context: 'change scope',
+              description: structural
+                ? `Structural: ${count} ${count === 1 ? 'file' : 'files'} outside routine content; only the admin can merge`
+                : 'Routine: content files only',
+              target_url: `${pr.html_url}/files`,
+            });

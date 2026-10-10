@@ -571,10 +571,10 @@ request”). A few minutes later a comment appears on it with two links:
 
 When it looks right, publish it: at the bottom of the pull request, press the
 green merge button, then confirm. The live site shows the change a few
-minutes later; until then, nothing on it changes. The button stays grey
-while GitHub is still checking the change, when the check fails (ask your
-agent to fix it), and for a structural change until the administrator
-approves it.
+minutes later; until then, nothing on it changes. While GitHub is still
+checking the change, the button stays grey. If the **build** check fails,
+ask your agent to fix it. A structural change (below) fails the **change
+scope** check on purpose: only the administrator can publish it.
 
 **Routine and structural changes.** Courses, teachers, testimonials, places,
 the photos on the home page, and the photos on other pages are routine
@@ -583,9 +583,8 @@ change to anything else, such as the template, the menus, contact details,
 an old address that should lead somewhere, or a new edition in a Youth &
 Children series, is structural. Your agent tells you when a request needs
 one, and keeps it in its own review, so your routine changes can go live
-without waiting. A structural review gets the label “structural”, and GitHub
-asks the administrator to approve it; once they have, it is published the
-same way.
+without waiting. GitHub labels a structural review “structural” and asks
+the administrator to review it, and only they can publish it.
 
 ## Your agent’s words
 
