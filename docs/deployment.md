@@ -141,6 +141,7 @@ itself, written `@` below:
 | MX | `@` | `aspmx.l.google.com` (1), `alt1.aspmx.l.google.com` (5), `alt2.aspmx.l.google.com` (5), `alt3.aspmx.l.google.com` (10), `alt4.aspmx.l.google.com` (10) | Google Workspace email |
 | TXT | `@` | `v=spf1 include:_spf.google.com ~all` | Email: which servers may send as oursabeel.com |
 | TXT | `_dmarc` | `v=DMARC1; p=none` | Email: reports on mail that fails those checks |
+| TXT | `_gh-sabeel-institute-o` | `0ce90c06b6` | GitHub's proof that the `Sabeel-Institute` organization owns the domain (its Verified badge) |
 | TXT | `@` | `google-site-verification=f-r5fNolVX0Tjy6KSmAojFJ_GiEnA8cadkK-NMFpFQA` and `google-site-verification=f3O53ieKMwLax241hlLj9de0gOQj2XB8ffhoZm4gwvE` (two records) | Google services' proof of ownership, such as Search Console |
 
 No other A, AAAA, or CNAME records may exist for `@` or `www`: browsers would
