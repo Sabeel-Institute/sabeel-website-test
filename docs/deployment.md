@@ -129,8 +129,8 @@ redirects to it. The domain is registered at NameSilo, which also hosts its
 DNS: the domain's name servers are NameSilo's own, `NS1.DNSOWL.COM`,
 `NS2.DNSOWL.COM`, and `NS3.DNSOWL.COM`, and its records are in NameSilo →
 Domain Manager → `oursabeel.com` → its DNS records. There, a host is written
-without the domain (`www`, `_dmarc`), and left empty for `oursabeel.com`
-itself, written `@` below:
+without the domain (`www`, `_dmarc`), and as `@` for `oursabeel.com`
+itself:
 
 | Type | Host | Value | For |
 |---|---|---|---|
@@ -138,10 +138,13 @@ itself, written `@` below:
 | CNAME | `www` | `oursabeel-website.web.app` | The website; Firebase redirects it to `oursabeel.com` |
 | TXT | `@` | `hosting-site=oursabeel-website` | Proves the domain belongs to the site. Firebase checks it to renew the certificate: never remove it |
 | TXT | `_acme-challenge`, `_acme-challenge.www` | Shown under each domain in the Firebase console | Let Firebase issue a certificate before traffic reaches it |
-| MX | `@` | `aspmx.l.google.com` (1), `alt1.aspmx.l.google.com` (5), `alt2.aspmx.l.google.com` (5), `alt3.aspmx.l.google.com` (10), `alt4.aspmx.l.google.com` (10) | Google Workspace email |
+| MX | `@` | `smtp.google.com`, priority 1 | Google Workspace email (Google's single-record setup) |
 | TXT | `@` | `v=spf1 include:_spf.google.com ~all` | Email: which servers may send as oursabeel.com |
+| TXT | `google._domainkey` | `v=DKIM1; k=rsa; p=…`, the 2048-bit key from Google Admin → Apps → Google Workspace → Gmail → Authenticate email | Google signs outgoing mail as oursabeel.com (DKIM) |
 | TXT | `_dmarc` | `v=DMARC1; p=none` | Email: reports on mail that fails those checks |
 | TXT | `_gh-sabeel-institute-o` | `0ce90c06b6` | GitHub's proof that the `Sabeel-Institute` organization owns the domain (its Verified badge) |
+| CNAME | `zeffy` | `u107181410.wl161.sendgrid.net` | Zeffy's emails (receipts, confirmations) sent as @oursabeel.com, through SendGrid: their bounce address and its SPF. Zeffy owns this name |
+| CNAME | `s1._domainkey`, `s2._domainkey` | `s1.domainkey.u107181410.wl161.sendgrid.net`, `s2.domainkey.u107181410.wl161.sendgrid.net` | The keys that sign Zeffy's emails as oursabeel.com (DKIM) |
 | TXT | `@` | `google-site-verification=f-r5fNolVX0Tjy6KSmAojFJ_GiEnA8cadkK-NMFpFQA` and `google-site-verification=f3O53ieKMwLax241hlLj9de0gOQj2XB8ffhoZm4gwvE` (two records) | Google services' proof of ownership, such as Search Console |
 
 No other A, AAAA, or CNAME records may exist for `@` or `www`: browsers would
