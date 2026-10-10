@@ -125,8 +125,8 @@ jobs:
       # Google grants deploy access only to workflows running from main.
       - uses: google-github-actions/auth@v3
         with:
-          workload_identity_provider: projects/176680257141/locations/global/workloadIdentityPools/github/providers/github-oidc
-          service_account: github-action-1388459667@sabeel-website-test.iam.gserviceaccount.com
+          workload_identity_provider: projects/215221958617/locations/global/workloadIdentityPools/github/providers/github-oidc
+          service_account: github-action-1388459667@oursabeel-website.iam.gserviceaccount.com
 
       - name: Deploy live site
         run: npx --yes "$FIREBASE_TOOLS" deploy --only hosting --non-interactive

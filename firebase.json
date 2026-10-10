@@ -1,6 +1,6 @@
 {
   "hosting": {
-    "site": "sabeel-website-test",
+    "site": "oursabeel-website",
     "public": "dist",
     "ignore": [
       "firebase.json",
@@ -26,6 +26,51 @@
         "type": 301
       },
       {
+        "source": "/my-courses/monthly-quran-room{,/}",
+        "destination": "/programs/monthly-quran-room/",
+        "type": 301
+      },
+      {
+        "source": "/my-courses/teen-quran{,/}",
+        "destination": "/programs/teen-sundays-surah-yusuf/",
+        "type": 301
+      },
+      {
+        "source": "/my-courses/unlock-the-quran-this-fall{,/}",
+        "destination": "/programs/quran-immersion-fall-2026/",
+        "type": 301
+      },
+      {
+        "source": "/my-courses/mb2-2{,/}",
+        "destination": "/programs/mommy-burnout/",
+        "type": 301
+      },
+      {
+        "source": "/my-courses/anchored-hearts-sisters-circle{,/}",
+        "destination": "/programs/anchored-hearts/",
+        "type": 301
+      },
+      {
+        "source": "/my-courses/journey-to-excellence{,/}",
+        "destination": "/programs/journey-to-excellence/",
+        "type": 301
+      },
+      {
+        "source": "/my-courses/race-to-jannah-a-boxcar-adventure{,/}",
+        "destination": "/programs/race-to-jannah/",
+        "type": 301
+      },
+      {
+        "source": "/my-courses/introduction-to-stocks-investments-the-halal-way{,/}",
+        "destination": "/programs/stocks-and-investments/",
+        "type": 301
+      },
+      {
+        "source": "/my-courses/raising-with-purpose{,/}",
+        "destination": "/programs/raising-with-purpose/",
+        "type": 301
+      },
+      {
         "source": "/my-courses/:rest*",
         "destination": "/programs/",
         "type": 301
@@ -38,6 +83,36 @@
       {
         "source": "/past-courses{,/**}",
         "destination": "/past-programs/",
+        "type": 301
+      },
+      {
+        "source": "/course_category/adults{,/}",
+        "destination": "/programs/womens-learning/",
+        "type": 301
+      },
+      {
+        "source": "/course_category/ladies{,/}",
+        "destination": "/programs/womens-learning/",
+        "type": 301
+      },
+      {
+        "source": "/course_category/kids{,/}",
+        "destination": "/programs/youth-children/",
+        "type": 301
+      },
+      {
+        "source": "/course_category/youth{,/}",
+        "destination": "/programs/youth-children/",
+        "type": 301
+      },
+      {
+        "source": "/course_category/youth-girls{,/}",
+        "destination": "/programs/youth-children/",
+        "type": 301
+      },
+      {
+        "source": "/course_category{,/**}",
+        "destination": "/programs/",
         "type": 301
       },
       {
@@ -58,6 +133,136 @@
       {
         "source": "/teachers-and-team/rukaiya-ahamed{,/}",
         "destination": "/teachers-and-team/rukaiya-ahmed/",
+        "type": 301
+      },
+      {
+        "source": "/ustaadah-sameera-shah{,/}",
+        "destination": "/teachers-and-team/sameera-shah/",
+        "type": 301
+      },
+      {
+        "source": "/afsha-m{,/}",
+        "destination": "/teachers-and-team/afsha-mohammad/",
+        "type": 301
+      },
+      {
+        "source": "/aminamian{,/}",
+        "destination": "/teachers-and-team/amina-mian/",
+        "type": 301
+      },
+      {
+        "source": "/khadija{,/}",
+        "destination": "/teachers-and-team/khadija-muhammad/",
+        "type": 301
+      },
+      {
+        "source": "/mariamsattar{,/}",
+        "destination": "/teachers-and-team/mariam-sattar/",
+        "type": 301
+      },
+      {
+        "source": "/rukaiya{,/}",
+        "destination": "/teachers-and-team/rukaiya-ahmed/",
+        "type": 301
+      },
+      {
+        "source": "/sanasattar{,/}",
+        "destination": "/teachers-and-team/sana-sattar/",
+        "type": 301
+      },
+      {
+        "source": "/sharmeenshamsi{,/}",
+        "destination": "/teachers-and-team/sharmeen-shamsi/",
+        "type": 301
+      },
+      {
+        "source": "/subohi-aftab{,/}",
+        "destination": "/teachers-and-team/subohi-aftab/",
+        "type": 301
+      },
+      {
+        "source": "/afshanh{,/}",
+        "destination": "/teachers-and-team/",
+        "type": 301
+      },
+      {
+        "source": "/arsala{,/}",
+        "destination": "/teachers-and-team/",
+        "type": 301
+      },
+      {
+        "source": "/erumrab{,/}",
+        "destination": "/teachers-and-team/",
+        "type": 301
+      },
+      {
+        "source": "/faisalshah{,/}",
+        "destination": "/teachers-and-team/",
+        "type": 301
+      },
+      {
+        "source": "/fazela{,/}",
+        "destination": "/teachers-and-team/",
+        "type": 301
+      },
+      {
+        "source": "/herac{,/}",
+        "destination": "/teachers-and-team/",
+        "type": 301
+      },
+      {
+        "source": "/hiratukdi{,/}",
+        "destination": "/teachers-and-team/",
+        "type": 301
+      },
+      {
+        "source": "/jessica{,/}",
+        "destination": "/teachers-and-team/",
+        "type": 301
+      },
+      {
+        "source": "/madiha{,/}",
+        "destination": "/teachers-and-team/",
+        "type": 301
+      },
+      {
+        "source": "/sobia{,/}",
+        "destination": "/teachers-and-team/",
+        "type": 301
+      },
+      {
+        "source": "/sr-amrin-vaid{,/}",
+        "destination": "/teachers-and-team/",
+        "type": 301
+      },
+      {
+        "source": "/sr-misbah-shah{,/}",
+        "destination": "/teachers-and-team/",
+        "type": 301
+      },
+      {
+        "source": "/sr-rida-shah{,/}",
+        "destination": "/teachers-and-team/",
+        "type": 301
+      },
+      {
+        "source": "/sr-rida-zahra{,/}",
+        "destination": "/teachers-and-team/",
+        "type": 301
+      },
+      {
+        "source": "/sr-sana-toola{,/}",
+        "destination": "/teachers-and-team/",
+        "type": 301
+      },
+      {
+        "source": "/sr-zahra-sattar{,/}",
+        "destination": "/teachers-and-team/",
+        "type": 301
+      },
+      {
+        "source": "/zainab{,/}",
+        "destination": "/teachers-and-team/",
         "type": 301
       },
       {
@@ -86,6 +291,46 @@
         "type": 301
       },
       {
+        "source": "/donations{,/**}",
+        "destination": "/support/",
+        "type": 301
+      },
+      {
+        "source": "/donation-confirmation{,/}",
+        "destination": "/support/",
+        "type": 301
+      },
+      {
+        "source": "/donation-confirmation-2{,/}",
+        "destination": "/support/",
+        "type": 301
+      },
+      {
+        "source": "/donation-failed{,/}",
+        "destination": "/support/",
+        "type": 301
+      },
+      {
+        "source": "/donation-failed-2{,/}",
+        "destination": "/support/",
+        "type": 301
+      },
+      {
+        "source": "/donor-dashboard{,/}",
+        "destination": "/support/",
+        "type": 301
+      },
+      {
+        "source": "/donor-dashboard-2{,/}",
+        "destination": "/support/",
+        "type": 301
+      },
+      {
+        "source": "/donation-form-copy{,/}",
+        "destination": "/support/",
+        "type": 301
+      },
+      {
         "source": "/our-mission{,/**}",
         "destination": "/about/",
         "type": 301
@@ -96,12 +341,77 @@
         "type": 301
       },
       {
+        "source": "/testimonial/certification-program{,/}",
+        "destination": "/hikam-foundations/",
+        "type": 301
+      },
+      {
+        "source": "/testimonial/certification-program-2{,/}",
+        "destination": "/hikam-foundations/",
+        "type": 301
+      },
+      {
+        "source": "/testimonial/certification-program-3{,/}",
+        "destination": "/hikam-foundations/",
+        "type": 301
+      },
+      {
+        "source": "/testimonial/certification-program-4{,/}",
+        "destination": "/hikam-foundations/",
+        "type": 301
+      },
+      {
+        "source": "/testimonial/girls-summer-garden{,/}",
+        "destination": "/programs/youth-children/",
+        "type": 301
+      },
+      {
+        "source": "/testimonial/boys-summer-camp-futuwwah{,/}",
+        "destination": "/programs/youth-children/",
+        "type": 301
+      },
+      {
+        "source": "/testimonial/kids-islam-is-outta-this-world{,/}",
+        "destination": "/programs/islam-is-outta-this-world-2025/",
+        "type": 301
+      },
+      {
+        "source": "/testimonial/why-islam-is-true-course{,/}",
+        "destination": "/past-programs/",
+        "type": 301
+      },
+      {
+        "source": "/testimonial{,/**}",
+        "destination": "/hikam-foundations/",
+        "type": 301
+      },
+      {
         "source": "/blog{,/**}",
         "destination": "/",
         "type": 301
       },
       {
         "source": "/blog-2{,/**}",
+        "destination": "/",
+        "type": 301
+      },
+      {
+        "source": "/author{,/**}",
+        "destination": "/",
+        "type": 301
+      },
+      {
+        "source": "/category{,/**}",
+        "destination": "/",
+        "type": 301
+      },
+      {
+        "source": "/site-option{,/**}",
+        "destination": "/",
+        "type": 301
+      },
+      {
+        "source": "/test{,/}",
         "destination": "/",
         "type": 301
       }

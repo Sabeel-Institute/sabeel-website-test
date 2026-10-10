@@ -139,8 +139,8 @@ jobs:
       - uses: google-github-actions/auth@v3
         id: auth
         with:
-          workload_identity_provider: projects/176680257141/locations/global/workloadIdentityPools/github/providers/github-oidc
-          service_account: github-action-1388459667@sabeel-website-test.iam.gserviceaccount.com
+          workload_identity_provider: projects/215221958617/locations/global/workloadIdentityPools/github/providers/github-oidc
+          service_account: github-action-1388459667@oursabeel-website.iam.gserviceaccount.com
           token_format: access_token
 
       - name: Deploy preview channel
@@ -248,8 +248,8 @@ jobs:
 
       - uses: google-github-actions/auth@v3
         with:
-          workload_identity_provider: projects/176680257141/locations/global/workloadIdentityPools/github/providers/github-oidc
-          service_account: github-action-1388459667@sabeel-website-test.iam.gserviceaccount.com
+          workload_identity_provider: projects/215221958617/locations/global/workloadIdentityPools/github/providers/github-oidc
+          service_account: github-action-1388459667@oursabeel-website.iam.gserviceaccount.com
 
       - name: Delete preview channel
         env:

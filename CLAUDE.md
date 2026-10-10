@@ -130,8 +130,15 @@
   calendar (FCNA), which Sabeel's own flyers match (the 21st night was
   March 30 in 2024 and March 20 in 2025).
 - `firebase.json` redirects other addresses for these pages (`/courses/`,
-  `/our-team/`, `/seminary/`, `/donate/`, `/our-mission/`, `/my-courses/`,
-  and more) so existing links keep working.
+  `/our-team/`, `/seminary/`, `/donate/`, `/our-mission/`, and more), and
+  every page address in the WordPress site's sitemap (`sitemap_index.xml`,
+  78 addresses on 2026-10-10), so existing links keep working: courses to
+  their programs (any other `/my-courses/` address to Programs), people to
+  their bios, or to Teachers & Team when they are not listed, course
+  categories to the area pages, donation pages to Support, testimonials to
+  Hikam Foundations or the program they name, and WordPress's own archive
+  pages to the home page. Specific sources come before the catch-alls,
+  because Firebase uses the first match.
 - Deploys, the Google identity pool, and every setting to change when the
   project, account, repository, branch, or domain moves are documented in
   `docs/deployment.md`. `preview.yml` runs from `main` via `workflow_run` and

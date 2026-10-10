@@ -18,7 +18,7 @@ flowchart TB
   PV --> CH["Preview channel pr-&lt;number&gt;<br/>site + /_visual-diff/<br/>links commented on the PR"]
   M["Pull request merged to main"] --> SM["Site workflow: build"]
   SM --> DL["Site workflow: deploy-live<br/>(runs from main)"]
-  DL --> LIVE["Live site<br/>sabeel-website-test.web.app"]
+  DL --> LIVE["Live site<br/>oursabeel.com"]
   PV -. "asks Google for access" .-> G{{"Google checks:<br/>this repo? running from main?"}}
   DL -. "asks Google for access" .-> G
 ```
@@ -52,13 +52,15 @@ flowchart TB
 | What | Value | Set in |
 |---|---|---|
 | Google account that owns the project | faisal.shah@oursabeel.com (Google Workspace org `oursabeel.com`, org ID 833557915874) | Google Cloud |
-| Firebase / Google Cloud project | `sabeel-website-test`, project number `176680257141` | `.firebaserc` (project ID); both workflows (project number) |
-| Hosting site | `sabeel-website-test` (the project's default site) | `firebase.json` (`hosting.site`); previews read it from `main`'s copy |
-| Live URL | https://sabeel-website-test.web.app | `astro.config.mjs` (`site`, used for canonical and link-preview URLs); GitHub repo "Website" field |
-| GitHub repository | `Sabeel-Institute/sabeel-website-test`, repo ID `1388459667`, owner ID `334027596` | Google identity pool condition and service-account binding |
+| Firebase / Google Cloud project | `oursabeel-website` (display name “Website”), project number `215221958617` | `.firebaserc` (project ID); both workflows (project number) |
+| Billing account | “My Billing Account”, in the `oursabeel.com` organization | Google Cloud → Billing |
+| Hosting site | `oursabeel-website` (the project's default site, also at https://oursabeel-website.web.app) | `firebase.json` (`hosting.site`); previews read it from `main`'s copy |
+| Live URL | https://oursabeel.com; https://www.oursabeel.com redirects to it | `astro.config.mjs` (`site`, used for canonical and link-preview URLs, the sitemap, and robots.txt); GitHub repo "Website" field; the site's custom domains in Firebase Hosting |
+| Domain and DNS | `oursabeel.com`, registered at Namecheap, DNS on Namecheap BasicDNS | Namecheap → Domain List → Manage → Advanced DNS (see [Custom domain](#custom-domain)) |
+| GitHub repository | `Sabeel-Institute/website`, repo ID `1388459667`, owner ID `334027596` | Google identity pool condition and service-account binding |
 | Identity pool | `github` ("GitHub Actions") | Google Cloud |
 | Identity provider | `github-oidc`, issuer `https://token.actions.githubusercontent.com` | Google Cloud; resource path in both workflows |
-| Deploy service account | `github-action-1388459667@sabeel-website-test.iam.gserviceaccount.com` | Google Cloud; both workflows |
+| Deploy service account | `github-action-1388459667@oursabeel-website.iam.gserviceaccount.com` | Google Cloud; both workflows |
 | Deploy branch | `main` | Provider condition; `site.yml` (`push: branches`) |
 | Build workflow name | `Site` | `site.yml` (`name:`) and `preview.yml` (`workflows: [Site]`) must match |
 
@@ -67,22 +69,24 @@ The repository's hosting configuration:
 - `.firebaserc`: the default Firebase project.
 - `firebase.json`: `hosting.site` (the site to deploy to), `public: "dist"`,
   `cleanUrls` and `trailingSlash` (pages are served at `/path/`),
-  `redirects` (other addresses for pages, so existing links keep working),
-  and long-lived cache headers for `/_astro/**` (fingerprinted build assets).
-  There are no rewrites; unknown paths get the built `404.html`.
+  `redirects` (other addresses for pages, so existing links keep working:
+  moved pages, and every page address of the WordPress site oursabeel.com
+  served before this one), and long-lived cache headers for `/_astro/**`
+  (fingerprinted build assets). There are no rewrites; unknown paths get the
+  built `404.html`. Firebase applies redirects before serving files, so a
+  redirect's source must never be the address of a page here.
+- `astro.config.mjs`: `site`, and the sitemap integration
+  (`@astrojs/sitemap`), which writes `sitemap-index.xml` and `sitemap-0.xml`
+  listing every page. `src/pages/robots.txt.ts` names the sitemap for search
+  engines.
 
-The project is on Firebase's no-cost Spark plan (no billing account). Hosting
-on Spark allows 10 GB of storage and 10 GB of data transfer a month (about
-360 MB a day), counted across the live site and every preview channel
-together. Past the transfer limit, Firebase disables the sites until the next
-month; past the storage limit, deploys fail. Each deploy stores a whole copy of
-the site (about 100 MB), so the live channel keeps only its 10 latest releases
-(step 1), each preview channel keeps only its latest, and a preview is deleted
-when its pull request closes. Before the site serves the
-organization's real traffic, switch the project to the Blaze plan
-(in the Firebase console, ⚙ → Usage and billing → Details & settings → modify
-the plan), which keeps the same no-cost amounts and bills usage beyond
-them.
+The project is on Firebase's Blaze plan, billed to the organization's “My
+Billing Account”. Hosting is free up to 10 GB of storage and 360 MB of data
+transfer a day (about 10 GB a month), counted across the live site and every
+preview channel together, and usage beyond that is billed. Each deploy stores
+a whole copy of the site (about 100 MB), so the live channel keeps only its 10
+latest releases (step 1), each preview channel keeps only its latest, and a
+preview is deleted when its pull request closes.
 
 The provider maps these claims from GitHub's token:
 `google.subject=assertion.sub`, `attribute.repository=assertion.repository`,
@@ -97,7 +101,7 @@ assertion.repository_id == '1388459667' && assertion.repository_owner_id == '334
 
 The service account can be used by the pool through one binding:
 `roles/iam.workloadIdentityUser` for
-`principalSet://iam.googleapis.com/projects/176680257141/locations/global/workloadIdentityPools/github/attribute.repository_id/1388459667`.
+`principalSet://iam.googleapis.com/projects/215221958617/locations/global/workloadIdentityPools/github/attribute.repository_id/1388459667`.
 
 Its roles on the project:
 
@@ -116,6 +120,28 @@ Enabled APIs used by deploys: `firebasehosting`, `firebase`,
 
 The `oursabeel.com` Google organization blocks service-account keys, which is
 why deploys use the identity pool. Never create or use a key.
+
+## Custom domain
+
+The site's custom domains, in Firebase console → Hosting → the site's
+**Custom domains**, are `oursabeel.com` and `www.oursabeel.com`, which
+redirects to it. The domain is registered at Namecheap, and its DNS records
+are in Namecheap → Domain List → `oursabeel.com` → Manage → **Advanced DNS**
+(email routing under **Mail Settings → Custom MX**):
+
+| Type | Host | Value | For |
+|---|---|---|---|
+| A | `@` | `199.36.158.100` | The website (Firebase Hosting) |
+| CNAME | `www` | `oursabeel-website.web.app` | The website; Firebase redirects it to `oursabeel.com` |
+| TXT | `@` | `hosting-site=oursabeel-website` | Proves the domain belongs to the site. Firebase checks it to renew the certificate: never remove it |
+| TXT | `_acme-challenge`, `_acme-challenge.www` | Shown under each domain in the Firebase console | Let Firebase issue a certificate before traffic reaches it |
+| MX | `@` | `aspmx.l.google.com` (1), `alt1.aspmx.l.google.com` (5), `alt2.aspmx.l.google.com` (5), `alt3.aspmx.l.google.com` (10), `alt4.aspmx.l.google.com` (10) | Google Workspace email |
+| TXT | `@` | `v=spf1 include:_spf.google.com ~all` | Email: which servers may send as oursabeel.com |
+| TXT | `_dmarc` | `v=DMARC1; p=none` | Email: reports on mail that fails those checks |
+| TXT | `@` | `google-site-verification=f-r5fNolVX0Tjy6KSmAojFJ_GiEnA8cadkK-NMFpFQA` and `google-site-verification=f3O53ieKMwLax241hlLj9de0gOQj2XB8ffhoZm4gwvE` (two records) | Google services' proof of ownership, such as Search Console |
+
+No other A, AAAA, or CNAME records may exist for `@` or `www`: browsers would
+reach the other server some of the time.
 
 ## GitHub settings that protect deploys
 
@@ -298,7 +324,7 @@ To bring an open pull request up to date without pushing to its branch:
 
 ```bash
 n=<number>
-repo=Sabeel-Institute/sabeel-website-test
+repo=Sabeel-Institute/website
 git fetch -q origin && main=$(git rev-parse origin/main)
 gh pr close $n && gh pr reopen $n
 until [ "$(gh api "repos/$repo/commits/$(gh api "repos/$repo/pulls/$n" -q .merge_commit_sha)" -q '.parents[0].sha')" = "$main" ]; do sleep 10; done
@@ -312,17 +338,30 @@ watching the pull request.
 
 ### Connecting a custom domain
 
-1. Firebase console → **Build → Hosting → Add custom domain** (for example
-   `oursabeel.com`, then `www.oursabeel.com` set to redirect to it). Firebase
-   shows the DNS records to add: a TXT record to prove ownership, then A
-   records. Add them at the domain registrar where `oursabeel.com` is managed,
-   and remove any other A, AAAA, or CNAME records for those names.
-   Verification and the HTTPS certificate can take up to a day.
-2. `astro.config.mjs`: set `site` to the custom domain.
-3. GitHub repo Settings → General → "Website": the custom domain.
-4. `firebase.json` redirects the paths used by the WordPress site at
-   `oursabeel.com` (`/our-mission/`, `/my-courses/`, `/donate/`, and more) to
-   their pages here, so existing links keep working.
+To connect `oursabeel.com` (or another domain) to a site, without downtime:
+
+1. Firebase console → **Build → Hosting → Add custom domain** →
+   `oursabeel.com` → **Advanced setup**, then `www.oursabeel.com`, set to
+   redirect to `oursabeel.com`. With the API:
+
+   ```bash
+   B="https://firebasehosting.googleapis.com/v1beta1/projects/$PROJECT_ID/sites/$PROJECT_ID/customDomains"
+   H=(-H "Authorization: Bearer $(gcloud auth print-access-token --account=$ACCOUNT)" -H "x-goog-user-project: $PROJECT_ID" -H "Content-Type: application/json")
+   curl -X POST "${H[@]}" "$B?customDomainId=oursabeel.com" -d '{}'
+   curl -X POST "${H[@]}" "$B?customDomainId=www.oursabeel.com" -d '{"redirectTarget": "oursabeel.com"}'
+   curl "${H[@]}" "$B/oursabeel.com"   # requiredDnsUpdates and cert.verification list the records
+   ```
+
+2. Add the `hosting-site` and `_acme-challenge` TXT records Firebase lists to
+   the domain's DNS (see [Custom domain](#custom-domain)). Firebase then
+   proves ownership and issues the certificate while the domain still points
+   elsewhere; this takes from minutes to a few hours. The domain shows as
+   ready (`ownershipState` `OWNERSHIP_ACTIVE`, `cert.state` `CERT_ACTIVE`)
+   when it is done.
+3. Replace the `@` A record and the `www` CNAME with the ones Firebase lists.
+   Visitors arrive as their DNS caches expire, within the records' TTL.
+4. `astro.config.mjs`: set `site` to the custom domain, and GitHub repo
+   Settings → General → "Website" to it.
 
 ## Setting up from scratch
 
@@ -338,14 +377,15 @@ You need:
 - On your computer: Node.js 24 with npm, the Google Cloud CLI (`gcloud`), and
   the GitHub CLI (`gh`). The Firebase CLI runs through `npx firebase-tools@15`
   and needs no install.
-- Nothing paid: the free Firebase Spark plan covers Hosting, preview channels,
-  and custom domains.
+- A billing account in the `oursabeel.com` organization for the Blaze plan.
+  The site's use stays within Hosting's no-cost amounts (see
+  [Where everything lives](#where-everything-lives)).
 
 ### Checklist
 
 | # | Step | Where | Manual only? |
 |---|---|---|---|
-| 1 | Create the Firebase project and start Hosting | Firebase console | Yes |
+| 1 | Create the project, put it on the Blaze plan, and add Firebase and Hosting | Firebase console or `gcloud` | No |
 | 2 | Enable the Google APIs | Google Cloud console or `gcloud` | No |
 | 3 | Create the deploy service account and grant its roles | Google Cloud console or `gcloud` | No |
 | 4 | Create the identity pool and GitHub provider | Google Cloud console or `gcloud` | No |
@@ -353,19 +393,21 @@ You need:
 | 6 | Point the repository at the project | Code: `.firebaserc`, both workflows, `astro.config.mjs` | No |
 | 7 | Apply the GitHub settings | GitHub web settings | Mostly (issue policy is web-only) |
 | 8 | First deploy and a test preview | Merge a pull request | No |
-| 9 | Custom domain (when ready) | Firebase console and domain registrar | Yes |
+| 9 | Custom domain | Firebase console or API, and the DNS host | DNS records only |
 
 Use a Google account that owns the project (faisal.shah@oursabeel.com)
 and a GitHub account that is an organization owner. For the commands, sign in
 first with `gcloud auth login <account>` and `gh auth login`, then set:
 
 ```bash
-PROJECT_ID=sabeel-website-test
-REPO=Sabeel-Institute/sabeel-website-test
+PROJECT_ID=oursabeel-website
+REPO=Sabeel-Institute/website
 ACCOUNT=faisal.shah@oursabeel.com
 ```
 
-### 1. Create the Firebase project and start Hosting (manual)
+### 1. Create the project, put it on the Blaze plan, and add Firebase and Hosting
+
+Console:
 
 1. Go to https://console.firebase.google.com → **Create a project** (or
    **Add Firebase to a Google Cloud project** if the project already exists).
@@ -373,27 +415,35 @@ ACCOUNT=faisal.shah@oursabeel.com
    `https://<project-id>.web.app`. Google Analytics is not needed.
 2. Make sure the project sits under the `oursabeel.com` organization (the
    project picker in the Google Cloud console shows its parent).
-3. In the project, open **Build → Hosting → Get started** and click through
-   the steps once. This creates the default site named after the project. The
-   CLI steps it shows can be skipped; the repository already contains the
-   configuration.
-4. Still in **Hosting**, open the live channel's **Release history** → ⋮ →
+3. ⚙ → **Usage and billing → Details & settings** → modify the plan to
+   **Blaze**, with the organization's billing account.
+4. **Build → Hosting → Get started**, clicking through the steps once. This
+   creates the default site named after the project. The CLI steps it shows
+   can be skipped; the repository already contains the configuration.
+5. Still in **Hosting**, open the live channel's **Release history** → ⋮ →
    **Release storage settings**, and keep **10** releases. Firebase otherwise
-   keeps every release, and the storage limit fills within weeks. The same
-   with the API:
+   keeps every release, and storage passes the no-cost 10 GB within weeks.
+6. Look up the project number: ⚙ **Project settings** → General →
+   **Project number**.
 
-   ```bash
-   curl -X PATCH -H "Authorization: Bearer $(gcloud auth print-access-token --account=$ACCOUNT)" \
-     -H "x-goog-user-project: $PROJECT_ID" -H "Content-Type: application/json" \
-     "https://firebasehosting.googleapis.com/v1beta1/sites/$PROJECT_ID/channels/live?updateMask=retainedReleaseCount" \
-     -d '{"retainedReleaseCount": 10}'
-   ```
-4. Look up the project number: Firebase console → ⚙ **Project settings** →
-   General → **Project number**, or:
+The same with commands. Adding Firebase creates the default Hosting site;
+`gcloud billing accounts list` shows the billing account's ID. Right after
+the project is created, a step can fail with "permission denied" for a minute
+while Google applies your access; repeat it.
 
-   ```bash
-   PROJECT_NUMBER=$(gcloud projects describe "$PROJECT_ID" --account "$ACCOUNT" --format='value(projectNumber)')
-   ```
+```bash
+gcloud projects create "$PROJECT_ID" --name Website --organization 833557915874 --account "$ACCOUNT"
+gcloud billing projects link "$PROJECT_ID" --billing-account <billing account ID> --account "$ACCOUNT"
+gcloud services enable firebase.googleapis.com --project "$PROJECT_ID" --account "$ACCOUNT"
+curl -X POST -H "Authorization: Bearer $(gcloud auth print-access-token --account=$ACCOUNT)" \
+  -H "x-goog-user-project: $PROJECT_ID" -H "Content-Type: application/json" \
+  "https://firebase.googleapis.com/v1beta1/projects/$PROJECT_ID:addFirebase" -d '{}'
+curl -X PATCH -H "Authorization: Bearer $(gcloud auth print-access-token --account=$ACCOUNT)" \
+  -H "x-goog-user-project: $PROJECT_ID" -H "Content-Type: application/json" \
+  "https://firebasehosting.googleapis.com/v1beta1/sites/$PROJECT_ID/channels/live?updateMask=retainedReleaseCount" \
+  -d '{"retainedReleaseCount": 10}'
+PROJECT_NUMBER=$(gcloud projects describe "$PROJECT_ID" --account "$ACCOUNT" --format='value(projectNumber)')
+```
 
 Also look up the repository's IDs (GitHub shows them only through the API):
 
@@ -420,7 +470,7 @@ gcloud services enable firebasehosting.googleapis.com firebase.googleapis.com \
 
 Console:
 1. **IAM & Admin → Service Accounts → Create service account.** ID:
-   `github-action-<repo ID>`; name: `GitHub Actions (Sabeel-Institute/sabeel-website-test)`.
+   `github-action-<repo ID>`; name: `GitHub Actions (Sabeel-Institute/website)`.
 2. **IAM & Admin → IAM → Grant access.** Principal: the new service-account
    email. Add the six roles in the table under
    [Where everything lives](#where-everything-lives).
@@ -518,7 +568,7 @@ Work through the table in
    runs `google-github-actions/auth` with `token_format: access_token`; it must
    fail with "rejected by the attribute condition". Delete the branch after.
 
-### 9. Custom domain (manual)
+### 9. Custom domain
 
 See [Connecting a custom domain](#connecting-a-custom-domain).
 
@@ -526,10 +576,10 @@ See [Connecting a custom domain](#connecting-a-custom-domain).
 
 ```bash
 gcloud iam workload-identity-pools providers describe github-oidc --location global \
-  --workload-identity-pool github --project sabeel-website-test \
+  --workload-identity-pool github --project oursabeel-website \
   --account faisal.shah@oursabeel.com --format 'yaml(attributeCondition,attributeMapping)'
-gcloud iam service-accounts get-iam-policy github-action-1388459667@sabeel-website-test.iam.gserviceaccount.com \
-  --project sabeel-website-test --account faisal.shah@oursabeel.com
+gcloud iam service-accounts get-iam-policy github-action-1388459667@oursabeel-website.iam.gserviceaccount.com \
+  --project oursabeel-website --account faisal.shah@oursabeel.com
 ```
 
 If `gcloud` says "Reauthentication required", run
@@ -544,7 +594,7 @@ deploy only what is on `main`.
 git switch main && git pull
 npm ci && npm run build
 npx firebase-tools@15 login          # as faisal.shah@oursabeel.com
-npx firebase-tools@15 deploy --only hosting --project sabeel-website-test
+npx firebase-tools@15 deploy --only hosting --project oursabeel-website
 ```
 
 The deploy goes to the site named in `firebase.json`. The Firebase command
