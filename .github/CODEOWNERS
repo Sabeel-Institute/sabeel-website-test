@@ -1,10 +1,10 @@
 # The repository admin owns every file except routine content: the paths
-# listed after the first line, without an owner. The "Protect main" ruleset
-# requires the owner's approval for a pull request that changes an owned
-# file, so a routine pull request needs no approval and a structural one
-# needs the admin's (see "Routine and structural changes" in AGENTS.md).
-# .github/workflows/scope.yml reads this file, and understands only `*`,
-# `/folder/`, and `/file` patterns.
+# listed after the first line, without an owner. A pull request that changes
+# an owned file is structural: .github/workflows/scope.yml gives it a failing
+# "change scope" status, which the "Protect main" ruleset requires, so only
+# the admin can merge it, and GitHub asks the admin to review it (see
+# "Routine and structural changes" in AGENTS.md). scope.yml understands only
+# `*`, `/folder/`, and `/file` patterns.
 * @faisal-shah-sabeel
 /src/content/programs/
 /src/content/team/
