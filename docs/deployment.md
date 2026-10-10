@@ -633,3 +633,5 @@ run `npx firebase-tools@15 login:use faisal.shah@oursabeel.com`.
 | The comment says pages "could not be captured" | Their screenshots failed, usually because the page never finished loading, kept its browser busy for more than 30 seconds, or navigated away. The visual-diff job's log in the Site run names the error. Open the page on the preview to see what it does. |
 | The visual comparison shows a difference nobody made | Screenshots differ only if the rendering differs, so look for a shared change (a stylesheet, the header or footer, a component used on many pages). If pages differ when comparing a build with itself, the screenshots are not repeatable; see the visual comparison notes in `CLAUDE.md`. |
 | Previews stop after renaming the build workflow | `preview.yml`'s `workflows: [Site]` does not match `site.yml`'s `name:`. |
+
+<!-- Test of the merge rules; this pull request is closed unmerged. -->
