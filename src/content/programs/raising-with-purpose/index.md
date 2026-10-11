@@ -6,21 +6,15 @@ summary: A monthly circle, with the Muslim Homeschooling Community of Greater Ho
 area: womens-learning
 schedule:
   - start: 2026-10-18
-    time: 5:00–7:00 PM
+    time: 10:00 AM–12:00 PM
     label: Monthly
 audience: Homeschooling mothers
 format: On-site
-venue: masjid-istiqlal
-location: Sabeel Classroom at Masjid Istiqlal
+venue: raindrop-turkish-center
+location: Raindrop Turkish Center (Turkistan Room)
 fee: $5
 registration:
   zeffy: raising-with-purpose
-instructors:
-  - mariam-sattar
-  - name: Pelin Unal
-    role: Conversation guest
-  - name: Najia Salim
-    role: Conversation guest
 expect: |
   Each session has three parts:
 
@@ -35,11 +29,5 @@ flyer: ./flyer.webp
 A monthly support circle for homeschooling moms, in collaboration with MHSC (Muslim HomeSchooling Community of Greater Houston).
 
 Each gathering is thoughtfully curated to give us time to connect with one another and reflect on our purpose and intentions in homeschooling — what brought us here, what we value most, and what we hope to nurture in our children beyond academics.
-
-## This month — Sunday, October 18
-
-- **Nourish** — Halaqah with Ust. Mariam Sattar, Sabeel Institute
-- **Connect** — In conversation with Pelin Unal and Najia Salim
-- **Create** — “Unwind and Untangle,” a mindful reflection activity
 
 Looking forward to this beautiful suhbah, insha Allah!

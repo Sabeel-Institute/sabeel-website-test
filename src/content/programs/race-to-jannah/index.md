@@ -5,9 +5,9 @@ subtitle: A BoxCar Adventure
 summary: Build your own wearable boxcar, race through fun challenges, and discover how niyyah, sabr, salah, dhikr, shukr, and good akhlaq help us on our journey to Jannah.
 area: youth-children
 schedule:
-  - start: 2026-10-31
+  - start: 2026-11-01
     time: 2:30–4:30 PM
-    repeat: FREQ=DAILY;COUNT=2
+    repeat: FREQ=WEEKLY;COUNT=2
 audience: Children 6–10
 format: On-site
 venue: masjid-istiqlal
